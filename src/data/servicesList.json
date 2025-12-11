@@ -1,0 +1,185 @@
+[
+  {
+    "id": "e-approval",
+    "text": "E-Approval",
+    "icon": "bx bxl-microsoft",
+    "available": true,
+    "link": "/e-approval",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "ict-assets-service",
+    "text": "ICT Assets",
+    "icon": "bx bx-chip",
+    "available": true,
+    "link": "/ict-assets/dashboard",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "unisync360",
+    "text": "UniSync360",
+    "icon": "bx bxs-graduation",
+    "available": true,
+    "link": "/unisync360/dashboard",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "business-intelligence",
+    "text": "Business Intelligence",
+    "icon": "bx bx-line-chart",
+    "available": true,
+    "link": "/bi/dashboard",
+    "description": "Social Media Business Intelligence & Analytics",
+    "permission": [],
+    "role": [
+      "admin",
+      "BI_Manager",
+      "BI_Analyst",
+      "Marketing_User"
+    ]
+  },
+  {
+    "id": "external-counselor-portal",
+    "text": "External Counselor Portal",
+    "icon": "bx bx-user-voice",
+    "available": true,
+    "link": "/unisync360/external-counselor",
+    "permission": [],
+    "role": [
+      "admin",
+      "unisync360_external_counselor"
+    ]
+  },
+  {
+    "id": "lead-lancer-portal",
+    "text": "Lead Lancer Portal",
+    "icon": "bx bx-user-plus",
+    "available": true,
+    "link": "/unisync360/lead-lancer",
+    "permission": [],
+    "role": [
+      "admin",
+      "unisync360_lead_lancer",
+      "unisync360_external_counselor"
+    ]
+  },
+  {
+    "id": "global-education-gateway-ai",
+    "text": "Global Education Gateway AI",
+    "icon": "bx bx-brain",
+    "available": true,
+    "link": "/global-education-gateway-ai",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "billingbook360",
+    "text": "BillingBook360",
+    "icon": "bx bx-receipt",
+    "available": true,
+    "link": "/billingbook360",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "delivery-boy",
+    "text": "Delivery Boy",
+    "icon": "bx bx-cycling",
+    "available": true,
+    "link": "/delivery-boy",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "otalytica",
+    "text": "Otalytica",
+    "icon": "bx bx-analyse",
+    "available": true,
+    "link": "/otalytica",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "oltacommerce",
+    "text": "OltaCommerce",
+    "icon": "bx bx-cart",
+    "available": true,
+    "link": "/oltacommerce",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "oltabot-ai",
+    "text": "OltaBot AI",
+    "icon": "bx bx-bot",
+    "available": true,
+    "link": "/oltabot-ai",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "rvln-tube",
+    "text": "RVLN Tube",
+    "icon": "bx bx-play-circle",
+    "available": true,
+    "link": "/rvln-tube",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "transfera",
+    "text": "Transfera",
+    "icon": "bx bx-transfer",
+    "available": true,
+    "link": "/transfera",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "loanxpress",
+    "text": "LoanXpress",
+    "icon": "bx bx-credit-card",
+    "available": true,
+    "link": "/loanxpress",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
+    "id": "machinaxpress",
+    "text": "MachinaXpress",
+    "icon": "bx bx-cog",
+    "available": true,
+    "link": "/machinaxpress",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  }
+]

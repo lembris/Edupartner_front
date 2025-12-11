@@ -1,0 +1,432 @@
+[
+    {
+        "items": [
+            {
+                "text": "Institutions",
+                "icon": "bx bxs-school",
+                "available": true,
+                "link": "",
+                "header": "INSTITUTIONS",
+                "submenu": [
+                    {
+                        "text": "Services",
+                        "icon": "bx bxl-microsoft",
+                        "available": true,
+                        "link": "/",
+                        "permission": [],
+                        "role": [
+                            "staff",
+                            "admin"
+                        ]
+                    },
+                    {
+                        "text": "Dashboard",
+                        "icon": "bx bx-home",
+                        "available": true,
+                        "link": "/unisync360/dashboard",
+                        "permission": [
+                            "view_dashboard"
+                        ],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Universities",
+                        "icon": "bx bxs-school",
+                        "available": true,
+                        "link": "/unisync360/institutions/universities",
+                        "permission": [
+                            ""
+                        ],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Schools",
+                        "icon": "bx bx-building-house",
+                        "available": true,
+                        "link": "/unisync360/institutions/schools",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Academic",
+                "icon": "bx bx-book-open",
+                "available": true,
+                "link": "",
+                "header": "ACADEMIC",
+                "submenu": [
+                    {
+                        "text": "Course Categories",
+                        "icon": "bx bx-category",
+                        "available": true,
+                        "link": "/unisync360/academics/course-categories",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Course Levels",
+                        "icon": "bx bx-layer",
+                        "available": true,
+                        "link": "/unisync360/academics/course-levels",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Courses",
+                        "icon": "bx bxs-book",
+                        "available": true,
+                        "link": "/unisync360/academics/courses",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "University Courses",
+                        "icon": "bx bx-book-content",
+                        "available": true,
+                        "link": "/unisync360/academics/university-courses",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Students",
+                "icon": "bx bxs-user",
+                "available": true,
+                "link": "",
+                "header": "STUDENTS",
+                "submenu": [
+                    {
+                        "text": "Student Sources",
+                        "icon": "bx bx-user-pin",
+                        "available": true,
+                        "link": "/unisync360/students-sources",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Student Statuses",
+                        "icon": "bx bx-user-check",
+                        "available": true,
+                        "link": "/unisync360/students-statuses",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Students",
+                        "icon": "bx bxs-user",
+                        "available": true,
+                        "link": "/unisync360/students",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Applications",
+                "icon": "bx bx-task",
+                "available": true,
+                "link": "",
+                "header": "APPLICATIONS",
+                "submenu": [
+                    {
+                        "text": "Course Allocations",
+                        "icon": "bx bx-task",
+                        "available": true,
+                        "link": "/unisync360/applications/course-allocations",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Document Requirements",
+                        "icon": "bx bx-file",
+                        "available": true,
+                        "link": "/unisync360/applications/document-requirements",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Recommendations",
+                "icon": "bx bx-cog",
+                "available": true,
+                "link": "",
+                "header": "RECOMMENDATIONS",
+                "submenu": [
+                    {
+                        "text": "Recommendation Engines",
+                        "icon": "bx bx-cog",
+                        "available": true,
+                        "link": "/unisync360/recommendations/engines",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Recommended Courses",
+                        "icon": "bx bx-like",
+                        "available": true,
+                        "link": "/unisync360/recommendations/recommended-courses",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Weight Configuration",
+                        "icon": "bx bx-slider-alt",
+                        "available": true,
+                        "link": "/unisync360/recommendations/weight-config",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Generate Recommendations",
+                        "icon": "bx bx-atom",
+                        "available": true,
+                        "link": "/unisync360/recommendations/generate-recommendations",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Accounts",
+                "icon": "bx bx-wallet",
+                "available": true,
+                "link": "",
+                "header": "ACCOUNTS",
+                "submenu": [
+                    {
+                        "text": "Chart of Accounts",
+                        "icon": "bx bx-list-ul",
+                        "available": true,
+                        "link": "/unisync360/accounts/chart-of-accounts",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Transactions",
+                        "icon": "bx bx-transfer",
+                        "available": true,
+                        "link": "/unisync360/accounts/transactions",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Payments",
+                        "icon": "bx bx-credit-card",
+                        "available": true,
+                        "link": "/unisync360/accounts/payments",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Invoices",
+                        "icon": "bx bx-receipt",
+                        "available": true,
+                        "link": "/unisync360/accounts/invoices",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    },
+                    {
+                        "text": "Financial Reports",
+                        "icon": "bx bx-bar-chart",
+                        "available": true,
+                        "link": "/unisync360/accounts/reports",
+                        "permission": [],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager",
+                            "ICT_Technician",
+                            "ICT_Auditor",
+                            "Department_User",
+                            "ReadOnly_User"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Settings",
+                "icon": "bx bx-cog",
+                "available": true,
+                "link": "",
+                "header": "SETTINGS",
+                "submenu": [
+                    {
+                        "text": "User Management",
+                        "icon": "bx bx-user-circle",
+                        "available": true,
+                        "link": "/unisync360/users",
+                        "permission": ["view_user"],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,373 @@
+import React, { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { createCourseAllocation, updateCourseAllocation, ALLOCATION_STATUS_OPTIONS } from "./Queries";
+import showToast from "../../../../../helpers/ToastHelper";
+import FormikSelect from "../../../../../components/ui-templates/form-components/FormikSelect";
+
+export const CourseAllocationModal = ({ selectedObj, onSuccess, onClose }) => {
+    const [modalInstance, setModalInstance] = useState(null);
+    const modalRef = useRef(null);
+
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 6 }, (_, i) => currentYear + i);
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    useEffect(() => {
+        let modal = null;
+        if (modalRef.current && window.bootstrap) {
+            modal = new window.bootstrap.Modal(modalRef.current, {
+                backdrop: 'static',
+                keyboard: false
+            });
+            setModalInstance(modal);
+            modal.show();
+        }
+
+        return () => {
+            if (modal) {
+                modal.hide();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleHidden = () => {
+            if (onClose) onClose();
+        };
+
+        if (modalRef.current) {
+            modalRef.current.addEventListener('hidden.bs.modal', handleHidden);
+        }
+
+        return () => {
+            if (modalRef.current) {
+                modalRef.current.removeEventListener('hidden.bs.modal', handleHidden);
+            }
+        };
+    }, [onClose]);
+
+    const handleClose = () => {
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+    };
+
+    const initialValues = {
+        student: selectedObj?.student?.uid || selectedObj?.student || "",
+        university_course: selectedObj?.university_course?.uid || selectedObj?.university_course || "",
+        intake_month: selectedObj?.intake_month || "",
+        intake_year: selectedObj?.intake_year || currentYear,
+        priority: selectedObj?.priority || 1,
+        status: selectedObj?.status || "pending",
+        application_date: selectedObj?.application_date || new Date().toISOString().split('T')[0],
+        notes: selectedObj?.notes || "",
+        scholarship_applied: selectedObj?.scholarship_applied || false,
+        scholarship_amount: selectedObj?.scholarship_amount || "",
+        agent_commission: selectedObj?.agent_commission || "",
+        estimated_start_date: selectedObj?.estimated_start_date || "",
+    };
+
+    const validationSchema = Yup.object().shape({
+        student: Yup.string().required("Student is required"),
+        university_course: Yup.string().required("University course is required"),
+        intake_month: Yup.string().required("Intake month is required"),
+        intake_year: Yup.number().required("Intake year is required").min(currentYear, "Year must be current or future"),
+        priority: Yup.number().min(1).max(10).required("Priority is required"),
+        status: Yup.string().required("Status is required"),
+        application_date: Yup.date().required("Application date is required"),
+        notes: Yup.string(),
+        scholarship_applied: Yup.boolean(),
+        scholarship_amount: Yup.number().nullable().min(0, "Amount must be positive"),
+        agent_commission: Yup.number().nullable().min(0, "Commission must be positive"),
+    });
+
+    const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+        try {
+            const payload = {
+                ...values,
+                intake_period: `${values.intake_month} ${values.intake_year}`,
+                scholarship_amount: values.scholarship_amount || null,
+                agent_commission: values.agent_commission || null,
+            };
+
+            let response;
+            if (selectedObj?.uid) {
+                response = await updateCourseAllocation(selectedObj.uid, payload);
+            } else {
+                response = await createCourseAllocation(payload);
+            }
+
+            if (response.status === 8000 || response.status === 201 || response.status === 200) {
+                showToast(
+                    selectedObj?.uid ? "Course allocation updated successfully!" : "Course allocation created successfully!",
+                    "success"
+                );
+                handleClose();
+                if (onSuccess) onSuccess();
+            } else {
+                showToast(response.message || "Operation failed", "error");
+                if (response.errors) {
+                    setErrors(response.errors);
+                }
+            }
+        } catch (error) {
+            console.error("Error saving course allocation:", error);
+            showToast("Failed to save course allocation. Please try again.", "error");
+            if (error.response?.data?.errors) {
+                setErrors(error.response.data.errors);
+            }
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    return createPortal(
+        <div className="modal fade" ref={modalRef} tabIndex="-1" aria-hidden="true">
+            <div className="modal-dialog modal-lg modal-dialog-centered">
+                <div className="modal-content">
+                    <Formik
+                        initialValues={initialValues}
+                        validationSchema={validationSchema}
+                        onSubmit={handleSubmit}
+                        enableReinitialize
+                    >
+                        {({ isSubmitting, values, setFieldValue }) => (
+                            <Form>
+                                <div className="modal-header bg-primary">
+                                    <h5 className="modal-title text-white">
+                                        <i className="bx bx-task me-2"></i>
+                                        {selectedObj?.uid ? "Edit Course Allocation" : "New Course Allocation"}
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close btn-close-white"
+                                        onClick={handleClose}
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+
+                                <div className="modal-body">
+                                    <div className="row">
+                                        {/* Student Selection */}
+                                        <FormikSelect
+                                            name="student"
+                                            label="Student *"
+                                            url="/unisync360-students/"
+                                            placeholder="Search and select student..."
+                                            containerClass="col-md-6 mb-3"
+                                            mapOption={(item) => ({
+                                                value: item.uid,
+                                                label: `${item.first_name} ${item.last_name}`,
+                                                ...item
+                                            })}
+                                            formatOptionLabel={(option) => (
+                                                <div className="d-flex align-items-center">
+                                                    <div className="avatar avatar-xs me-2">
+                                                        <span className="avatar-initial rounded-circle bg-label-primary">
+                                                            {option.first_name?.[0]}{option.last_name?.[0]}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <span>{option.label}</span>
+                                                        <small className="d-block text-muted">{option.personal_email}</small>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        />
+
+                                        {/* University Course Selection */}
+                                        <FormikSelect
+                                            name="university_course"
+                                            label="University Course *"
+                                            url="/unisync360-academic/university-courses/"
+                                            placeholder="Search and select course..."
+                                            containerClass="col-md-6 mb-3"
+                                            mapOption={(item) => ({
+                                                value: item.uid,
+                                                label: `${item.course_name || ''} - ${item.university_name || ''}`,
+                                                ...item
+                                            })}
+                                            formatOptionLabel={(option) => (
+                                                <div>
+                                                    <span className="fw-medium">{option.course_name || option.label}</span>
+                                                    <small className="d-block text-muted">
+                                                        <i className="bx bxs-school me-1"></i>
+                                                        {option.university_name}
+                                                        {option.tuition_fee && (
+                                                            <span className="ms-2">
+                                                                | <i className="bx bx-money me-1"></i>
+                                                                {option.currency} {parseFloat(option.tuition_fee).toLocaleString()}
+                                                            </span>
+                                                        )}
+                                                    </small>
+                                                </div>
+                                            )}
+                                        />
+
+                                        {/* Intake Month */}
+                                        <div className="col-md-4 mb-3">
+                                            <label className="form-label">Intake Month *</label>
+                                            <Field as="select" name="intake_month" className="form-select">
+                                                <option value="">Select Month</option>
+                                                {months.map((month) => (
+                                                    <option key={month} value={month}>{month}</option>
+                                                ))}
+                                            </Field>
+                                            <ErrorMessage name="intake_month" component="div" className="text-danger small" />
+                                        </div>
+
+                                        {/* Intake Year */}
+                                        <div className="col-md-4 mb-3">
+                                            <label className="form-label">Intake Year *</label>
+                                            <Field as="select" name="intake_year" className="form-select">
+                                                {years.map((year) => (
+                                                    <option key={year} value={year}>{year}</option>
+                                                ))}
+                                            </Field>
+                                            <ErrorMessage name="intake_year" component="div" className="text-danger small" />
+                                        </div>
+
+                                        {/* Priority */}
+                                        <div className="col-md-4 mb-3">
+                                            <label className="form-label">Priority *</label>
+                                            <Field as="select" name="priority" className="form-select">
+                                                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                                                    <option key={num} value={num}>#{num} {num === 1 ? "(Highest)" : num === 10 ? "(Lowest)" : ""}</option>
+                                                ))}
+                                            </Field>
+                                            <ErrorMessage name="priority" component="div" className="text-danger small" />
+                                        </div>
+
+                                        {/* Status */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Status *</label>
+                                            <Field as="select" name="status" className="form-select">
+                                                {ALLOCATION_STATUS_OPTIONS.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </Field>
+                                            <ErrorMessage name="status" component="div" className="text-danger small" />
+                                        </div>
+
+                                        {/* Application Date */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Application Date *</label>
+                                            <Field type="date" name="application_date" className="form-control" />
+                                            <ErrorMessage name="application_date" component="div" className="text-danger small" />
+                                        </div>
+
+                                        {/* Estimated Start Date */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Estimated Start Date</label>
+                                            <Field type="date" name="estimated_start_date" className="form-control" />
+                                            <ErrorMessage name="estimated_start_date" component="div" className="text-danger small" />
+                                        </div>
+
+                                        {/* Scholarship Applied */}
+                                        <div className="col-md-6 mb-3">
+                                            <div className="form-check mt-4">
+                                                <Field
+                                                    type="checkbox"
+                                                    name="scholarship_applied"
+                                                    className="form-check-input"
+                                                    id="scholarship_applied"
+                                                />
+                                                <label className="form-check-label" htmlFor="scholarship_applied">
+                                                    Scholarship Applied
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {/* Scholarship Amount - Only show if scholarship applied */}
+                                        {values.scholarship_applied && (
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">Scholarship Amount</label>
+                                                <div className="input-group">
+                                                    <span className="input-group-text">$</span>
+                                                    <Field
+                                                        type="number"
+                                                        name="scholarship_amount"
+                                                        className="form-control"
+                                                        placeholder="0.00"
+                                                        min="0"
+                                                        step="0.01"
+                                                    />
+                                                </div>
+                                                <ErrorMessage name="scholarship_amount" component="div" className="text-danger small" />
+                                            </div>
+                                        )}
+
+                                        {/* Agent Commission */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">Agent Commission</label>
+                                            <div className="input-group">
+                                                <span className="input-group-text">$</span>
+                                                <Field
+                                                    type="number"
+                                                    name="agent_commission"
+                                                    className="form-control"
+                                                    placeholder="0.00"
+                                                    min="0"
+                                                    step="0.01"
+                                                />
+                                            </div>
+                                            <ErrorMessage name="agent_commission" component="div" className="text-danger small" />
+                                        </div>
+
+                                        {/* Notes */}
+                                        <div className="col-12 mb-3">
+                                            <label className="form-label">Notes</label>
+                                            <Field
+                                                as="textarea"
+                                                name="notes"
+                                                className="form-control"
+                                                rows="3"
+                                                placeholder="Add any additional notes about this allocation..."
+                                            />
+                                            <ErrorMessage name="notes" component="div" className="text-danger small" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-secondary"
+                                        onClick={handleClose}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                                                Saving...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="bx bx-save me-1"></i>
+                                                {selectedObj?.uid ? "Update Allocation" : "Create Allocation"}
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
+                </div>
+            </div>
+        </div>,
+        document.body
+    );
+};

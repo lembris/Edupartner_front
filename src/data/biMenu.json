@@ -1,0 +1,79 @@
+[
+  {
+    "items": [
+      {
+        "text": "Analytics Dashboard",
+        "icon": "bx bx-line-chart",
+        "available": true,
+        "link": "",
+        "header": "ANALYTICS",
+        "submenu": [
+          {
+            "text": "Services",
+            "icon": "bx bxl-microsoft",
+            "available": true,
+            "link": "/",
+            "permission": [],
+            "role": [
+              "staff",
+              "admin"
+            ]
+          },
+          {
+            "text": "Dashboard",
+            "icon": "bx bx-home",
+            "available": true,
+            "link": "/bi/dashboard",
+            "permission": [
+              "view_dashboard"
+            ],
+            "role": [
+              "admin",
+              "BI_Manager",
+              "BI_Analyst",
+              "Marketing_User",
+              "ReadOnly_User"
+            ]
+          }
+        ]
+      },
+      {
+        "text": "Account Management",
+        "icon": "bx bx-user-circle",
+        "available": true,
+        "link": "",
+        "header": "ACCOUNTS",
+        "submenu": [
+          {
+            "text": "Business Accounts",
+            "icon": "bx bx-user-circle",
+            "available": true,
+            "link": "/bi/accounts",
+            "permission": [],
+            "role": [
+              "admin",
+              "BI_Manager",
+              "BI_Analyst",
+              "Marketing_User",
+              "ReadOnly_User"
+            ]
+          },
+          {
+            "text": "Compare Accounts",
+            "icon": "bx bx-git-compare",
+            "available": true,
+            "link": "/bi/compare",
+            "permission": [],
+            "role": [
+              "admin",
+              "BI_Manager",
+              "BI_Analyst",
+              "Marketing_User",
+              "ReadOnly_User"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

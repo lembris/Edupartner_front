@@ -1,0 +1,10 @@
+export { default as AIInsightsDashboard } from './AIInsightsDashboard';
+export { default as AIInsightsPage } from './AIInsightsPage';
+export { default as AICourseRecommendations } from './AICourseRecommendations';
+export { default as AIEligibilityCheck } from './AIEligibilityCheck';
+export { default as AIDeparturePlanner } from './AIDeparturePlanner';
+export { default as AIDocumentChecker } from './AIDocumentChecker';
+export { default as AIRiskAssessment } from './AIRiskAssessment';
+export { default as AIFeeEstimator } from './AIFeeEstimator';
+export { default as AIStudentSuccessScore } from './AIStudentSuccessScore';
+export * from './AIQueries';

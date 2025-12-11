@@ -1,0 +1,105 @@
+[
+    {
+        "items": [
+            {
+                "text": "Portal",
+                "icon": "bx bx-home",
+                "available": true,
+                "link": "",
+                "header": "LEAD LANCER PORTAL",
+                "submenu": [
+                    {
+                        "text": "Services",
+                        "icon": "bx bxl-microsoft",
+                        "available": true,
+                        "link": "/",
+                        "permission": [],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Dashboard",
+                        "icon": "bx bx-home",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer",
+                        "permission": [],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Students",
+                "icon": "bx bx-user",
+                "available": true,
+                "link": "",
+                "header": "STUDENT MANAGEMENT",
+                "submenu": [
+                    {
+                        "text": "My Students",
+                        "icon": "bx bx-user-circle",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer",
+                        "permission": [],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Register Student",
+                        "icon": "bx bx-user-plus",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer?action=register",
+                        "permission": [],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Commissions",
+                "icon": "bx bx-money",
+                "available": true,
+                "link": "",
+                "header": "EARNINGS",
+                "submenu": [
+                    {
+                        "text": "Commission Board",
+                        "icon": "bx bx-dollar-circle",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer?tab=commissions",
+                        "permission": [],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "My Targets",
+                        "icon": "bx bx-target-lock",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer?tab=targets",
+                        "permission": [],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
