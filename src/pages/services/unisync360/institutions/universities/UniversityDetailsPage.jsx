@@ -1487,6 +1487,7 @@ export const UniversityDetailsPage = () => {
             <UniversityExpenseModal
                 selectedObj={selectedExpense}
                 universityUid={id}
+                universityId={universityData?.id}
                 onSuccess={() => {
                     fetchExpenses();
                     setSelectedExpense(null);

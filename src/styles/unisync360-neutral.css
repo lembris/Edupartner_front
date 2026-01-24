@@ -1,0 +1,96 @@
+// Neutral Color Scheme for UniSync360 Dashboard
+// Professional, accessible, and neutral color palette
+
+// Primary neutral colors (replacing vibrant colors)
+$neutral-primary: #475569 !default;      // Slate-600
+$neutral-primary-light: #64748b !default; // Slate-500
+$neutral-primary-dark: #334155 !default;  // Slate-700
+$neutral-primary-bg: #f1f5f9 !default;    // Slate-100
+
+// Secondary neutral colors
+$neutral-secondary: #6b7280 !default;     // Gray-500
+$neutral-secondary-light: #9ca3af !default; // Gray-400
+$neutral-secondary-dark: #4b5563 !default;  // Gray-600
+
+// Background colors
+$neutral-bg-primary: #ffffff !default;    // Pure white
+$neutral-bg-secondary: #f8fafc !default;  // Slate-50
+$neutral-bg-tertiary: #f1f5f9 !default;    // Slate-100
+$neutral-bg-quaternary: #e2e8f0 !default;  // Slate-200
+
+// Surface colors (cards, panels, etc.)
+$neutral-surface: #ffffff !default;        // White surface
+$neutral-surface-hover: #f8fafc !default;  // Light gray hover
+$neutral-surface-border: #e2e8f0 !default;  // Subtle border
+
+// Text colors
+$neutral-text-primary: #1e293b !default;   // Slate-800
+$neutral-text-secondary: #475569 !default;  // Slate-600
+$neutral-text-muted: #64748b !default;     // Slate-500
+$neutral-text-disabled: #94a3b8 !default;  // Slate-400
+
+// Accent colors (minimal, functional)
+$neutral-accent-blue: #3b82f6 !default;    // Blue-500 for primary actions
+$neutral-accent-green: #10b981 !default;   // Green-500 for success
+$neutral-accent-amber: #f59e0b !default;   // Amber-500 for warnings
+$neutral-accent-red: #ef4444 !default;     // Red-500 for errors
+
+// Status colors (neutral variants)
+$neutral-success: #059669 !default;        // Emerald-600
+$neutral-warning: #d97706 !default;        // Amber-600
+$neutral-error: #dc2626 !default;          // Red-600
+$neutral-info: #0891b2 !default;           // Cyan-600
+
+// Chart colors (neutral palette)
+$neutral-chart-1: #475569 !default;        // Slate-600
+$neutral-chart-2: #64748b !default;        // Slate-500
+$neutral-chart-3: #94a3b8 !default;        // Slate-400
+$neutral-chart-4: #cbd5e1 !default;        // Slate-300
+$neutral-chart-5: #334155 !default;        // Slate-700
+$neutral-chart-6: #1e293b !default;        // Slate-800
+
+// Interactive states
+$neutral-hover-bg: rgba(71, 85, 105, 0.08) !default;    // Primary color with opacity
+$neutral-active-bg: rgba(71, 85, 105, 0.16) !default;   // Primary color with opacity
+$neutral-focus-ring: rgba(71, 85, 105, 0.25) !default;  // Focus ring color
+$neutral-disabled-bg: #f1f5f9 !default;                 // Disabled background
+$neutral-disabled-text: #94a3b8 !default;                // Disabled text
+
+// Component-specific neutral colors
+$neutral-card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !default;
+$neutral-card-border: #e2e8f0 !default;
+$neutral-divider: #e2e8f0 !default;
+$neutral-input-border: #cbd5e1 !default;
+$neutral-input-border-focus: #94a3b8 !default;
+
+// Menu specific neutral colors
+$neutral-menu-bg: #ffffff !default;
+$neutral-menu-item-hover: #f8fafc !default;
+$neutral-menu-item-active: rgba(71, 85, 105, 0.1) !default;
+$neutral-menu-text: #334155 !default;
+$neutral-menu-text-active: #475569 !default;
+
+// Navbar specific neutral colors
+$neutral-navbar-bg: rgba(255, 255, 255, 0.95) !default;
+$neutral-navbar-border: #e2e8f0 !default;
+$neutral-navbar-text: #334155 !default;
+
+// Override Bootstrap variables with neutral colors
+$primary: $neutral-primary !default;
+$secondary: $neutral-secondary !default;
+$success: $neutral-success !default;
+$info: $neutral-info !default;
+$warning: $neutral-warning !default;
+$danger: $neutral-error !default;
+$light: $neutral-bg-secondary !default;
+$dark: $neutral-text-primary !default;
+
+// Override component variables
+$body-bg: $neutral-bg-secondary !default;
+$body-color: $neutral-text-primary !default;
+$headings-color: $neutral-text-primary !default;
+$text-muted: $neutral-text-muted !default;
+$card-bg: $neutral-surface !default;
+$card-border-color: $neutral-surface-border !default;
+$input-border-color: $neutral-input-border !default;
+$input-focus-border-color: $neutral-input-border-focus !default;

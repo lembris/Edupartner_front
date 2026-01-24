@@ -1,0 +1,347 @@
+// UniSync360 Neutral Theme Implementation
+// Global neutral color scheme for public-facing dashboard
+
+// Import neutral color variables
+@import '../../../public/scss/_components/include';
+@import 'unisync360-neutral.css';
+
+// Override the primary theme with neutral colors
+$primary-color: $neutral-primary !default;
+
+// Apply neutral theme globally
+@include template-common-theme($primary-color);
+
+// Navbar - Neutral styling
+// ---------------------------------------------------------------------------
+@include template-navbar-style('.bg-navbar-theme', $neutral-navbar-bg, $color: $neutral-navbar-text, $active-color: $neutral-text-primary);
+.layout-navbar {
+  background-color: $neutral-navbar-bg !important;
+  backdrop-filter: saturate(200%) blur(6px);
+  border-bottom: 1px solid $neutral-navbar-border;
+}
+.navbar-detached {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+.layout-navbar-fixed .layout-page:before {
+  backdrop-filter: saturate(200%) blur(10px);
+  background: rgba($neutral-bg-secondary, 0.6);
+}
+
+// Menu - Neutral styling
+// ---------------------------------------------------------------------------
+@include template-menu-style(
+  '.bg-menu-theme',
+  $neutral-menu-bg,
+  $color: $neutral-menu-text,
+  $active-color: $neutral-menu-text-active,
+  $border: transparent,
+  $active-bg: $neutral-menu-item-active
+);
+
+// menu shadow
+@include media-breakpoint-up($menu-collapsed-layout-breakpoint) {
+  .bg-menu-theme.menu-vertical {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+}
+
+.bg-menu-theme {
+  // Menu header
+  .menu-header {
+    color: $neutral-text-muted;
+    &:before {
+      background-color: $neutral-text-muted !important;
+    }
+  }
+
+  // menu shadow
+  &.menu-vertical {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  // menu item open(vertical) & hover (vertical & horizontal)
+  .menu-inner .menu-item.open > .menu-link,
+  .menu-inner .menu-item .menu-link:not(.active):hover {
+    html:not(.layout-menu-collapsed) &,
+    .layout-menu-hover.layout-menu-collapsed & {
+      background-color: $neutral-menu-item-hover;
+    }
+  }
+  
+  // menu item open(horizontal)
+  .menu-inner .menu-sub > .menu-item.active {
+    > .menu-link.menu-toggle {
+      background-color: $neutral-menu-item-hover;
+    }
+    .menu-icon {
+      color: $neutral-primary;
+    }
+  }
+  
+  // menu item active
+  .menu-inner > .menu-item.active > .menu-link {
+    color: $neutral-menu-text-active;
+    background-color: $neutral-menu-item-active !important;
+  }
+
+  .menu-inner > .menu-item.active:before {
+    background: $neutral-primary;
+  }
+
+  // Sub menu item link bullet
+  .menu-sub > .menu-item > .menu-link:before {
+    background-color: $neutral-text-muted !important;
+  }
+  
+  // Sub menu item link active bullet
+  .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle):before {
+    background-color: $neutral-primary !important;
+    border: 3px solid $neutral-menu-item-active !important;
+  }
+}
+
+.app-brand .layout-menu-toggle {
+  background-color: $neutral-primary;
+  border: 7px solid $neutral-bg-secondary;
+  i {
+    color: color-contrast($neutral-primary);
+  }
+  .menu-inner > .menu-header::before {
+    background-color: $neutral-text-muted;
+  }
+}
+
+// Footer - Neutral styling
+// ---------------------------------------------------------------------------
+@include template-footer-style('.bg-footer-theme', $neutral-bg-secondary, $color: $neutral-text-primary, $active-color: $neutral-text-primary);
+
+.layout-footer-fixed {
+  .content-footer {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+}
+
+// Cards and components - Neutral styling
+// ---------------------------------------------------------------------------
+.card {
+  border: 1px solid $neutral-surface-border;
+  box-shadow: $neutral-card-shadow;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+// Buttons - Neutral styling
+// ---------------------------------------------------------------------------
+.btn-primary {
+  background-color: $neutral-primary;
+  border-color: $neutral-primary;
+  
+  &:hover {
+    background-color: $neutral-primary-dark;
+    border-color: $neutral-primary-dark;
+  }
+  
+  &:active {
+    background-color: $neutral-primary-dark;
+    border-color: $neutral-primary-dark;
+  }
+}
+
+.btn-outline-primary {
+  color: $neutral-primary;
+  border-color: $neutral-primary;
+  
+  &:hover {
+    background-color: $neutral-primary;
+    border-color: $neutral-primary;
+  }
+}
+
+// Form controls - Neutral styling
+// ---------------------------------------------------------------------------
+.form-control {
+  border-color: $neutral-input-border;
+  
+  &:focus {
+    border-color: $neutral-input-border-focus;
+    box-shadow: 0 0 0 0.2rem $neutral-focus-ring;
+  }
+}
+
+.form-select {
+  border-color: $neutral-input-border;
+  
+  &:focus {
+    border-color: $neutral-input-border-focus;
+    box-shadow: 0 0 0 0.2rem $neutral-focus-ring;
+  }
+}
+
+// Tables - Neutral styling
+// ---------------------------------------------------------------------------
+.table {
+  color: $neutral-text-primary;
+  
+  th {
+    border-color: $neutral-divider;
+    background-color: $neutral-bg-tertiary;
+  }
+  
+  td {
+    border-color: $neutral-divider;
+  }
+}
+
+// Badges - Neutral styling
+// ---------------------------------------------------------------------------
+.badge {
+  &.bg-primary {
+    background-color: $neutral-primary !important;
+  }
+  
+  &.bg-secondary {
+    background-color: $neutral-secondary !important;
+  }
+}
+
+// Progress bars - Neutral styling
+// ---------------------------------------------------------------------------
+.progress {
+  background-color: $neutral-bg-quaternary;
+}
+
+.progress-bar {
+  background-color: $neutral-primary;
+}
+
+// Alerts - Neutral styling
+// ---------------------------------------------------------------------------
+.alert {
+  &.alert-primary {
+    background-color: $neutral-primary-bg;
+    border-color: $neutral-primary;
+    color: $neutral-primary-dark;
+  }
+}
+
+// Accordion - Neutral styling
+// ---------------------------------------------------------------------------
+.accordion-button {
+  background-color: $neutral-bg-secondary;
+  border-color: $neutral-divider;
+  
+  &:not(.collapsed) {
+    background-color: $neutral-bg-tertiary;
+    color: $neutral-text-primary;
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 0.2rem $neutral-focus-ring;
+  }
+}
+
+// Modals - Neutral styling
+// ---------------------------------------------------------------------------
+.modal-content {
+  border: 1px solid $neutral-surface-border;
+}
+
+// Dropdowns - Neutral styling
+// ---------------------------------------------------------------------------
+.dropdown-menu {
+  border: 1px solid $neutral-surface-border;
+  box-shadow: $neutral-card-shadow;
+}
+
+.dropdown-item {
+  &:hover {
+    background-color: $neutral-menu-item-hover;
+  }
+  
+  &:active {
+    background-color: $neutral-menu-item-active;
+  }
+}
+
+// Charts - Neutral color palette
+// ---------------------------------------------------------------------------
+.apexcharts-canvas {
+  .apexcharts-legend-series {
+    color: $neutral-text-secondary;
+  }
+}
+
+// Global text and background utilities
+// ---------------------------------------------------------------------------
+.text-primary {
+  color: $neutral-primary !important;
+}
+
+.text-secondary {
+  color: $neutral-secondary !important;
+}
+
+.bg-primary {
+  background-color: $neutral-primary !important;
+}
+
+.bg-secondary {
+  background-color: $neutral-secondary !important;
+}
+
+// Focus states for accessibility
+// ---------------------------------------------------------------------------
+.focus-ring-neutral:focus {
+  outline: 2px solid $neutral-primary;
+  outline-offset: 2px;
+}
+
+// Disabled states
+// ---------------------------------------------------------------------------
+.btn:disabled,
+.form-control:disabled,
+.form-select:disabled {
+  background-color: $neutral-disabled-bg;
+  color: $neutral-disabled-text;
+  border-color: $neutral-divider;
+}
+
+// Dividers
+// ---------------------------------------------------------------------------
+.divider,
+hr {
+  border-color: $neutral-divider;
+}
+
+// Loaders and spinners
+// ---------------------------------------------------------------------------
+.spinner-border {
+  border-color: $neutral-primary;
+  border-right-color: transparent;
+}
+
+// Tooltips
+// ---------------------------------------------------------------------------
+.tooltip {
+  .tooltip-inner {
+    background-color: $neutral-text-primary;
+  }
+  
+  .tooltip-arrow::before {
+    border-top-color: $neutral-text-primary;
+  }
+}
+
+// Popovers
+// ---------------------------------------------------------------------------
+.popover {
+  border: 1px solid $neutral-surface-border;
+  box-shadow: $neutral-card-shadow;
+  
+  .popover-header {
+    background-color: $neutral-bg-tertiary;
+    border-bottom-color: $neutral-divider;
+  }
+}

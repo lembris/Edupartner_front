@@ -68,10 +68,21 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         console.log("Logging out user...");
+        const userType = localStorage.getItem("user_type");
+        
         localStorage.removeItem(ACCESS_TOKEN);
         localStorage.removeItem(REFRESH_TOKEN);
+        localStorage.removeItem("user_type");
         setUser(null);
-        navigate("/auth/login");
+        
+        // Redirect based on user type
+        if (userType === 'external_counselor') {
+            navigate("/unisync360/external-counselor-login");
+        } else if (userType === 'lead_lancer') {
+            navigate("/unisync360/lead-lancer-login");
+        } else {
+            navigate("/auth/login");
+        }
     };
 
     return (

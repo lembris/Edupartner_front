@@ -1,0 +1,375 @@
+/* 
+ * UniSync360 Global Neutral Color Scheme
+ * Apply this CSS globally to implement neutral colors throughout the dashboard
+ * Professional, accessible, and neutral color palette for public-facing systems
+ */
+
+/* CSS Custom Properties for Neutral Color Scheme */
+:root {
+  /* Primary Colors */
+  --neutral-primary: #475569;
+  --neutral-primary-light: #64748b;
+  --neutral-primary-dark: #334155;
+  --neutral-primary-bg: #f1f5f9;
+
+  /* Background Colors */
+  --neutral-bg-primary: #ffffff;
+  --neutral-bg-secondary: #f8fafc;
+  --neutral-bg-tertiary: #f1f5f9;
+  --neutral-bg-quaternary: #e2e8f0;
+
+  /* Surface Colors */
+  --neutral-surface: #ffffff;
+  --neutral-surface-hover: #f8fafc;
+  --neutral-surface-border: #e2e8f0;
+
+  /* Text Colors */
+  --neutral-text-primary: #1e293b;
+  --neutral-text-secondary: #475569;
+  --neutral-text-muted: #64748b;
+  --neutral-text-disabled: #94a3b8;
+
+  /* Accent Colors */
+  --neutral-accent-blue: #3b82f6;
+  --neutral-accent-green: #10b981;
+  --neutral-accent-amber: #f59e0b;
+  --neutral-accent-red: #ef4444;
+
+  /* Status Colors */
+  --neutral-success: #059669;
+  --neutral-warning: #d97706;
+  --neutral-error: #dc2626;
+  --neutral-info: #0891b2;
+
+  /* Chart Colors */
+  --neutral-chart-1: #475569;
+  --neutral-chart-2: #64748b;
+  --neutral-chart-3: #94a3b8;
+  --neutral-chart-4: #cbd5e1;
+  --neutral-chart-5: #334155;
+  --neutral-chart-6: #1e293b;
+
+  /* Interactive States */
+  --neutral-hover-bg: rgba(71, 85, 105, 0.08);
+  --neutral-active-bg: rgba(71, 85, 105, 0.16);
+  --neutral-focus-ring: rgba(71, 85, 105, 0.25);
+  --neutral-disabled-bg: #f1f5f9;
+  --neutral-disabled-text: #94a3b8;
+
+  /* Component Specific */
+  --neutral-card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --neutral-card-border: #e2e8f0;
+  --neutral-divider: #e2e8f0;
+  --neutral-input-border: #cbd5e1;
+  --neutral-input-border-focus: #94a3b8;
+}
+
+/* Global Theme Overrides */
+body {
+  background-color: var(--neutral-bg-secondary) !important;
+  color: var(--neutral-text-primary) !important;
+}
+
+/* Layout Components */
+.layout-navbar {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid var(--neutral-surface-border) !important;
+}
+
+.bg-menu-theme {
+  background-color: var(--neutral-bg-primary) !important;
+}
+
+.bg-footer-theme {
+  background-color: var(--neutral-bg-secondary) !important;
+}
+
+/* Card Components */
+.card {
+  background-color: var(--neutral-surface) !important;
+  border: 1px solid var(--neutral-surface-border) !important;
+  box-shadow: var(--neutral-card-shadow) !important;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Button Overrides */
+.btn-primary {
+  background-color: var(--neutral-primary) !important;
+  border-color: var(--neutral-primary) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--neutral-primary-dark) !important;
+  border-color: var(--neutral-primary-dark) !important;
+}
+
+.btn-outline-primary {
+  color: var(--neutral-primary) !important;
+  border-color: var(--neutral-primary) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--neutral-primary) !important;
+  border-color: var(--neutral-primary) !important;
+}
+
+/* Form Controls */
+.form-control,
+.form-select {
+  border-color: var(--neutral-input-border) !important;
+  background-color: var(--neutral-surface) !important;
+  color: var(--neutral-text-primary) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--neutral-input-border-focus) !important;
+  box-shadow: 0 0 0 0.2rem var(--neutral-focus-ring) !important;
+}
+
+/* Menu Components */
+.menu-header {
+  color: var(--neutral-text-muted) !important;
+}
+
+.menu-inner .menu-item .menu-link {
+  color: var(--neutral-text-secondary) !important;
+}
+
+.menu-inner .menu-item.active > .menu-link {
+  color: var(--neutral-primary) !important;
+  background-color: var(--neutral-active-bg) !important;
+}
+
+.menu-inner .menu-item .menu-link:not(.active):hover {
+  background-color: var(--neutral-hover-bg) !important;
+}
+
+/* Table Components */
+.table {
+  color: var(--neutral-text-primary) !important;
+}
+
+.table th {
+  border-color: var(--neutral-divider) !important;
+  background-color: var(--neutral-bg-tertiary) !important;
+}
+
+.table td {
+  border-color: var(--neutral-divider) !important;
+}
+
+/* Badge Components */
+.badge.bg-primary {
+  background-color: var(--neutral-primary) !important;
+}
+
+.badge.bg-secondary {
+  background-color: var(--neutral-text-secondary) !important;
+}
+
+/* Alert Components */
+.alert-primary {
+  background-color: var(--neutral-primary-bg) !important;
+  border-color: var(--neutral-primary) !important;
+  color: var(--neutral-primary-dark) !important;
+}
+
+/* Progress Components */
+.progress {
+  background-color: var(--neutral-bg-quaternary) !important;
+}
+
+.progress-bar {
+  background-color: var(--neutral-primary) !important;
+}
+
+/* Accordion Components */
+.accordion-button {
+  background-color: var(--neutral-bg-secondary) !important;
+  border-color: var(--neutral-divider) !important;
+  color: var(--neutral-text-primary) !important;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--neutral-bg-tertiary) !important;
+}
+
+/* Modal Components */
+.modal-content {
+  background-color: var(--neutral-surface) !important;
+  border: 1px solid var(--neutral-surface-border) !important;
+}
+
+/* Dropdown Components */
+.dropdown-menu {
+  background-color: var(--neutral-surface) !important;
+  border: 1px solid var(--neutral-surface-border) !important;
+  box-shadow: var(--neutral-card-shadow) !important;
+}
+
+.dropdown-item {
+  color: var(--neutral-text-primary) !important;
+}
+
+.dropdown-item:hover {
+  background-color: var(--neutral-hover-bg) !important;
+}
+
+/* Text Color Overrides */
+.text-primary {
+  color: var(--neutral-primary) !important;
+}
+
+.text-secondary {
+  color: var(--neutral-text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--neutral-text-muted) !important;
+}
+
+/* Background Color Overrides */
+.bg-primary {
+  background-color: var(--neutral-primary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--neutral-text-secondary) !important;
+}
+
+.bg-light {
+  background-color: var(--neutral-bg-secondary) !important;
+}
+
+/* Border Color Overrides */
+.border-primary {
+  border-color: var(--neutral-primary) !important;
+}
+
+.border-secondary {
+  border-color: var(--neutral-text-secondary) !important;
+}
+
+/* Focus States */
+.form-control:focus,
+.btn:focus,
+.form-select:focus {
+  outline: 2px solid var(--neutral-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* Disabled States */
+.btn:disabled,
+.form-control:disabled,
+.form-select:disabled {
+  background-color: var(--neutral-disabled-bg) !important;
+  color: var(--neutral-disabled-text) !important;
+  border-color: var(--neutral-divider) !important;
+}
+
+/* Divider Components */
+hr,
+.divider {
+  border-color: var(--neutral-divider) !important;
+}
+
+/* Loading Spinners */
+.spinner-border {
+  border-color: var(--neutral-primary) !important;
+  border-right-color: transparent !important;
+}
+
+/* Tooltips */
+.tooltip .tooltip-inner {
+  background-color: var(--neutral-text-primary) !important;
+}
+
+/* Popovers */
+.popover {
+  background-color: var(--neutral-surface) !important;
+  border: 1px solid var(--neutral-surface-border) !important;
+  box-shadow: var(--neutral-card-shadow) !important;
+}
+
+.popover-header {
+  background-color: var(--neutral-bg-tertiary) !important;
+  border-bottom-color: var(--neutral-divider) !important;
+}
+
+/* Chart Colors */
+.apexcharts-canvas .apexcharts-legend-series {
+  color: var(--neutral-text-secondary) !important;
+}
+
+/* Navbar Brand */
+.app-brand {
+  background-color: var(--neutral-bg-primary) !important;
+}
+
+.app-brand-link {
+  color: var(--neutral-text-primary) !important;
+}
+
+/* Footer */
+.content-footer {
+  background-color: var(--neutral-bg-secondary) !important;
+  color: var(--neutral-text-primary) !important;
+  border-top: 1px solid var(--neutral-surface-border) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card {
+    border-radius: 0.5rem !important;
+  }
+  
+  .btn {
+    border-radius: 0.375rem !important;
+  }
+}
+
+/* Dark mode support for accessibility */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --neutral-bg-primary: #1e293b;
+    --neutral-bg-secondary: #0f172a;
+    --neutral-bg-tertiary: #334155;
+    --neutral-text-primary: #f8fafc;
+    --neutral-text-secondary: #cbd5e1;
+    --neutral-text-muted: #94a3b8;
+    --neutral-surface: #1e293b;
+    --neutral-surface-border: #334155;
+    --neutral-divider: #334155;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --neutral-primary: #000000;
+    --neutral-text-primary: #000000;
+    --neutral-surface-border: #000000;
+    --neutral-divider: #000000;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .card {
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+  
+  .btn {
+    border: 1px solid #000 !important;
+  }
+}

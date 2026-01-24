@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { createUniversityExpense, updateUniversityExpense, getExpenseCategories, createExpenseCategory } from "./Queries";
 import showToast from "../../../../../helpers/ToastHelper";
 
-export const UniversityExpenseModal = ({ selectedObj, universityUid, onSuccess, onClose }) => {
+export const UniversityExpenseModal = ({ selectedObj, universityUid, universityId, onSuccess, onClose }) => {
     const [categories, setCategories] = useState([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [showNewCategoryForm, setShowNewCategoryForm] = useState(false);
@@ -12,7 +12,7 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, onSuccess, 
     const [creatingCategory, setCreatingCategory] = useState(false);
 
     const [initialValues, setInitialValues] = useState({
-        university: universityUid || "",
+        university: universityUid || universityId || "",
         category: "",
         description: "",
         amount: "",
@@ -47,7 +47,7 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, onSuccess, 
     useEffect(() => {
         if (selectedObj) {
             setInitialValues({
-                university: selectedObj.university || universityUid || "",
+                university: selectedObj.university || universityUid || universityId || "",
                 category: selectedObj.category || "",
                 description: selectedObj.description || "",
                 amount: selectedObj.amount || "",
@@ -60,7 +60,7 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, onSuccess, 
             });
         } else {
             setInitialValues({
-                university: universityUid || "",
+                university: universityUid || universityId || "",
                 category: "",
                 description: "",
                 amount: "",
@@ -72,7 +72,7 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, onSuccess, 
                 receipt: null,
             });
         }
-    }, [selectedObj, universityUid]);
+    }, [selectedObj, universityUid, universityId]);
 
     const fetchCategories = async () => {
         setLoadingCategories(true);
@@ -128,9 +128,17 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, onSuccess, 
             const formData = new FormData();
             Object.keys(values).forEach(key => {
                 if (values[key] !== null && values[key] !== undefined && values[key] !== "") {
+                    // Send university and category as UIDs (backend will handle conversion)
                     formData.append(key, values[key]);
                 }
             });
+
+            // Ensure university is always set (use UID from URL if available)
+            if (!formData.get('university') && universityUid) {
+                formData.set('university', universityUid);
+            } else if (!formData.get('university') && universityId) {
+                formData.set('university', universityId);
+            }
 
             let result;
             if (selectedObj) {
@@ -222,11 +230,11 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, onSuccess, 
                                                     disabled={loadingCategories}
                                                 >
                                                     <option value="">Select Category</option>
-                                                    {categories.map((cat) => (
-                                                        <option key={cat.uid} value={cat.uid}>
-                                                            {cat.name}
-                                                        </option>
-                                                    ))}
+{categories.map((cat) => (
+    <option key={cat.uid} value={cat.uid}>
+         {cat.name}
+     </option>
+ ))}
                                                 </Field>
                                                 <button
                                                     type="button"

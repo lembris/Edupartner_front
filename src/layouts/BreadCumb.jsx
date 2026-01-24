@@ -10,8 +10,7 @@ const BreadCumb = ({ pageList = [], children }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/auth/login");
+    dispatch(logout(navigate));
   };
 
   const navigateTOPrevPage = () => {

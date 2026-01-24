@@ -9,17 +9,6 @@
                 "header": "INSTITUTIONS",
                 "submenu": [
                     {
-                        "text": "Services",
-                        "icon": "bx bxl-microsoft",
-                        "available": true,
-                        "link": "/",
-                        "permission": [],
-                        "role": [
-                            "staff",
-                            "admin"
-                        ]
-                    },
-                    {
                         "text": "Dashboard",
                         "icon": "bx bx-home",
                         "available": true,
@@ -211,7 +200,7 @@
                 "header": "APPLICATIONS",
                 "submenu": [
                     {
-                        "text": "Course Allocations",
+                        "text": "Course Applications",
                         "icon": "bx bx-task",
                         "available": true,
                         "link": "/unisync360/applications/course-allocations",
@@ -414,11 +403,27 @@
                 "header": "SETTINGS",
                 "submenu": [
                     {
-                        "text": "User Management",
+                        "text": "System Users",
                         "icon": "bx bx-user-circle",
                         "available": true,
                         "link": "/unisync360/users",
-                        "permission": ["view_user"],
+                        "permission": [
+                            "view_user"
+                        ],
+                        "role": [
+                            "ICT_Superuser",
+                            "ICT_Admin",
+                            "ICT_Manager"
+                        ]
+                    },
+                    {
+                        "text": "User Roles",
+                        "icon": "bx bx-shield",
+                        "available": true,
+                        "link": "/unisync360/roles",
+                        "permission": [
+                            "view_role"
+                        ],
                         "role": [
                             "ICT_Superuser",
                             "ICT_Admin",

@@ -9,22 +9,13 @@
                 "header": "EXTERNAL COUNSELOR PORTAL",
                 "submenu": [
                     {
-                        "text": "Services",
-                        "icon": "bx bxl-microsoft",
-                        "available": true,
-                        "link": "/",
-                        "permission": [],
-                        "role": [
-                            "admin",
-                            "unisync360_external_counselor"
-                        ]
-                    },
-                    {
                         "text": "Dashboard",
                         "icon": "bx bx-home",
                         "available": true,
                         "link": "/unisync360/external-counselor",
-                        "permission": [],
+                        "permission": [
+                            "view_recruiterprofile"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -44,7 +35,10 @@
                         "icon": "bx bx-user-circle",
                         "available": true,
                         "link": "/unisync360/external-counselor",
-                        "permission": [],
+                        "permission": [
+                            "view_student",
+                            "view_recruiterstudent"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -55,7 +49,38 @@
                         "icon": "bx bx-user-plus",
                         "available": true,
                         "link": "/unisync360/external-counselor?action=register",
-                        "permission": [],
+                        "permission": [
+                            "add_student",
+                            "add_recruiterstudent"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Student Academic History",
+                        "icon": "bx bx-book-bookmark",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?tab=academic",
+                        "permission": [
+                            "view_studentacademichistory",
+                            "add_studentacademichistory",
+                            "change_studentacademichistory"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Edit Student Info",
+                        "icon": "bx bx-edit",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?action=edit",
+                        "permission": [
+                            "change_student"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -75,7 +100,9 @@
                         "icon": "bx bx-folder-open",
                         "available": true,
                         "link": "/unisync360/external-counselor?tab=documents",
-                        "permission": [],
+                        "permission": [
+                            "view_studentdocument"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -86,7 +113,22 @@
                         "icon": "bx bx-upload",
                         "available": true,
                         "link": "/unisync360/external-counselor?action=upload",
-                        "permission": [],
+                        "permission": [
+                            "add_studentdocument"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Edit Document",
+                        "icon": "bx bx-pencil",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?action=edit-document",
+                        "permission": [
+                            "change_studentdocument"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -97,7 +139,9 @@
                         "icon": "bx bx-list-check",
                         "available": true,
                         "link": "/unisync360/applications/document-requirements",
-                        "permission": [],
+                        "permission": [
+                            "view_documentrequirement"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -117,7 +161,9 @@
                         "icon": "bx bx-book-content",
                         "available": true,
                         "link": "/unisync360/external-counselor?tab=applications",
-                        "permission": [],
+                        "permission": [
+                            "view_courseallocation"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -128,7 +174,22 @@
                         "icon": "bx bx-plus-circle",
                         "available": true,
                         "link": "/unisync360/external-counselor?action=apply",
-                        "permission": [],
+                        "permission": [
+                            "add_courseallocation"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Edit Application",
+                        "icon": "bx bx-pencil",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?action=edit-application",
+                        "permission": [
+                            "change_courseallocation"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -139,18 +200,23 @@
                         "icon": "bx bxs-school",
                         "available": true,
                         "link": "/unisync360/institutions/universities",
-                        "permission": [],
+                        "permission": [
+                            "view_university"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
                         ]
                     },
                     {
-                        "text": "Courses",
+                        "text": "University Courses",
                         "icon": "bx bx-book",
                         "available": true,
                         "link": "/unisync360/academics/university-courses",
-                        "permission": [],
+                        "permission": [
+                            "view_universitycourse",
+                            "view_course"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -163,14 +229,29 @@
                 "icon": "bx bx-money",
                 "available": true,
                 "link": "",
-                "header": "EARNINGS",
+                "header": "EARNINGS & TRACKING",
                 "submenu": [
                     {
                         "text": "Commission Board",
                         "icon": "bx bx-dollar-circle",
                         "available": true,
                         "link": "/unisync360/external-counselor?tab=commissions",
-                        "permission": [],
+                        "permission": [
+                            "view_commission"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Student Status",
+                        "icon": "bx bx-bar-chart",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?tab=status",
+                        "permission": [
+                            "view_studentcommissionstatus"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -181,7 +262,96 @@
                         "icon": "bx bx-target-lock",
                         "available": true,
                         "link": "/unisync360/external-counselor?tab=targets",
-                        "permission": [],
+                        "permission": [
+                            "view_recruitertarget"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Communication",
+                "icon": "bx bx-envelope",
+                "available": true,
+                "link": "",
+                "header": "COMMUNICATION & SUPPORT",
+                "submenu": [
+                    {
+                        "text": "Messages",
+                        "icon": "bx bx-message-detail",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?tab=communications",
+                        "permission": [
+                            "view_communication"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Send Message",
+                        "icon": "bx bx-send",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?action=send-message",
+                        "permission": [
+                            "add_communication"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Appointments",
+                        "icon": "bx bx-calendar-event",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?tab=appointments",
+                        "permission": [
+                            "view_appointment"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Schedule Appointment",
+                        "icon": "bx bx-calendar-plus",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?action=schedule",
+                        "permission": [
+                            "add_appointment"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Student Contacts",
+                        "icon": "bx bx-phone",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?tab=contacts",
+                        "permission": [
+                            "view_studentcontact"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Add Contact",
+                        "icon": "bx bx-user-plus",
+                        "available": true,
+                        "link": "/unisync360/external-counselor?action=add-contact",
+                        "permission": [
+                            "add_studentcontact"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"

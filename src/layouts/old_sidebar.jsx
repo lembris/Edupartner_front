@@ -69,20 +69,20 @@ const Sidebar = ({ isService = false }) => {
         >
           <span className="app-brand-logo demo">
             <img
-              src="/assets/img/logo/erp_360_logo_color.png"
+              src="/assets/img/logo/edupartners_logo.png"
               alt="sneat-logo"
-              width={"70px"}
-              height={"70px"}
+              width={"120px"}
+              height={"120px"}
               aria-label="Sneat logo image"
             />
           </span>
-          <span style={{ width: "70px" }}></span>
+          <span style={{ width: "120px" }}></span>
           <span className="app-brand-logo demo">
             <img
-              src="/assets/img/mnhlogo.png"
+              src="/assets/img/logo/edupartners_logo.png"
               alt="sneat-logo"
-              width={"70px"}
-              height={"70px"}
+              width={"120px"}
+              height={"120px"}
               aria-label="Sneat logo image"
             />
           </span>

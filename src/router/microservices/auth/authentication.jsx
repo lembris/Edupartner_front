@@ -1,4 +1,6 @@
 import LoginPage from "../../../pages/authentication/LoginPage.jsx";
+import ExternalCounselorLoginPage from "../../../pages/authentication/ExternalCounselorLoginPage.jsx";
+import LeadLancerLoginPage from "../../../pages/authentication/LeadLancerLoginPage.jsx";
 import RegisterPage from "../../../pages/authentication/RegisterPage.jsx";
 import { ForgotPasswordPage } from "../../../pages/authentication/ForgotPasswordPage.jsx";
 import NewUserPage from "../../../pages/authentication/NewUserPage.jsx";
@@ -10,6 +12,8 @@ function RegisterAndLogout() {
 
 export const authenticationRoutes = [
     { path: "/auth/login", element: <LoginPage />, isPublic: true },
+    { path: "/unisync360/external-counselor-login", element: <ExternalCounselorLoginPage />, isPublic: true },
+    { path: "/unisync360/lead-lancer-login", element: <LeadLancerLoginPage />, isPublic: true },
     {
         path: "/auth/new-user-0InEm7BVGIrZafX2riM8DQFgQG2L06ImZlP3oJF",
         element: <NewUserPage />,

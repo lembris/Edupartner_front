@@ -15,8 +15,10 @@ function App() {
   const isAuthPath =
     location.pathname.includes("auth") ||
     location.pathname.includes("error") ||
-    location.pathname.includes("under-maintenance") |
-    location.pathname.includes("blank");
+    location.pathname.includes("under-maintenance") ||
+    location.pathname.includes("blank") ||
+    location.pathname === "/unisync360/external-counselor-login" ||
+    location.pathname === "/unisync360/lead-lancer-login";
 
   const isService = location.pathname === "/";
 

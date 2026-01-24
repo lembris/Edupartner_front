@@ -144,23 +144,24 @@ const Sidebar = ({ isService = false }) => {
       id="layout-menu"
       className="layout-menu menu-vertical menu bg-menu-theme"
     >
-      <div className="app-brand demo mb-2">
+      <div className="app-brand demo mb-2" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "15px 0" }}>
         <Link
           aria-label="Navigate to sneat homepage"
           to="/"
           className="app-brand-link"
+          style={{ display: "flex", justifyContent: "center", width: "100%" }}
         >
           <span
             className="app-brand-logo"
+            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
           >
             <img
-              src="/assets/img/logo/erp_360_logo_color.png"
+              src="/assets/img/logo/edupartners_nav_logo.png"
               alt="sneat-logo"
               style={{
-                paddingLeft: "1px",
-                padding: "10px",
                 height: "auto",
                 width: "250px",
+                objectFit: "contain",
               }}
               aria-label="ERP360 logo image"
             />

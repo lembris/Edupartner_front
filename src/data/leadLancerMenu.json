@@ -9,23 +9,13 @@
                 "header": "LEAD LANCER PORTAL",
                 "submenu": [
                     {
-                        "text": "Services",
-                        "icon": "bx bxl-microsoft",
-                        "available": true,
-                        "link": "/",
-                        "permission": [],
-                        "role": [
-                            "admin",
-                            "unisync360_lead_lancer",
-                            "unisync360_external_counselor"
-                        ]
-                    },
-                    {
                         "text": "Dashboard",
                         "icon": "bx bx-home",
                         "available": true,
                         "link": "/unisync360/lead-lancer",
-                        "permission": [],
+                        "permission": [
+                            "view_recruiterprofile"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_lead_lancer",
@@ -39,14 +29,17 @@
                 "icon": "bx bx-user",
                 "available": true,
                 "link": "",
-                "header": "STUDENT MANAGEMENT",
+                "header": "STUDENT REGISTRATION & TRACKING",
                 "submenu": [
                     {
                         "text": "My Students",
                         "icon": "bx bx-user-circle",
                         "available": true,
                         "link": "/unisync360/lead-lancer",
-                        "permission": [],
+                        "permission": [
+                            "view_student",
+                            "view_recruiterstudent"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_lead_lancer",
@@ -58,7 +51,40 @@
                         "icon": "bx bx-user-plus",
                         "available": true,
                         "link": "/unisync360/lead-lancer?action=register",
-                        "permission": [],
+                        "permission": [
+                            "add_student",
+                            "add_recruiterstudent"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Student Status",
+                        "icon": "bx bx-check-circle",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer?tab=status",
+                        "permission": [
+                            "view_studentstatus",
+                            "view_studentcommissionstatus"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Update Status",
+                        "icon": "bx bx-refresh",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer?action=update-status",
+                        "permission": [
+                            "add_studentcommissionstatus",
+                            "change_studentcommissionstatus"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_lead_lancer",
@@ -72,14 +98,16 @@
                 "icon": "bx bx-money",
                 "available": true,
                 "link": "",
-                "header": "EARNINGS",
+                "header": "EARNINGS & TARGETS",
                 "submenu": [
                     {
                         "text": "Commission Board",
                         "icon": "bx bx-dollar-circle",
                         "available": true,
                         "link": "/unisync360/lead-lancer?tab=commissions",
-                        "permission": [],
+                        "permission": [
+                            "view_commission"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_lead_lancer",
@@ -91,7 +119,9 @@
                         "icon": "bx bx-target-lock",
                         "available": true,
                         "link": "/unisync360/lead-lancer?tab=targets",
-                        "permission": [],
+                        "permission": [
+                            "view_recruitertarget"
+                        ],
                         "role": [
                             "admin",
                             "unisync360_lead_lancer",

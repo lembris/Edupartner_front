@@ -36,9 +36,11 @@ import { FinancialReportsPage } from "../../../pages/services/unisync360/account
 
 // User Management
 import { UserListPage } from "../../../pages/services/unisync360/users/UserListPage.jsx";
+import { RoleListPage } from "../../../pages/services/unisync360/roles/RoleListPage.jsx";
 
 // User Manual
 import { UserManualPage } from "../../../pages/services/unisync360/usermanual/UserManualPage.jsx";
+import { LeadLancerUserManualPage } from "../../../pages/services/unisync360/lead-lancer/LeadLancerUserManualPage.jsx";
 
 // Commission Portal
 import { LeadLancerDashboard } from "../../../pages/services/unisync360/commission-portal/LeadLancerDashboard.jsx";
@@ -54,6 +56,8 @@ const unisync360Permissions = {
         "ICT_Auditor",
         "Department_User",
         "ReadOnly_User",
+        "unisync360_lead_lancer",
+        "unisync360_external_counselor",
     ],
     readOnlyRoles: ["admin", "ReadOnly_User"],
 }
@@ -414,6 +418,18 @@ export const unisync360Routes = [
             </ProtectedRoute>
         ),
     },
+    // Roles Management Route
+    {
+        path: "/unisync360/roles",
+        element: (
+            <ProtectedRoute
+                requiredPermissions={["view_role"]}
+                requiredRoles={unisync360Permissions.roles}
+            >
+                <RoleListPage />
+            </ProtectedRoute>
+        ),
+    },
     // User Manual Route
     {
         path: "/unisync360/user-manual",
@@ -423,6 +439,18 @@ export const unisync360Routes = [
                 requiredRoles={unisync360Permissions.roles}
             >
                 <UserManualPage />
+            </ProtectedRoute>
+        ),
+    },
+    // Lead Lancer User Manual Route
+    {
+        path: "/unisync360/lead-lancer/user-manual",
+        element: (
+            <ProtectedRoute
+                requiredPermissions={unisync360Permissions.dashboard}
+                requiredRoles={["unisync360_lead_lancer", "unisync360_external_counselor", ...unisync360Permissions.roles]}
+            >
+                <LeadLancerUserManualPage />
             </ProtectedRoute>
         ),
     },
@@ -442,7 +470,7 @@ export const unisync360Routes = [
         path: "/unisync360/lead-lancer",
         element: (
             <ProtectedRoute
-                requiredPermissions={unisync360Permissions.dashboard}
+                requiredPermissions={["view_recruiterprofile"]}
                 requiredRoles={["unisync360_lead_lancer", "unisync360_external_counselor", ...unisync360Permissions.roles]}
             >
                 <LeadLancerDashboard />
@@ -453,7 +481,7 @@ export const unisync360Routes = [
         path: "/unisync360/external-counselor",
         element: (
             <ProtectedRoute
-                requiredPermissions={unisync360Permissions.dashboard}
+                requiredPermissions={["view_recruiterprofile"]}
                 requiredRoles={["unisync360_external_counselor", ...unisync360Permissions.roles]}
             >
                 <ExternalCounselorDashboard />

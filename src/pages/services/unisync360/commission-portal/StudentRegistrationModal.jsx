@@ -170,7 +170,7 @@ export const StudentRegistrationModal = ({ show, onHide, onSuccess }) => {
                                     <FormikSelect
                                         name="nationality"
                                         label="Nationality *"
-                                        url="/countries"
+                                        url="/countries/"
                                         containerClass="mb-3"
                                         filters={{ page: 1, page_size: 10, paginated: true }}
                                         mapOption={(item) => ({ value: item.uid, label: item.name })}
@@ -213,7 +213,7 @@ export const StudentRegistrationModal = ({ show, onHide, onSuccess }) => {
                                     <FormikSelect
                                         name="source"
                                         label="Source (Optional)"
-                                        url="/unisync360-students/sources"
+                                        url="/unisync360-students/sources/"
                                         containerClass="mb-3"
                                         filters={{ page: 1, page_size: 10, paginated: true }}
                                         mapOption={(item) => ({ value: item.uid, label: item.name })}

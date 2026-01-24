@@ -30,13 +30,25 @@ export const login = (userData, navigation) => async (dispatch) => {
       // Save tokens to localStorage
       localStorage.setItem(ACCESS_TOKEN, access_token);
       localStorage.setItem(REFRESH_TOKEN, refresh_token);
+      localStorage.setItem("user_type", userData.user_type || "default");
 
       // Dispatch success action with user data
       dispatch({
         type: loginTypes.LOGIN_SUCCESS,
         payload: { user, access_token, refresh_token },
       });
-      navigation("/");
+
+      // Route to appropriate portal based on user_type
+      if (userData.user_type === 'external_counselor') {
+        navigation("/unisync360/external-counselor");
+      } else if (userData.user_type === 'lead_lancer') {
+        navigation("/unisync360/lead-lancer");
+        // } else if (user.is_superuser) {
+        //   navigation("/unisync360/dashboard");
+      } else {
+        navigation("/unisync360/dashboard");
+        // navigation("/");
+      }
     } else if (response.status == 202 && response.data.status === 8002) {
       dispatch({
         type: loginTypes.LOGIN_FAILURE,

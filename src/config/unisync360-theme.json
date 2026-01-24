@@ -1,0 +1,117 @@
+{
+  "theme": {
+    "name": "UniSync360 Neutral Theme",
+    "version": "1.0.0",
+    "description": "Professional neutral color scheme for public-facing UniSync360 dashboard",
+    "colors": {
+      "primary": "#475569",
+      "primary_light": "#64748b",
+      "primary_dark": "#334155",
+      "primary_bg": "#f1f5f9",
+      "background_primary": "#ffffff",
+      "background_secondary": "#f8fafc",
+      "background_tertiary": "#f1f5f9",
+      "background_quaternary": "#e2e8f0",
+      "surface": "#ffffff",
+      "surface_hover": "#f8fafc",
+      "surface_border": "#e2e8f0",
+      "text_primary": "#1e293b",
+      "text_secondary": "#475569",
+      "text_muted": "#64748b",
+      "text_disabled": "#94a3b8",
+      "accent_blue": "#3b82f6",
+      "accent_green": "#10b981",
+      "accent_amber": "#f59e0b",
+      "accent_red": "#ef4444",
+      "success": "#059669",
+      "warning": "#d97706",
+      "error": "#dc2626",
+      "info": "#0891b2"
+    },
+    "features": {
+      "accessibility": true,
+      "dark_mode": true,
+      "high_contrast": true,
+      "print_optimized": true,
+      "responsive": true
+    },
+    "components": {
+      "navbar": {
+        "background": "rgba(255, 255, 255, 0.95)",
+        "border": "1px solid #e2e8f0",
+        "text_color": "#1e293b"
+      },
+      "sidebar": {
+        "background": "#ffffff",
+        "item_hover": "#f8fafc",
+        "item_active": "rgba(71, 85, 105, 0.1)",
+        "text_color": "#475569",
+        "text_active": "#475569"
+      },
+      "cards": {
+        "background": "#ffffff",
+        "border": "1px solid #e2e8f0",
+        "shadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+        "hover_shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+      },
+      "buttons": {
+        "primary_background": "#475569",
+        "primary_hover": "#334155",
+        "focus_ring": "rgba(71, 85, 105, 0.25)"
+      },
+      "forms": {
+        "border_color": "#cbd5e1",
+        "focus_border": "#94a3b8",
+        "background": "#ffffff"
+      },
+      "tables": {
+        "header_background": "#f1f5f9",
+        "border_color": "#e2e8f0",
+        "text_color": "#1e293b"
+      }
+    },
+    "custom_properties": {
+      "--neutral-primary": "#475569",
+      "--neutral-primary-light": "#64748b",
+      "--neutral-primary-dark": "#334155",
+      "--neutral-primary-bg": "#f1f5f9",
+      "--neutral-bg-primary": "#ffffff",
+      "--neutral-bg-secondary": "#f8fafc",
+      "--neutral-bg-tertiary": "#f1f5f9",
+      "--neutral-bg-quaternary": "#e2e8f0",
+      "--neutral-surface": "#ffffff",
+      "--neutral-surface-hover": "#f8fafc",
+      "--neutral-surface-border": "#e2e8f0",
+      "--neutral-text-primary": "#1e293b",
+      "--neutral-text-secondary": "#475569",
+      "--neutral-text-muted": "#64748b",
+      "--neutral-text-disabled": "#94a3b8",
+      "--neutral-hover-bg": "rgba(71, 85, 105, 0.08)",
+      "--neutral-active-bg": "rgba(71, 85, 105, 0.16)",
+      "--neutral-focus-ring": "rgba(71, 85, 105, 0.25)",
+      "--neutral-disabled-bg": "#f1f5f9",
+      "--neutral-disabled-text": "#94a3b8",
+      "--neutral-card-shadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+      "--neutral-card-border": "#e2e8f0",
+      "--neutral-divider": "#e2e8f0",
+      "--neutral-input-border": "#cbd5e1",
+      "--neutral-input-border-focus": "#94a3b8"
+    },
+    "files": {
+      "global_css": "src/styles/unisync360-global.css",
+      "theme_scss": "src/styles/unisync360-theme.scss",
+      "variables": "src/styles/unisync360-neutral.css",
+      "app_css": "src/App.css",
+      "index_css": "src/index.css",
+      "theme_config": "src/config/unisync360-theme.json"
+    },
+    "implementation": {
+      "global_application": true,
+      "css_custom_properties": true,
+      "bootstrap_override": true,
+      "component_specific": true,
+      "responsive_design": true,
+      "accessibility_compliance": true
+    }
+  }
+}

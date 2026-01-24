@@ -18,8 +18,7 @@ const Navbar = ({ isService = false }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/auth/login");
+    dispatch(logout(navigate));
   };
 
   return (
