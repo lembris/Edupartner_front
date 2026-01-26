@@ -14,3 +14,7 @@ export const getBadgeClass = (status) => {
             return "bg-label-info";
     }
 }
+
+export const BadgeClassHelper = {
+    getBadgeClass
+};

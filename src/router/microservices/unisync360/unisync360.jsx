@@ -44,6 +44,7 @@ import { LeadLancerUserManualPage } from "../../../pages/services/unisync360/lea
 
 // Commission Portal
 import { LeadLancerDashboard } from "../../../pages/services/unisync360/commission-portal/LeadLancerDashboard.jsx";
+import { LeadLancerListPage } from "../../../pages/services/unisync360/lead-lancer/LeadLancerListPage.jsx";
 import { ExternalCounselorDashboard } from "../../../pages/services/unisync360/commission-portal/ExternalCounselorDashboard.jsx";
 
 const unisync360Permissions = {
@@ -473,7 +474,7 @@ export const unisync360Routes = [
                 requiredPermissions={["view_recruiterprofile"]}
                 requiredRoles={["unisync360_lead_lancer", "unisync360_external_counselor", ...unisync360Permissions.roles]}
             >
-                <LeadLancerDashboard />
+                <LeadLancerListPage />
             </ProtectedRoute>
         ),
     },

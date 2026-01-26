@@ -34,6 +34,11 @@ export const commissionPortalService = {
         return response.data;
     },
 
+    deleteRecruiter: async (uid) => {
+        const response = await axiosInstance.delete(`${BASE_URL}/recruiters/${uid}/`);
+        return response.data;
+    },
+
     // Student Registration
     registerStudent: async (data) => {
         const response = await axiosInstance.post(`${BASE_URL}/register-student/`, data);
@@ -226,4 +231,5 @@ export const commissionPortalService = {
     },
 };
 
+export const recruiterService = commissionPortalService;
 export default commissionPortalService;
