@@ -109,7 +109,8 @@ coverage/
 
 # Vite config backups and variants
 .vite
-vite.config.*.js
+vite.config.*.j
+!vite.config.js.template
 vite.config.*.ts
 vite.config.js.backup.*
 vite.config.js.save
