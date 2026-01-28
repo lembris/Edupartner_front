@@ -1,4 +1,113 @@
-node_modules
+# Existing
+
+.DS_Store
+
+# Dependencies
+
+node_modules/
+
+
+
+# Production build
+
+dist/
+
+build/
+
 package-lock.json
-dist
-src/Costants.jsx
+
+
+
+# Environment variables
+
+.env
+
+.env.local
+
+.env.production
+
+.env.*.local
+
+src/.env
+
+
+
+
+
+# IDE
+
+.idea/
+
+.vscode/
+
+*.swp
+
+*.swo
+
+
+
+# Logs
+
+logs
+
+*.log
+
+npm-debug.log*
+
+yarn-debug.log*
+
+yarn-error.log*
+
+pnpm-debug.log*
+
+lerna-debug.log*
+
+
+
+# Editor directories and files
+
+.vscode/*
+
+!.vscode/extensions.json
+
+*.suo
+
+*.ntvs*
+
+*.njsproj
+
+*.sln
+
+*.sw?
+
+
+
+# Backup files
+
+*.backup.*
+
+*.save
+
+*.bak
+
+
+
+# OS
+
+Thumbs.db
+
+.DS_Store
+
+
+
+# Testing
+
+coverage/
+
+.nyc_output
+
+
+
+# Vite
+
+.vite
