@@ -107,7 +107,11 @@ coverage/
 .nyc_output
 
 
-
-# Vite
-
+# Vite config backups and variants
 .vite
+vite.config.*.js
+vite.config.*.ts
+vite.config.js.backup.*
+vite.config.js.save
+*.backup.*
+*.save
