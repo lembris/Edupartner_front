@@ -50,17 +50,14 @@ import { ExternalCounselorDashboard } from "../../../pages/services/unisync360/c
 const unisync360Permissions = {
     dashboard: ["view_dashboard"],
     roles: [
-        "ICT_Superuser",
-        "admin",
-        "ICT_Manager",
-        "ICT_Technician",
-        "ICT_Auditor",
-        "Department_User",
-        "ReadOnly_User",
-        "unisync360_lead_lancer",
+        "unisync360_super_admin",
+        "unisync360_facilitation_officer",
+        "unisync360_accountant",
+        "unisync360_counselor",
         "unisync360_external_counselor",
+        "unisync360_lead_lancer",
     ],
-    readOnlyRoles: ["admin", "ReadOnly_User"],
+    readOnlyRoles: ["unisync360_external_counselor", "unisync360_lead_lancer"],
 }
 
 
@@ -412,7 +409,7 @@ export const unisync360Routes = [
         path: "/unisync360/users",
         element: (
             <ProtectedRoute
-                requiredPermissions={["view_user"]}
+                requiredPermissions={[]}
                 requiredRoles={unisync360Permissions.roles}
             >
                 <UserListPage />
@@ -424,7 +421,7 @@ export const unisync360Routes = [
         path: "/unisync360/roles",
         element: (
             <ProtectedRoute
-                requiredPermissions={["view_role"]}
+                requiredPermissions={[]}
                 requiredRoles={unisync360Permissions.roles}
             >
                 <RoleListPage />
@@ -471,7 +468,7 @@ export const unisync360Routes = [
         path: "/unisync360/lead-lancer",
         element: (
             <ProtectedRoute
-                requiredPermissions={["view_recruiterprofile"]}
+                requiredPermissions={[]}
                 requiredRoles={["unisync360_lead_lancer", "unisync360_external_counselor", ...unisync360Permissions.roles]}
             >
                 <LeadLancerListPage />
@@ -482,7 +479,7 @@ export const unisync360Routes = [
         path: "/unisync360/external-counselor",
         element: (
             <ProtectedRoute
-                requiredPermissions={["view_recruiterprofile"]}
+                requiredPermissions={[]}
                 requiredRoles={["unisync360_external_counselor", ...unisync360Permissions.roles]}
             >
                 <ExternalCounselorDashboard />

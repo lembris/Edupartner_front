@@ -8,8 +8,12 @@ export const Services = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  // Filter services by search text
-  const filteredServices = servicesList.filter(
+  // Filter services by search text - Only show UniSync360 services
+  const unisync360Services = servicesList.filter(
+    (service) => service.id === 'unisync360' || service.id === 'external-counselor-portal' || service.id === 'lead-lancer-portal'
+  );
+  
+  const filteredServices = unisync360Services.filter(
     (service) =>
       service.text.toLowerCase().includes(search.toLowerCase()) ||
       (service.description &&
@@ -119,7 +123,7 @@ export const Services = () => {
                 className="card-title text-center text-white"
                 style={{ margin: "0px", marginBottom: "0px" }}
               >
-                OLTANA SOFTWORKS SERVICES
+                EDUPARTNERS INTERNATIONAL
               </h2>
               <div
                 className="input-group text-center"
@@ -134,7 +138,7 @@ export const Services = () => {
                   justifyContent: "center",
                 }}
               >
-                  A premium gateway to Oltana's comprehensive digital ecosystem
+                  Empowering education through innovative solutions
               </div>
 
               <div

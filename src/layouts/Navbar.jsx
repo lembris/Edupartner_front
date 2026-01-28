@@ -178,7 +178,9 @@ const Navbar = ({ isService = false }) => {
                     maxHeight: "300px",
                   }}
                 >
-                  {servicesList.map((doc, idx) => ( 
+                  {servicesList
+                    .filter(doc => doc.id === 'unisync360' || doc.id === 'external-counselor-portal' || doc.id === 'lead-lancer-portal')
+                    .map((doc, idx) => ( 
                     <div
                       className="d-flex align-items-center service-list-item cursor-pointer me-3 mb-3"
                       key={"docs_index_" + idx}

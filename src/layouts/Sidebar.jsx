@@ -205,12 +205,17 @@ const ServiceDocsMenu = ({ services }) => {
     return segments[0] || '';
   };
 
+  // Filter to show only UniSync360 services
+  const unisync360Services = services.filter(
+    service => service.id === 'unisync360' || service.id === 'external-counselor-portal' || service.id === 'lead-lancer-portal'
+  );
+
   return (
     <>
       <li className="menu-header small text-uppercase">
         <span className="menu-header-text">Documentation</span>
       </li>
-      {services.map((service, idx) => {
+      {unisync360Services.map((service, idx) => {
         const namespace = getNamespace(service.link);
         return (
           <li className="menu-item" key={`docs_${service.id}_${idx}`}>
