@@ -368,6 +368,16 @@
                         "role": [
                             "unisync360_super_admin"
                         ]
+                    },
+                    {
+                        "text": "Permissions",
+                        "icon": "bx bx-lock",
+                        "available": true,
+                        "link": "/unisync360/permissions",
+                        "permission": [],
+                        "role": [
+                            "unisync360_super_admin"
+                        ]
                     }
                 ]
             }

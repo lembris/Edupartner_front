@@ -37,6 +37,7 @@ import { FinancialReportsPage } from "../../../pages/services/unisync360/account
 // User Management
 import { UserListPage } from "../../../pages/services/unisync360/users/UserListPage.jsx";
 import { RoleListPage } from "../../../pages/services/unisync360/roles/RoleListPage.jsx";
+import { PermissionListPage } from "../../../pages/services/unisync360/permissions/PermissionListPage.jsx";
 
 // User Manual
 import { UserManualPage } from "../../../pages/services/unisync360/usermanual/UserManualPage.jsx";
@@ -425,6 +426,18 @@ export const unisync360Routes = [
                 requiredRoles={unisync360Permissions.roles}
             >
                 <RoleListPage />
+            </ProtectedRoute>
+        ),
+    },
+    // Permissions Management Route
+    {
+        path: "/unisync360/permissions",
+        element: (
+            <ProtectedRoute
+                requiredPermissions={[]}
+                requiredRoles={["unisync360_super_admin"]}
+            >
+                <PermissionListPage />
             </ProtectedRoute>
         ),
     },

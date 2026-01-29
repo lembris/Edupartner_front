@@ -102,23 +102,39 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
 
     const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
         try {
-            const submitData = { ...values };
+            setSubmitting(true);
             
-            if (selectedObj) {
-                delete submitData.password;
-                delete submitData.password_confirm;
-                delete submitData.pf_number;
-                delete submitData.username;
+            const submitData = {};
+
+            // Always include these fields
+            submitData.email = values.email;
+            submitData.first_name = values.first_name;
+            submitData.last_name = values.last_name;
+            submitData.status = values.status;
+
+            // Include these if provided/changed
+            if (values.middle_name) submitData.middle_name = values.middle_name;
+            if (values.dob) submitData.dob = values.dob;
+            if (values.sex) submitData.sex = values.sex;
+            if (values.phone_number) submitData.phone_number = values.phone_number;
+            if (values.alternative_contact) submitData.alternative_contact = values.alternative_contact;
+            if (values.office_location) submitData.office_location = values.office_location;
+
+            // For create (new user)
+            if (!selectedObj) {
+                submitData.username = values.username;
+                submitData.pf_number = values.pf_number;
+                submitData.password = values.password;
+                submitData.roles = values.roles;
+            } else {
+                // For update (edit user) - only include fields that might have changed
+                // Don't send password, username, pf_number (read-only)
+                // But allow roles to be sent if needed
+                if (values.roles && values.roles.length > 0) {
+                    submitData.roles = values.roles;
+                }
             }
 
-            if (!submitData.middle_name) delete submitData.middle_name;
-            if (!submitData.dob) delete submitData.dob;
-            if (!submitData.sex) delete submitData.sex;
-            if (!submitData.phone_number) delete submitData.phone_number;
-            if (!submitData.alternative_contact) delete submitData.alternative_contact;
-            if (!submitData.office_location) delete submitData.office_location;
-
-            setSubmitting(true);
             let result;
             if (selectedObj?.guid) {
                 result = await updateUser(selectedObj.guid, submitData);
