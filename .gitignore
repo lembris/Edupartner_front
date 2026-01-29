@@ -110,6 +110,7 @@ coverage/
 # Vite config backups and variants
 .vite
 vite.config.*.js
+vite.config.js
 !src/Costants.jsx.template
 !vite.config.js.template
 
