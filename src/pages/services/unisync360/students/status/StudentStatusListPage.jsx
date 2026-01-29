@@ -53,6 +53,7 @@ export const StudentStatusListPage = () => {
             <PaginatedTable
                 fetchPath="/unisync360-students/statuses/"
                 title="Student Statuses"
+                isFullPath={false}
                 columns={[
                     {
                         key: "name",

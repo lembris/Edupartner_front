@@ -101,22 +101,39 @@ const PaginatedTable = ({
 
   // Main fetch effect - triggers on pagination, page size, filters, or DEBOUNCED search
   useEffect(() => {
+    // Prevent fetching if we're beyond available pages
+    if (totalCount === 0 && currentPage > 1) {
+      setCurrentPage(1);
+      return;
+    }
     doFetch(currentPage, pageSize, debouncedSearchQuery, selectedFilters, selectedFilterGroups);
-  }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, debouncedSearchQuery]);
+  }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, debouncedSearchQuery, totalCount]);
 
   // Handle search debounce - waits 400ms before updating debouncedSearchQuery
   // This prevents multiple API calls while user is still typing
   useEffect(() => {
-    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    // Clear any existing timeout
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+    
+    // Set new timeout only if search query is not empty or if it's clearing a previous search
     searchDebounceRef.current = setTimeout(() => {
-      lastFetchParams.current = "";
-      setCurrentPage(1);
-      setDebouncedSearchQuery(searchQuery);
-    }, 400);
+      // Only update if mounted and value actually changed
+      if (isMounted.current && searchQuery !== debouncedSearchQuery) {
+        lastFetchParams.current = ""; // Reset to force fetch with new search
+        setCurrentPage(1); // Reset to page 1 when search changes
+        setDebouncedSearchQuery(searchQuery);
+      }
+    }, 400); // 400ms debounce delay
+    
+    // Cleanup: clear timeout on unmount or before next effect runs
     return () => {
-      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+      }
     };
-  }, [searchQuery]); // Only depends on raw searchQuery
+  }, [searchQuery, debouncedSearchQuery]); // Depend on both to track actual changes
 
   // Handle isRefresh - force re-fetch
   useEffect(() => {
@@ -368,16 +385,22 @@ const PaginatedTable = ({
                     </td>
                   </tr>
                 ) : rowRecords.length === 0 ? (
-                  <tr>
-                    <td colSpan="100%">
-                      <div className="alert alert-info" role="alert">
-                        <div className="alert-body text-center">
-                          <p className="mb-0">No Records Found</p>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
+                   <tr>
+                     <td colSpan="100%">
+                       <div className="alert alert-info" role="alert">
+                         <div className="alert-body text-center py-4">
+                           <i className="bx bx-search-alt" style={{ fontSize: '2rem', color: '#17a2b8' }}></i>
+                           <p className="mb-1 mt-2 fw-semibold">No Records Found</p>
+                           <small className="text-muted">
+                             {debouncedSearchQuery || selectedFilters?.length > 1 
+                               ? "Try adjusting your search or filters" 
+                               : "No data available. Create a new record to get started."}
+                           </small>
+                         </div>
+                       </div>
+                     </td>
+                   </tr>
+                 ) : (
                   rowRecords.map((row, rowIndex) => (
                     <tr
                       key={row.id || rowIndex}
