@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react-swc'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/',
   build: {
     rollupOptions: {
       output: {
@@ -21,7 +22,6 @@ export default defineConfig({
           if (id.includes('node_modules/apexcharts') || id.includes('node_modules/react-apexcharts')) {
             return 'vendor-charts';
           }
-
           // Lazy-loaded route chunks - only loaded when needed
           if (id.includes('e_approval/settings') || id.includes('e_approval/users') || id.includes('e_approval/operations')) {
             return 'chunk-eapproval';
@@ -49,7 +49,18 @@ export default defineConfig({
     }
   },
   server: {
-    // Optimize dev server
+    host: '0.0.0.0',
+    port: 3000,
     middlewareMode: false,
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 3000,
+    allowedHosts: [
+      'edupartnersintl.com',
+      'www.edupartnersintl.com',
+      '76.13.31.181',
+      'localhost'
+    ]
   }
 })
