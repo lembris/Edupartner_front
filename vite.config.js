@@ -7,20 +7,46 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Split vendor code
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-redux': ['redux', 'react-redux', '@reduxjs/toolkit', 'redux-persist'],
-          'vendor-ui': ['sweetalert2', 'formik', 'yup', 'axios'],
-          // Split microservice routes to separate chunks
-          'route-unisync360': ['./src/router/microservices/unisync360/unisync360.jsx'],
-          'route-eapproval': ['./src/router/microservices/e_approval/settings.jsx', './src/router/microservices/e_approval/operations.jsx'],
-          'route-ict': ['./src/router/microservices/ict_assets/ict-assets.jsx'],
-          'route-bi': ['./src/router/microservices/business_intelligence/business-intelligence.jsx'],
+        manualChunks(id) {
+          // Vendor chunks - loaded once, shared across all routes
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
+            return 'vendor-react';
+          }
+          if (id.includes('node_modules/redux') || id.includes('node_modules/react-redux') || id.includes('node_modules/@reduxjs/toolkit') || id.includes('node_modules/redux-persist')) {
+            return 'vendor-redux';
+          }
+          if (id.includes('node_modules/sweetalert2') || id.includes('node_modules/formik') || id.includes('node_modules/yup') || id.includes('node_modules/axios')) {
+            return 'vendor-ui';
+          }
+          if (id.includes('node_modules/apexcharts') || id.includes('node_modules/react-apexcharts')) {
+            return 'vendor-charts';
+          }
+
+          // Lazy-loaded route chunks - only loaded when needed
+          if (id.includes('e_approval/settings') || id.includes('e_approval/users') || id.includes('e_approval/operations')) {
+            return 'chunk-eapproval';
+          }
+          if (id.includes('ict_assets/ict-assets')) {
+            return 'chunk-ict';
+          }
+          if (id.includes('unisync360/unisync360')) {
+            return 'chunk-unisync360';
+          }
+          if (id.includes('business_intelligence/business-intelligence')) {
+            return 'chunk-bi';
+          }
         }
       }
     },
-    chunkSizeWarningLimit: 1000,
+    // Increase chunk size limit (lazy-loaded chunks can be larger)
+    chunkSizeWarningLimit: 2000,
+    // Optimize build output
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console logs in production
+      }
+    }
   },
   server: {
     // Optimize dev server
