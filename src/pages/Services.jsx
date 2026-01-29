@@ -21,7 +21,9 @@ export const Services = () => {
   );
 
   useEffect(() => {
-    dashboardAnalitics();
+    // Analytics script removed from index.html during optimization
+    // This function was loading legacy template charts, not needed for Services page
+    // If needed, uncomment the script tag in index.html
   }, []);
   return (
     <>
