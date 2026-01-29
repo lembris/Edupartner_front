@@ -1,3 +1,3 @@
 export const ACCESS_TOKEN = "accessToken";
 export const REFRESH_TOKEN = "refreshToken";
-export const API_BASE_URL = "https://edupartnersintl.com";
+export const API_BASE_URL = "http://127.0.0.1:8092";
