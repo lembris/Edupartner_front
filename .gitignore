@@ -122,3 +122,4 @@ vite.config.js.backup.*
 vite.config.js.save
 *.backup.*
 *.save
+*.bak
