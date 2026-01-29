@@ -44,7 +44,15 @@ const Layout = ({ children, isService = false, activeService = null }) => {
             <Footer />
           </div>
         </div>
-        <div className="layout-overlay layout-menu-toggle"></div>
+        <div 
+          className="layout-overlay layout-menu-toggle"
+          onClick={() => {
+            const sidebar = document.querySelector(".layout-sidenav");
+            const overlay = document.querySelector(".layout-overlay");
+            if (sidebar) sidebar.classList.remove("show");
+            if (overlay) overlay.classList.remove("show");
+          }}
+        ></div>
       </div>
     </div>
   );

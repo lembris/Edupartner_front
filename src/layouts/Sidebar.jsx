@@ -142,7 +142,7 @@ const Sidebar = ({ isService = false }) => {
   return (
     <aside
       id="layout-menu"
-      className="layout-menu menu-vertical menu bg-menu-theme"
+      className="layout-menu layout-sidenav menu-vertical menu bg-menu-theme"
     >
       <div className="app-brand demo mb-2" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "15px 0" }}>
         <Link
@@ -168,12 +168,18 @@ const Sidebar = ({ isService = false }) => {
           </span>
         </Link>
 
-        <a
-          href="#"
-          className="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none"
+        <button
+          onClick={() => {
+            const sidebar = document.querySelector(".layout-sidenav");
+            const overlay = document.querySelector(".layout-overlay");
+            if (sidebar) sidebar.classList.remove("show");
+            if (overlay) overlay.classList.remove("show");
+          }}
+          className="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none bg-transparent border-0"
+          type="button"
         >
           <i className="bx bx-chevron-left bx-sm align-middle"></i>
-        </a>
+        </button>
       </div>
 
       <div style={{ alignContent: "center", textAlign: "center" }}>

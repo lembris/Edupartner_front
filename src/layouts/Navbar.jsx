@@ -9,9 +9,23 @@ const Navbar = ({ isService = false }) => {
   const user = useSelector((state) => state.userReducer?.data);
 
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
+  };
+
+  const toggleProfileDropdown = () => {
+    setShowProfileDropdown(!showProfileDropdown);
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+    const sidebar = document.querySelector(".layout-sidenav");
+    const overlay = document.querySelector(".layout-overlay");
+    if (sidebar) sidebar.classList.toggle("show");
+    if (overlay) overlay.classList.toggle("show");
   };
 
   const dispatch = useDispatch();
@@ -117,13 +131,14 @@ const Navbar = ({ isService = false }) => {
       </style>
 
       <div className="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-        <a
+        <button
           aria-label="toggle for sidebar"
-          className="nav-item nav-link px-0 me-xl-4"
-          href="#"
+          className="nav-item nav-link px-0 me-xl-4 bg-transparent border-0"
+          onClick={toggleSidebar}
+          type="button"
         >
           <i className="bx bx-menu bx-sm"></i>
-        </a>
+        </button>
       </div>
 
       <div
@@ -230,11 +245,11 @@ const Navbar = ({ isService = false }) => {
             </a>
           </li>
           <li className="nav-item navbar-dropdown dropdown-user dropdown">
-            <a
+            <button
               aria-label="dropdown profile avatar"
-              className="nav-link dropdown-toggle hide-arrow"
-              href="#"
-              data-bs-toggle="dropdown"
+              className="nav-link dropdown-toggle hide-arrow bg-transparent border-0"
+              onClick={toggleProfileDropdown}
+              type="button"
             >
               <div className="avatar avatar-online">
                 <img
@@ -249,8 +264,8 @@ const Navbar = ({ isService = false }) => {
                   aria-label="Avatar Image"
                 />
               </div>
-            </a>
-            <ul className="dropdown-menu dropdown-menu-end">
+            </button>
+            <ul className={`dropdown-menu dropdown-menu-end ${showProfileDropdown ? "show" : ""}`} style={{ display: showProfileDropdown ? "block" : "none" }}>
               <li>
                 <a
                   aria-label="go to profile"
@@ -296,6 +311,7 @@ const Navbar = ({ isService = false }) => {
                   href="#"
                   onClick={() => {
                     navigate("/account/settings");
+                    setShowProfileDropdown(false);
                   }}
                 >
                   <i className="bx bx-user me-2"></i>
@@ -307,7 +323,11 @@ const Navbar = ({ isService = false }) => {
                   aria-label="go to setting"
                   className="dropdown-item"
                   href="#"
-                  onClick={handleLogout}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowProfileDropdown(false);
+                    handleLogout();
+                  }}
                 >
                   <i className="bx bx-lock me-2"></i>
                   <span className="align-middle">Log Out</span>
