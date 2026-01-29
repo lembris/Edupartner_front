@@ -22,7 +22,7 @@ const FormikSelect = ({
   ...selectProps
 }) => {
   const [field, meta] = useField(name);
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue, setFieldTouched } = useFormikContext();
 
   const [options, setOptions] = useState(() =>
     Array.isArray(staticOptions) ? staticOptions.map(mapOption) : []
@@ -140,7 +140,10 @@ const FormikSelect = ({
             setFieldValue(name, keys);
             mergeOptions(selected || []);
           } else {
-            setFieldValue(name, selected ? selected.value : null);
+            const value = selected ? selected.value : null;
+            setFieldValue(name, value);
+            // Mark field as touched to trigger validation
+            setFieldTouched(name, true, false);
             if (selected) mergeOptions([selected]);
           }
 

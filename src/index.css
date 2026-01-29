@@ -1,6 +1,9 @@
 /* Import UniSync360 Neutral Theme */
 @import './styles/unisync360-global.css';
 
+/* Import UniSync360 Specific Color Overrides */
+@import './styles/unisync360-colors.css';
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

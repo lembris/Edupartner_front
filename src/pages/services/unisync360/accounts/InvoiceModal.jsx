@@ -179,14 +179,14 @@ export const InvoiceModal = ({ selectedObj, onSuccess, onClose }) => {
         >
             <div className="modal-dialog modal-xl">
                 <div className="modal-content">
-                    <div className="modal-header bg-primary text-white">
+                    <div className="modal-header">
                         <h5 className="modal-title" id="invoiceModalLabel">
                             <i className="bx bx-receipt me-2"></i>
                             {selectedObj ? "Update Invoice" : "Create New Invoice"}
                         </h5>
                         <button
                             type="button"
-                            className="btn-close btn-close-white"
+                            className="btn-close"
                             onClick={handleCloseModal}
                             aria-label="Close"
                         ></button>

@@ -27,6 +27,7 @@ const PaginatedTable = ({
   const [error, setError] = useState(false);
   const pageSizeData = [10, 25, 50, 100];
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const searchDebounceRef = useRef(null);
   const [selectedFilters, setSelectedFilters] = useState(filterSelected);
   const [selectedFilterGroups, setSelectedFilterGroups] = useState(() =>
@@ -39,6 +40,7 @@ const PaginatedTable = ({
   // Track if component is mounted
   const isMounted = useRef(true);
   const lastFetchParams = useRef("");
+  const doFetchRef = useRef(null);
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
@@ -92,28 +94,37 @@ const PaginatedTable = ({
     }
   }, [fetchPath, isFullPath]);
 
-  // Single effect for fetching (pagination, filters, page size changes)
+  // Store reference for use in other effects
   useEffect(() => {
-    doFetch(currentPage, pageSize, searchQuery, selectedFilters, selectedFilterGroups);
-  }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, searchQuery]);
+    doFetchRef.current = doFetch;
+  }, [doFetch]);
 
-  // Handle isRefresh
+  // Main fetch effect - triggers on pagination, page size, filters, or DEBOUNCED search
   useEffect(() => {
-    if (isRefresh > 0) {
-      lastFetchParams.current = "";
-      doFetch(currentPage, pageSize, searchQuery, selectedFilters, selectedFilterGroups);
-    }
-  }, [isRefresh]);
+    doFetch(currentPage, pageSize, debouncedSearchQuery, selectedFilters, selectedFilterGroups);
+  }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, debouncedSearchQuery]);
 
-  // Debounce search
+  // Handle search debounce - waits 400ms before updating debouncedSearchQuery
+  // This prevents multiple API calls while user is still typing
   useEffect(() => {
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
     searchDebounceRef.current = setTimeout(() => {
-      doFetch(1, pageSize, searchQuery, selectedFilters, selectedFilterGroups);
+      lastFetchParams.current = "";
       setCurrentPage(1);
+      setDebouncedSearchQuery(searchQuery);
     }, 400);
-    return () => clearTimeout(searchDebounceRef.current);
-  }, [searchQuery]);
+    return () => {
+      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    };
+  }, [searchQuery]); // Only depends on raw searchQuery
+
+  // Handle isRefresh - force re-fetch
+  useEffect(() => {
+    if (isRefresh > 0) {
+      lastFetchParams.current = "";
+      doFetch(currentPage, pageSize, debouncedSearchQuery, selectedFilters, selectedFilterGroups);
+    }
+  }, [isRefresh]);
 
   // Cleanup
   useEffect(() => {

@@ -97,7 +97,7 @@ export const PasswordChangeModal = ({ user, onSuccess, onClose }) => {
         >
             <div className="modal-dialog">
                 <div className="modal-content">
-                    <div className="modal-header bg-warning text-dark">
+                    <div className="modal-header">
                         <h5 className="modal-title" id="passwordChangeModalLabel">
                             <i className="bx bx-key me-2"></i>
                             Change Password

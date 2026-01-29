@@ -50,7 +50,7 @@ const Navbar = ({ isService = false }) => {
               padding: 10px;
               background:
                 linear-gradient(#fff, #fff) padding-box,
-                linear-gradient(135deg, #1976d2a6 0%, #e53835c2 60%, #ffd900c4 100%) border-box;
+                linear-gradient(135deg, #475569 0%, #64748b 100%) border-box;
               transition:
                 background 1s ease,
                 border-color 1s ease,
@@ -58,7 +58,7 @@ const Navbar = ({ isService = false }) => {
                 box-shadow 0.4s ease,
                 transform 0.4s ease,
                 opacity 0.4s ease;
-              box-shadow: 0 5px 16px rgba(10, 67, 124, 0.51);
+              box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
               animation: fadeInSlideUp 0.5s ease forwards;
               opacity: 0;
               transform: translateY(10px);
@@ -71,7 +71,7 @@ const Navbar = ({ isService = false }) => {
               min-height: 300px;
               background:
                 linear-gradient(#fff, #fff) padding-box,
-                linear-gradient(135deg, #1976d2ef 0%, #e53835e7 60%, #ffd700 100%) border-box;
+                linear-gradient(135deg, #475569 0%, #64748b 100%) border-box;
               transition:
                 background 1s ease,
                 border-color 1s ease,
@@ -79,7 +79,7 @@ const Navbar = ({ isService = false }) => {
                 box-shadow 0.4s ease,
                 transform 0.4s ease,
                 opacity 0.4s ease;
-              box-shadow: 0 5px 16px rgba(10, 67, 124, 0.51);
+              box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
               animation: fadeInSlideUp 0.5s ease forwards;
               opacity: 0;
               transform: translateY(10px);
@@ -93,28 +93,19 @@ const Navbar = ({ isService = false }) => {
             .service-list-item:active,
             .service-list-item:hover,
             .service-list-item:focus {
-              box-shadow: 0 6px 24px rgba(10, 67, 124, 0.18), 0 1.5px 8px rgba(25, 118, 210, 0.18);
-              transform: translateX(40px); /* Slide from right */
-              /* No scale, no zoom */
+              box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+              transform: translateX(40px);
             }
             /* Icons inside cards */
             .dropdown-services-box .bx {
               font-size: 2rem;
-              background: linear-gradient(90deg, #1976d2 0%, #e53935 60%, #ffd700 100%);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              background-clip: text;
-              text-fill-color: transparent;
+              color: #475569;
             }
 
             /* Gradient titles */
             .dropdown-services-box .service-title {
               font-weight: bold;
-              background: linear-gradient(90deg, #1976d2 0%, #e53935 60%, #ffd700 100%);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              background-clip: text;
-              text-fill-color: transparent;
+              color: #334155;
             }
 
             /* Animation keyframe */
@@ -152,8 +143,9 @@ const Navbar = ({ isService = false }) => {
             <button
               aria-label="Click me"
               type="button"
-              className="btn btn-sm btn-outline-primary me-2 me-xl-4"
+              className="btn btn-sm btn-outline-secondary me-2 me-xl-4"
               onClick={toggleDropdown}
+              style={{ color: '#475569', borderColor: '#cbd5e1' }}
             >
               <i className="bx bx-menu me-1"></i> Quick Access to Services
               {activeService && (
@@ -180,7 +172,7 @@ const Navbar = ({ isService = false }) => {
                 }}
               >
                 <div className="row">
-                  <h5 className="text-info"> Choose The Services</h5>
+                  <h5 className="text-secondary"> Choose The Services</h5>
                   <p className="text-muted">
                     The below is list of mnh-Connect Service you Included
                   </p>
@@ -227,7 +219,8 @@ const Navbar = ({ isService = false }) => {
               <button
                 aria-label="Click me"
                 type="button"
-                className="btn btn-sm btn-outline-primary me-2 me-xl-4"
+                className="btn btn-sm btn-outline-secondary me-2 me-xl-4"
+                style={{ color: '#475569', borderColor: '#cbd5e1' }}
               >
                 <i className="bx bx-user me-1"></i>
                 {user?.position?.level_name}

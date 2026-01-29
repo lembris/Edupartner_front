@@ -81,7 +81,7 @@ const showLoginDialog = () => {
                 } catch (error) {
                     setLoading(false);
 
-                    if (error.status === 401) {
+                    if (error.response?.status === 401) {
                         if (errorCount === 2) {
                             closeModal();
                             reject(true);
@@ -92,6 +92,11 @@ const showLoginDialog = () => {
                                     Invalid password. Try again. <br /> <small>(Last attempt)</small>
                                 </div>
                             );
+                            // Clear password field for retry
+                            if (passwordRef.current) {
+                                passwordRef.current.value = "";
+                                passwordRef.current.focus();
+                            }
                         }
 
                     } else {
@@ -131,13 +136,16 @@ const showLoginDialog = () => {
                                         height: "100%", // Ensure the parent div has a height
                                     }}>
                                         <img
-                                            src={user?.data?.photo !== "" ? user?.data?.photo : "../assets/img/avatars/1.png"}
+                                            src={user?.data?.photo !== "" ? user?.data?.photo : "/assets/img/avatars/1.png"}
                                             alt="user-avatar"
                                             className="d-block rounded"
                                             height="100"
                                             width="100"
                                             aria-label="Account image"
                                             id="uploadedAvatar"
+                                            onError={(e) => {
+                                                e.target.src = "/assets/img/avatars/1.png";
+                                            }}
                                         />
                                     </div>
                                     <h5 className="text-muted text-center mt-4">VERIFY YOU IDENTITY</h5>

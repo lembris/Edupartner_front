@@ -1,6 +1,9 @@
 /* UniSync360 Global Neutral Theme - Apply First */
 @import './styles/unisync360-global.css';
 
+/* UniSync360 Specific Color Overrides - Secondary Gray as Primary */
+@import './styles/unisync360-colors.css';
+
 #root {
   max-width: 1280px;
   margin: 0 auto;

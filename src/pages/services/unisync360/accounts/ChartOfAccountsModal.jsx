@@ -148,14 +148,14 @@ export const ChartOfAccountsModal = ({ selectedObj, onSuccess, onClose }) => {
         >
             <div className="modal-dialog modal-lg">
                 <div className="modal-content">
-                    <div className="modal-header bg-primary text-white">
+                    <div className="modal-header">
                         <h5 className="modal-title" id="chartOfAccountsModalLabel">
                             <i className="bx bx-wallet me-2"></i>
                             {selectedObj ? "Update Account" : "Create New Account"}
                         </h5>
                         <button
                             type="button"
-                            className="btn-close btn-close-white"
+                            className="btn-close"
                             onClick={handleCloseModal}
                             aria-label="Close"
                         ></button>

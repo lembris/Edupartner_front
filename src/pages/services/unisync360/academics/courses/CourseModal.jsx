@@ -25,7 +25,7 @@ export const CourseModal = ({ selectedObj, onSuccess, onClose }) => {
                 level: selectedObj.level?.uid || selectedObj.level || "",
                 description: selectedObj.description || "",
                 duration_years: selectedObj.duration_years || 3,
-                total_credits: selectedObj.total_credits || "",
+                total_credits: selectedObj.total_credits !== null && selectedObj.total_credits !== undefined ? selectedObj.total_credits : "",
             });
         } else {
             setInitialValues({
@@ -46,38 +46,89 @@ export const CourseModal = ({ selectedObj, onSuccess, onClose }) => {
         category: Yup.string().required("Category is required"),
         level: Yup.string().required("Level is required"),
         duration_years: Yup.number().required("Duration is required").min(0, "Must be positive"),
-        total_credits: Yup.number().nullable().min(0, "Must be positive"),
+        total_credits: Yup.number().nullable().typeError("Must be a valid number").min(0, "Must be positive"),
     });
 
     const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
         try {
             setSubmitting(true);
 
-            // We can send JSON directly unless we have file uploads (which Course model doesn't seem to have yet)
-            // If using FormData in Queries.jsx (which we didn't strictly force), we can pass object or FormData.
-            // Queries.jsx uses api.post(..., data, config) where config is json.
-            // So we can pass 'values' directly.
+            // Convert empty strings to null for optional numeric fields
+            const submitValues = {
+                ...values,
+                total_credits: values.total_credits === "" ? null : values.total_credits,
+            };
 
             let result;
             if (selectedObj) {
-                result = await updateCourse(selectedObj.uid, values);
+                result = await updateCourse(selectedObj.uid, submitValues);
             } else {
-                result = await createCourse(values);
+                result = await createCourse(submitValues);
             }
 
-            if (result) {
+            // Check if result has status and handle accordingly
+            if (result?.status === 8000) {
                 showToast("success", `Course ${selectedObj ? 'Updated' : 'Created'} Successfully`);
                 handleClose();
                 resetForm();
                 if (onSuccess) onSuccess();
+            } else if (result?.status === 8002) {
+                // Validation error - show error details in toast and keep modal open
+                setErrors(result.data);
+
+                // Extract error messages from the response
+                const errorMessages = [];
+                if (result.data && typeof result.data === 'object') {
+                    for (const [field, messages] of Object.entries(result.data)) {
+                        if (Array.isArray(messages)) {
+                            errorMessages.push(...messages);
+                        } else if (typeof messages === 'string') {
+                            errorMessages.push(messages);
+                        }
+                    }
+                }
+
+                const errorText = errorMessages.length > 0
+                    ? errorMessages.join('. ')
+                    : "Validation Failed";
+                showToast("warning", errorText);
             } else {
-                showToast("warning", "Process Failed");
+                // Other errors
+                const errorMessage = result?.message || "Something went wrong while saving course";
+                showToast("error", errorMessage);
+                if (result?.data) {
+                    setErrors(result.data);
+                }
             }
         } catch (error) {
             console.error("Course submission error:", error);
-            if (error.response && error.response.data) {
-                setErrors(error.response.data);
-                showToast("warning", "Validation Failed");
+            const errorData = error.response?.data;
+            if (errorData) {
+                setErrors(errorData);
+
+                // Check if it's a validation error (8002) or 400 Bad Request
+                if (error.response?.data?.status === 8002 || error.response?.status === 400) {
+                    // Extract error messages from the response data
+                    const errorMessages = [];
+                    const data = error.response?.data?.data || error.response?.data;
+
+                    if (data && typeof data === 'object') {
+                        for (const [field, messages] of Object.entries(data)) {
+                            if (Array.isArray(messages)) {
+                                errorMessages.push(...messages);
+                            } else if (typeof messages === 'string') {
+                                errorMessages.push(messages);
+                            }
+                        }
+                    }
+
+                    const errorText = errorMessages.length > 0
+                        ? errorMessages.join('. ')
+                        : "Validation Failed";
+                    showToast("warning", errorText);
+                } else {
+                    showToast("warning", error.response?.data?.message || "Validation Failed");
+                }
             } else {
                 showToast("error", "Something went wrong while saving course");
             }
@@ -107,14 +158,14 @@ export const CourseModal = ({ selectedObj, onSuccess, onClose }) => {
         >
             <div className="modal-dialog modal-lg" role="document">
                 <div className="modal-content">
-                    <div className="modal-header bg-primary text-white">
-                        <h5 className="modal-title text-white">
+                    <div className="modal-header">
+                        <h5 className="modal-title">
                             <i className="bx bxs-book me-2"></i>
                             {selectedObj ? "Update Course" : "Add New Course"}
                         </h5>
                         <button
                             type="button"
-                            className="btn-close btn-close-white"
+                            className="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
                             onClick={handleClose}

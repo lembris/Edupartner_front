@@ -40,7 +40,7 @@ export const createStudentStatus = async (data) => {
 // Update Student Status
 export const updateStudentStatus = async (uid, data) => {
     try {
-        const response = await api.patch(`${API_URL}/unisync360-students/statuses/${uid}/`, data, config);
+        const response = await api.put(`${API_URL}/unisync360-students/statuses/${uid}/`, data, config);
         return response.data;
     } catch (error) {
         console.error("Error updating student status:", error);

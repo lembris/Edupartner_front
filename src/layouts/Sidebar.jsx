@@ -153,6 +153,7 @@ const Sidebar = ({ isService = false }) => {
     <aside
       id="layout-menu"
       className={`layout-menu layout-sidenav menu-vertical menu bg-menu-theme ${sidebarOpen ? "show" : ""}`}
+      style={{ overflowY: 'auto', maxHeight: '100vh' }}
     >
       <div className="app-brand demo mb-2" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "15px 0" }}>
         <Link

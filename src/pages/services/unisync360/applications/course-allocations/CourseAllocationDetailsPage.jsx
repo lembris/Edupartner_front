@@ -315,47 +315,89 @@ export const CourseAllocationDetailsPage = () => {
                         </div>
 
                         {/* Application Fee & Status */}
-                        <div className="card shadow-sm">
-                            <div className="card-header">
-                                <h5 className="mb-0">
-                                    <i className="bx bx-money me-2 text-success"></i> Application Info
-                                </h5>
-                            </div>
-                            <div className="card-body">
-                                <ul className="list-unstyled mb-0">
-                                    <li className="d-flex justify-content-between mb-3">
-                                        <span className="text-muted">Tuition Fee</span>
-                                        <span className="fw-bold text-success">
-                                            {allocation.university_course?.currency || '$'}
-                                            {Number(allocation.university_course?.tuition_fee || 0).toLocaleString()}
-                                        </span>
-                                    </li>
-                                    <li className="d-flex justify-content-between mb-3">
-                                        <span className="text-muted">Application Fee</span>
-                                        <span className={`fw-bold ${allocation.application_fee_paid ? 'text-success' : 'text-warning'}`}>
-                                            {allocation.application_fee_paid 
-                                                ? `Paid - $${Number(allocation.application_fee_amount || 0).toLocaleString()}`
-                                                : "Not Paid"
-                                            }
-                                        </span>
-                                    </li>
-                                    <li className="d-flex justify-content-between mb-3">
-                                        <span className="text-muted">Application Ref</span>
-                                        <span className="fw-bold">
-                                            {allocation.application_reference || "N/A"}
-                                        </span>
-                                    </li>
-                                    {allocation.decision_date && (
-                                        <li className="d-flex justify-content-between">
-                                            <span className="text-muted">Decision Date</span>
-                                            <span className="fw-bold">
-                                                {formatDate(allocation.decision_date)}
-                                            </span>
-                                        </li>
-                                    )}
-                                </ul>
-                            </div>
-                        </div>
+                         <div className="card shadow-sm">
+                             <div className="card-header">
+                                 <h5 className="mb-0">
+                                     <i className="bx bx-money me-2 text-success"></i> Application Info
+                                 </h5>
+                             </div>
+                             <div className="card-body">
+                                 <ul className="list-unstyled mb-0">
+                                     <li className="d-flex justify-content-between mb-3">
+                                         <span className="text-muted">Tuition Fee</span>
+                                         <span className="fw-bold text-success">
+                                             {allocation.university_course?.currency || '$'}
+                                             {Number(allocation.university_course?.tuition_fee || 0).toLocaleString()}
+                                         </span>
+                                     </li>
+                                     
+                                     {/* Course Scholarship Info */}
+                                     {allocation.university_course?.scholarship_available && (
+                                         <>
+                                             <li className="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                                                 <span className="text-muted">
+                                                     <i className="bx bx-gift me-2 text-success"></i>Course Scholarship
+                                                 </span>
+                                                 <span className="fw-bold text-success">
+                                                     {allocation.university_course?.scholarship_type === 'percentage'
+                                                         ? `${allocation.university_course?.scholarship_amount}%`
+                                                         : allocation.university_course?.scholarship_type === 'fixed'
+                                                         ? `${allocation.university_course?.currency} ${Number(allocation.university_course?.scholarship_amount || 0).toLocaleString()}`
+                                                         : 'Full Scholarship'
+                                                     }
+                                                 </span>
+                                             </li>
+                                             <li className="d-flex justify-content-between mb-3">
+                                                 <span className="text-muted">Fee After Scholarship</span>
+                                                 <span className="fw-bold text-info">
+                                                     {allocation.university_course?.currency || '$'}
+                                                     {Number(allocation.university_course?.fee_after_scholarship || 0).toLocaleString()}
+                                                 </span>
+                                             </li>
+                                         </>
+                                     )}
+                                     
+                                     {/* Student Applied Scholarship */}
+                                     {allocation.scholarship_applied && (
+                                         <li className="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                                             <span className="text-muted">
+                                                 <i className="bx bx-check-circle me-2 text-success"></i>Student Scholarship
+                                             </span>
+                                             <span className="fw-bold text-success">
+                                                 {allocation.scholarship_amount 
+                                                     ? `${allocation.university_course?.currency || '$'}${Number(allocation.scholarship_amount).toLocaleString()}`
+                                                     : 'Applied'
+                                                 }
+                                             </span>
+                                         </li>
+                                     )}
+                                     
+                                     <li className="d-flex justify-content-between mb-3">
+                                         <span className="text-muted">Application Fee</span>
+                                         <span className={`fw-bold ${allocation.application_fee_paid ? 'text-success' : 'text-warning'}`}>
+                                             {allocation.application_fee_paid 
+                                                 ? `Paid - $${Number(allocation.application_fee_amount || 0).toLocaleString()}`
+                                                 : "Not Paid"
+                                             }
+                                         </span>
+                                     </li>
+                                     <li className="d-flex justify-content-between mb-3">
+                                         <span className="text-muted">Application Ref</span>
+                                         <span className="fw-bold">
+                                             {allocation.application_reference || "N/A"}
+                                         </span>
+                                     </li>
+                                     {allocation.decision_date && (
+                                         <li className="d-flex justify-content-between">
+                                             <span className="text-muted">Decision Date</span>
+                                             <span className="fw-bold">
+                                                 {formatDate(allocation.decision_date)}
+                                             </span>
+                                         </li>
+                                     )}
+                                 </ul>
+                             </div>
+                         </div>
                     </div>
 
                     {/* Right Column */}

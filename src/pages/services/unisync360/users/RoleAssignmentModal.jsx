@@ -115,14 +115,14 @@ export const RoleAssignmentModal = ({ user, onSuccess, onClose }) => {
         >
             <div className="modal-dialog">
                 <div className="modal-content">
-                    <div className="modal-header bg-info text-white">
+                    <div className="modal-header">
                         <h5 className="modal-title" id="roleAssignmentModalLabel">
                             <i className="bx bx-shield me-2"></i>
                             Manage Roles
                         </h5>
                         <button
                             type="button"
-                            className="btn-close btn-close-white"
+                            className="btn-close"
                             onClick={handleCloseModal}
                             aria-label="Close"
                         ></button>
