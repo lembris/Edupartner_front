@@ -41,6 +41,7 @@ const PaginatedTable = ({
   const isMounted = useRef(true);
   const lastFetchParams = useRef("");
   const doFetchRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
@@ -50,6 +51,14 @@ const PaginatedTable = ({
     const paramsKey = JSON.stringify({ page, size, search, selFilters, selFilterGroups });
     if (paramsKey === lastFetchParams.current) return;
     lastFetchParams.current = paramsKey;
+
+    // Cancel previous request if one is in progress
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    // Create new AbortController for this request
+    abortControllerRef.current = new AbortController();
 
     setLoading(true);
     setError(null);
@@ -72,19 +81,34 @@ const PaginatedTable = ({
           filters: selFilters.join(","),
           ...formattedFilterGroups,
         },
+        signal: abortControllerRef.current.signal,
       });
 
       if (!isMounted.current) return;
 
       if (result.status === 200 || result.status === 8000 || result.status === "success") {
         setRowRecords(result.data || []);
-        if (result.pagination) {
-          setTotalCount(result.pagination.total || 0);
+        setError(false);
+        // Always set total count - handle empty results properly
+        const total = result.pagination?.total ?? (result.data ? result.data.length : 0);
+        setTotalCount(total);
+        
+        // Only show warning if search was used and no results found
+        if (debouncedSearchQuery && (!result.data || result.data.length === 0)) {
+          showToast("No Records Found", "info", "Search completed");
         }
       } else {
-        showToast("No Records Found", "warning", "Fetch Completed");
+        setRowRecords([]);
+        setTotalCount(0);
+        setError(true);
+        showToast("Failed to fetch records", "warning", "Fetch completed");
       }
     } catch (err) {
+      // Ignore abort errors - they're expected when canceling requests
+      if (err.name === 'AbortError') {
+        return;
+      }
+      
       if (!isMounted.current) return;
       console.error("Error fetching data:", err);
       setError(true);
@@ -101,13 +125,8 @@ const PaginatedTable = ({
 
   // Main fetch effect - triggers on pagination, page size, filters, or DEBOUNCED search
   useEffect(() => {
-    // Prevent fetching if we're beyond available pages
-    if (totalCount === 0 && currentPage > 1) {
-      setCurrentPage(1);
-      return;
-    }
     doFetch(currentPage, pageSize, debouncedSearchQuery, selectedFilters, selectedFilterGroups);
-  }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, debouncedSearchQuery, totalCount]);
+  }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, debouncedSearchQuery]);
 
   // Handle search debounce - waits 400ms before updating debouncedSearchQuery
   // This prevents multiple API calls while user is still typing
@@ -117,15 +136,14 @@ const PaginatedTable = ({
       clearTimeout(searchDebounceRef.current);
     }
     
-    // Set new timeout only if search query is not empty or if it's clearing a previous search
+    // Set new timeout to update debouncedSearchQuery after user stops typing
     searchDebounceRef.current = setTimeout(() => {
-      // Only update if mounted and value actually changed
-      if (isMounted.current && searchQuery !== debouncedSearchQuery) {
+      if (isMounted.current) {
         lastFetchParams.current = ""; // Reset to force fetch with new search
         setCurrentPage(1); // Reset to page 1 when search changes
         setDebouncedSearchQuery(searchQuery);
       }
-    }, 400); // 400ms debounce delay
+    }, 400); // 400ms debounce delay - prevents excessive API calls
     
     // Cleanup: clear timeout on unmount or before next effect runs
     return () => {
@@ -133,7 +151,7 @@ const PaginatedTable = ({
         clearTimeout(searchDebounceRef.current);
       }
     };
-  }, [searchQuery, debouncedSearchQuery]); // Depend on both to track actual changes
+  }, [searchQuery]); // Only depend on raw searchQuery - NOT debouncedSearchQuery
 
   // Handle isRefresh - force re-fetch
   useEffect(() => {
@@ -145,7 +163,13 @@ const PaginatedTable = ({
 
   // Cleanup
   useEffect(() => {
-    return () => { isMounted.current = false; };
+    return () => { 
+      isMounted.current = false;
+      // Cancel any pending requests on unmount
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, []);
 
   // Handle group filter change

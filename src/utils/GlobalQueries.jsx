@@ -4,17 +4,23 @@ import api from "../api";
 
 const API_URL = `${API_BASE_URL}/api`;
 
-const setConfig = (filter = {}) => {
+const setConfig = (filter = {}, signal = null) => {
   const cleanedFilter = Object.fromEntries(
     Object.entries(filter).filter(
       ([_, value]) => value !== "" && value !== null && value !== undefined
     )
   );
 
-  return {
+  const config = {
     headers: { "Content-Type": "application/json" },
     params: cleanedFilter,
   };
+
+  if (signal) {
+    config.signal = signal;
+  }
+
+  return config;
 };
 
 export const fetchData = async ({
@@ -22,6 +28,7 @@ export const fetchData = async ({
   uid = "",
   filter = {},
   isFullPath = false,
+  signal = null,
 }) => {
   if (!url) {
     throw new Error("URL is required for fetching data");
@@ -30,7 +37,7 @@ export const fetchData = async ({
   try {
     const response = await api.get(
       `${isFullPath ? API_BASE_URL : API_URL}${url}${uid ? `/${uid}` : ""}`,
-      uid ? {} : setConfig(filter)
+      uid ? (signal ? { signal } : {}) : setConfig(filter, signal)
     );
     return response.data;
   } catch (error) {
