@@ -22,10 +22,9 @@ const Navbar = ({ isService = false }) => {
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
-    const sidebar = document.querySelector(".layout-sidenav");
-    const overlay = document.querySelector(".layout-overlay");
-    if (sidebar) sidebar.classList.toggle("show");
-    if (overlay) overlay.classList.toggle("show");
+    // Dispatch custom event for sidebar toggle
+    const event = new CustomEvent('toggleSidebar', { detail: { open: !sidebarOpen } });
+    document.dispatchEvent(event);
   };
 
   const dispatch = useDispatch();
@@ -39,6 +38,7 @@ const Navbar = ({ isService = false }) => {
     <nav
       className="layout-navbar navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme container-fluid"
       id="layout-navbar"
+      style={{ position: 'sticky', top: 0, zIndex: 1000 }}
     >
       <style>
         {`
@@ -265,7 +265,14 @@ const Navbar = ({ isService = false }) => {
                 />
               </div>
             </button>
-            <ul className={`dropdown-menu dropdown-menu-end ${showProfileDropdown ? "show" : ""}`} style={{ display: showProfileDropdown ? "block" : "none" }}>
+            <ul className={`dropdown-menu dropdown-menu-end ${showProfileDropdown ? "show" : ""}`} style={{ 
+              display: showProfileDropdown ? "block" : "none",
+              position: "absolute",
+              right: 0,
+              top: "100%",
+              minWidth: "200px",
+              zIndex: 1050
+            }}>
               <li>
                 <a
                   aria-label="go to profile"

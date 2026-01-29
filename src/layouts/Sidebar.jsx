@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -119,6 +119,16 @@ const Sidebar = ({ isService = false }) => {
   const userPermissions = user?.user_permissions;
   const userRoles = user?.groups;
   const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Listen for sidebar toggle events
+  useEffect(() => {
+    const handleToggleSidebar = (event) => {
+      setSidebarOpen(event.detail.open);
+    };
+    document.addEventListener('toggleSidebar', handleToggleSidebar);
+    return () => document.removeEventListener('toggleSidebar', handleToggleSidebar);
+  }, []);
 
   // Dynamically determine active namespace from URL
   const activeNamespace = useMemo(() => {
@@ -142,7 +152,7 @@ const Sidebar = ({ isService = false }) => {
   return (
     <aside
       id="layout-menu"
-      className="layout-menu layout-sidenav menu-vertical menu bg-menu-theme"
+      className={`layout-menu layout-sidenav menu-vertical menu bg-menu-theme ${sidebarOpen ? "show" : ""}`}
     >
       <div className="app-brand demo mb-2" style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "15px 0" }}>
         <Link
@@ -170,10 +180,9 @@ const Sidebar = ({ isService = false }) => {
 
         <button
           onClick={() => {
-            const sidebar = document.querySelector(".layout-sidenav");
-            const overlay = document.querySelector(".layout-overlay");
-            if (sidebar) sidebar.classList.remove("show");
-            if (overlay) overlay.classList.remove("show");
+            setSidebarOpen(false);
+            const event = new CustomEvent('toggleSidebar', { detail: { open: false } });
+            document.dispatchEvent(event);
           }}
           className="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none bg-transparent border-0"
           type="button"
@@ -348,6 +357,11 @@ const MenuItem = ({ userPermissions, userRoles, submenu, ...item }) => {
         to={item.link}
         className={`menu-link ${hasSubmenu ? 'menu-toggle' : ''}`}
         target={item.link?.includes('http') ? '_blank' : undefined}
+        onClick={() => {
+          // Close sidebar on mobile after clicking a link
+          const event = new CustomEvent('toggleSidebar', { detail: { open: false } });
+          document.dispatchEvent(event);
+        }}
       >
         <i className={`menu-icon tf-icons ${item.icon}`}></i>
         <div>{item.text}</div>

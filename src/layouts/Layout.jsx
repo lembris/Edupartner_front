@@ -31,8 +31,23 @@ const Layout = ({ children, isService = false, activeService = null }) => {
     }
   }, []);
 
+
+
   return (
     <div className="layout-wrapper layout-content-navbar">
+      <style>
+        {`
+          @media (max-width: 1199.98px) {
+            .layout-sidenav.show {
+              transform: translateX(0) !important;
+            }
+            
+            #layout-navbar {
+              z-index: 1101 !important;
+            }
+          }
+        `}
+      </style>
       <div className="layout-container">
         <Sidebar isService={isService} activeService={activeService} />
         <div className="layout-page">
@@ -44,15 +59,6 @@ const Layout = ({ children, isService = false, activeService = null }) => {
             <Footer />
           </div>
         </div>
-        <div 
-          className="layout-overlay layout-menu-toggle"
-          onClick={() => {
-            const sidebar = document.querySelector(".layout-sidenav");
-            const overlay = document.querySelector(".layout-overlay");
-            if (sidebar) sidebar.classList.remove("show");
-            if (overlay) overlay.classList.remove("show");
-          }}
-        ></div>
       </div>
     </div>
   );
