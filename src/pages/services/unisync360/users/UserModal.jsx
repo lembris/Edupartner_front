@@ -63,7 +63,7 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().email("Invalid email").required("Email is required"),
-        pf_number: selectedObj ? Yup.string() : Yup.string().required("PF Number is required"),
+        pf_number: selectedObj ? Yup.string() : Yup.string().required("STAFF Number is required"),
         username: selectedObj ? Yup.string() : Yup.string().required("Username is required"),
         first_name: Yup.string().required("First name is required"),
         middle_name: Yup.string().nullable(),
@@ -74,12 +74,12 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
         alternative_contact: Yup.string().nullable(),
         office_location: Yup.string().nullable(),
         status: Yup.string().required("Status is required"),
-        password: selectedObj 
-            ? Yup.string() 
-            : Yup.string().required("Password is required").min(8, "Password must be at least 8 characters"),
-        password_confirm: selectedObj 
-            ? Yup.string() 
-            : Yup.string().required("Confirm password").oneOf([Yup.ref('password')], 'Passwords must match'),
+        password: !selectedObj
+            ? Yup.string().required("Password is required").min(8, "Password must be at least 8 characters")
+            : Yup.string(),
+        password_confirm: !selectedObj
+            ? Yup.string().required("Confirm password is required").oneOf([Yup.ref('password')], 'Passwords must match')
+            : Yup.string(),
         roles: selectedObj ? Yup.array() : Yup.array().min(1, "At least one role is required"),
     });
 
@@ -227,7 +227,7 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
                                                     <ErrorMessage name="username" component="div" className="text-danger small" />
                                                 </div>
                                                 <div className="col-md-6 mb-3">
-                                                    <label className="form-label">PF Number *</label>
+                                                    <label className="form-label">STAFF Number *</label>
                                                     <Field 
                                                         name="pf_number" 
                                                         className="form-control" 

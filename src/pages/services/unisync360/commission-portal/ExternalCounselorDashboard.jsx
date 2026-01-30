@@ -449,7 +449,7 @@ const AllStudentsList = ({ onRefresh, onUploadDocument, onApplyCourse }) => {
             if (statusFilter) params.status = statusFilter;
             if (sourceFilter) params.source = sourceFilter;
             const response = await commissionPortalService.getMyStudents(params);
-            setStudents(response?.data?.results || []);
+            setStudents(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching students:", error);
         } finally {

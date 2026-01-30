@@ -13,9 +13,7 @@
                         "icon": "bx bx-home",
                         "available": true,
                         "link": "/unisync360/external-counselor",
-                        "permission": [
-                            "view_recruiterprofile"
-                        ],
+                        "permission": [],
                         "role": [
                             "admin",
                             "unisync360_external_counselor"
@@ -36,8 +34,7 @@
                         "available": true,
                         "link": "/unisync360/external-counselor",
                         "permission": [
-                            "view_student",
-                            "view_recruiterstudent"
+                            "view_student"
                         ],
                         "role": [
                             "admin",
@@ -50,8 +47,7 @@
                         "available": true,
                         "link": "/unisync360/external-counselor?action=register",
                         "permission": [
-                            "add_student",
-                            "add_recruiterstudent"
+                            "add_student"
                         ],
                         "role": [
                             "admin",

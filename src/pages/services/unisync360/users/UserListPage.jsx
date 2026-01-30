@@ -200,7 +200,7 @@ export const UserListPage = () => {
                                         {row.full_name || `${row.first_name} ${row.last_name}`}
                                     </span>
                                     <small className="d-block text-muted fs-11">{row.email}</small>
-                                    <small className="d-block text-muted fs-11">PF: {row.pf_number}</small>
+                                    <small className="d-block text-muted fs-11">STAFF: {row.pf_number}</small>
                                     {row.username && (
                                         <small className="d-block text-muted fs-11">
                                             <i className="bx bx-user-check me-1"></i>@{row.username}

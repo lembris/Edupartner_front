@@ -28,7 +28,7 @@ export const LeadLancerDashboard = () => {
 
         // Set active tab from URL
         if (tab) {
-            const validTabs = ['students', 'commissions', 'targets'];
+            const validTabs = ['students', 'commissions', 'packages', 'payments', 'targets', 'predictions'];
             if (validTabs.includes(tab)) {
                 setActiveTab(tab);
             }
@@ -90,7 +90,7 @@ export const LeadLancerDashboard = () => {
     }
 
     return (
-        <div className="container-xxl flex-grow-1 container-p-y">
+        <div className="container-fluid flex-grow-1 container-p-y">
             {/* Header */}
             <div className="row mb-4">
                 <div className="col-12">
@@ -271,10 +271,34 @@ export const LeadLancerDashboard = () => {
                     </li>
                     <li className="nav-item">
                         <button
+                            className={`nav-link ${activeTab === "packages" ? "active" : ""}`}
+                            onClick={() => handleTabChange("packages")}
+                        >
+                            <i className="bx bx-package me-2"></i> Packages
+                        </button>
+                    </li>
+                    <li className="nav-item">
+                        <button
+                            className={`nav-link ${activeTab === "payments" ? "active" : ""}`}
+                            onClick={() => handleTabChange("payments")}
+                        >
+                            <i className="bx bx-credit-card me-2"></i> Payments
+                        </button>
+                    </li>
+                    <li className="nav-item">
+                        <button
                             className={`nav-link ${activeTab === "targets" ? "active" : ""}`}
                             onClick={() => handleTabChange("targets")}
                         >
                             <i className="bx bx-target-lock me-2"></i> Targets
+                        </button>
+                    </li>
+                    <li className="nav-item">
+                        <button
+                            className={`nav-link ${activeTab === "predictions" ? "active" : ""}`}
+                            onClick={() => handleTabChange("predictions")}
+                        >
+                            <i className="bx bx-trending-up me-2"></i> Predictions
                         </button>
                     </li>
                 </ul>
@@ -283,7 +307,10 @@ export const LeadLancerDashboard = () => {
                         <MyStudentsList onRefresh={fetchDashboardData} />
                     )}
                     {activeTab === "commissions" && <CommissionBoard />}
+                    {activeTab === "packages" && <CommissionPackagesView />}
+                    {activeTab === "payments" && <CommissionPaymentsView />}
                     {activeTab === "targets" && <TargetProgress />}
+                    {activeTab === "predictions" && <CommissionPredictionsView />}
                 </div>
             </div>
 
@@ -345,7 +372,7 @@ const MyStudentsList = ({ onRefresh }) => {
             if (searchQuery) params.search = searchQuery;
             if (statusFilter) params.status = statusFilter;
             const response = await commissionPortalService.getMyStudents(params);
-            setStudents(response?.data?.results || []);
+            setStudents(response?.data?.data || []);
         } catch (error) {
             console.error("Error fetching students:", error);
         } finally {
@@ -481,6 +508,244 @@ const getActivityColor = (type) => {
         target_set: "secondary",
     };
     return colors[type] || "secondary";
+};
+
+// Commission Packages Component
+const CommissionPackagesView = () => {
+    const [packages, setPackages] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPackages = async () => {
+            try {
+                setLoading(true);
+                // TODO: Implement API call to fetch commission packages
+                // const response = await commissionPortalService.getCommissionPackages();
+                setPackages([]);
+            } catch (error) {
+                console.error("Error fetching packages:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPackages();
+    }, []);
+
+    if (loading) {
+        return <div className="text-center py-5"><div className="spinner-border text-primary"></div></div>;
+    }
+
+    return (
+        <div className="card mt-4">
+            <div className="card-header">
+                <h5 className="mb-0">Commission Packages</h5>
+            </div>
+            <div className="table-responsive">
+                <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Package Name</th>
+                            <th>Description</th>
+                            <th>Scope</th>
+                            <th>Rate Type</th>
+                            <th>Default Rate</th>
+                            <th>Valid Period</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {packages.length > 0 ? (
+                            packages.map((pkg) => (
+                                <tr key={pkg.uid}>
+                                    <td><strong>{pkg.name}</strong></td>
+                                    <td>{pkg.description || "-"}</td>
+                                    <td><span className="badge bg-info">{pkg.scope}</span></td>
+                                    <td>{pkg.rate_type}</td>
+                                    <td><strong className="text-primary">{pkg.default_rate}%</strong></td>
+                                    <td>{pkg.valid_from} to {pkg.valid_to || "No Limit"}</td>
+                                    <td>
+                                        <button className="btn btn-sm btn-icon btn-label-primary">
+                                            <i className="bx bx-show"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="7" className="text-center py-4">
+                                    <p className="mb-0 text-muted">No commission packages available</p>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+// Commission Payments Component
+const CommissionPaymentsView = () => {
+    const [payments, setPayments] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPayments = async () => {
+            try {
+                setLoading(true);
+                // TODO: Implement API call to fetch commission payments
+                // const response = await commissionPortalService.getCommissionPayments();
+                setPayments([]);
+            } catch (error) {
+                console.error("Error fetching payments:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPayments();
+    }, []);
+
+    if (loading) {
+        return <div className="text-center py-5"><div className="spinner-border text-primary"></div></div>;
+    }
+
+    return (
+        <div className="card mt-4">
+            <div className="card-header">
+                <h5 className="mb-0">Commission Payments</h5>
+            </div>
+            <div className="table-responsive">
+                <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Reference</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {payments.length > 0 ? (
+                            payments.map((payment) => (
+                                <tr key={payment.uid}>
+                                    <td>{payment.payment_reference}</td>
+                                    <td>{formatCurrency(payment.amount)}</td>
+                                    <td><span className={`badge bg-${getPaymentStatusColor(payment.status)}`}>{payment.status}</span></td>
+                                    <td>{new Date(payment.payment_date).toLocaleDateString()}</td>
+                                    <td>
+                                        <button className="btn btn-sm btn-icon btn-label-primary">
+                                            <i className="bx bx-show"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="5" className="text-center py-4">
+                                    <p className="mb-0 text-muted">No payments found</p>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+// Commission Predictions Component
+const CommissionPredictionsView = () => {
+    const [predictions, setPredictions] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPredictions = async () => {
+            try {
+                setLoading(true);
+                // TODO: Implement API call to fetch commission predictions
+                // const response = await commissionPortalService.getCommissionPredictions();
+                setPredictions([]);
+            } catch (error) {
+                console.error("Error fetching predictions:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPredictions();
+    }, []);
+
+    if (loading) {
+        return <div className="text-center py-5"><div className="spinner-border text-primary"></div></div>;
+    }
+
+    return (
+        <div className="card mt-4">
+            <div className="card-header">
+                <h5 className="mb-0">Commission Predictions</h5>
+            </div>
+            <div className="table-responsive">
+                <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Prediction Period</th>
+                            <th>Prediction Date</th>
+                            <th>Predicted Commission</th>
+                            <th>Confidence Level</th>
+                            <th>Methodology</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {predictions.length > 0 ? (
+                            predictions.map((pred) => (
+                                <tr key={pred.uid}>
+                                    <td><span className="badge bg-info">{pred.prediction_period}</span></td>
+                                    <td>{new Date(pred.prediction_date).toLocaleDateString()}</td>
+                                    <td><strong className="text-info">{formatCurrency(pred.predicted_commission)}</strong></td>
+                                    <td>
+                                        <div className="d-flex align-items-center">
+                                            <div className="progress" style={{ width: "100px", height: "6px" }}>
+                                                <div 
+                                                    className="progress-bar bg-info" 
+                                                    style={{ width: `${pred.confidence_level}%` }}
+                                                ></div>
+                                            </div>
+                                            <span className="ms-2 fw-semibold">{pred.confidence_level}%</span>
+                                        </div>
+                                    </td>
+                                    <td>{pred.methodology || "Standard"}</td>
+                                    <td>
+                                        <button className="btn btn-sm btn-icon btn-label-primary">
+                                            <i className="bx bx-show"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" className="text-center py-4">
+                                    <p className="mb-0 text-muted">No predictions available</p>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+// Helper function for payment status color
+const getPaymentStatusColor = (status) => {
+    const colors = {
+        pending: "warning",
+        processing: "info",
+        completed: "success",
+        failed: "danger",
+        reversed: "secondary",
+    };
+    return colors[status] || "secondary";
 };
 
 export default LeadLancerDashboard;

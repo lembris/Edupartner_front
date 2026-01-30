@@ -8,7 +8,7 @@ import FormWizard from "react-form-wizard-component";
 import "react-form-wizard-component/dist/style.css";
 import FormikSelect from "../../../../components/ui-templates/form-components/FormikSelect";
 
-export const StudentModal = ({ selectedObj, onSuccess, onClose }) => {
+export const StudentModal = ({ selectedObj, onSuccess, onClose, isLeadLancer = false }) => {
     const [errors, setOtherError] = useState({});
     const [tabsError, setTabsError] = useState([false, false, false]);
     const [isValidTab, setIsValidTab] = useState([false, false, false]);
@@ -16,6 +16,40 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose }) => {
     const [modalInstance, setModalInstance] = useState(null);
     const modalRef = useRef(null);
     const previousTabIndexRef = useRef(0);
+    
+    // Check if this is a new student being added by lead lancer
+    const isLeadLancerAddingStudent = isLeadLancer && !selectedObj;
+
+    // Fetch Lead Lancer source and Review status for pre-filling
+    const [leadLancerSourceId, setLeadLancerSourceId] = useState(null);
+    const [reviewStatusId, setReviewStatusId] = useState(null);
+
+    useEffect(() => {
+        const fetchSourceAndStatus = async () => {
+            if (isLeadLancerAddingStudent) {
+                try {
+                    // Fetch "Lead Lancer" source
+                    const sourcesResponse = await fetch("/unisync360-students/sources/?page=1&page_size=100&search=Lead%20Lancer");
+                    const sourcesData = await sourcesResponse.json();
+                    const leadLancerSource = sourcesData.results?.find(s => s.name === "Lead Lancer");
+                    if (leadLancerSource) {
+                        setLeadLancerSourceId(leadLancerSource.uid);
+                    }
+
+                    // Fetch "Review" status
+                    const statusResponse = await fetch("/unisync360-students/statuses/?page=1&page_size=100&search=Review");
+                    const statusData = await statusResponse.json();
+                    const reviewStatus = statusData.results?.find(s => s.name === "Review");
+                    if (reviewStatus) {
+                        setReviewStatusId(reviewStatus.uid);
+                    }
+                } catch (error) {
+                    console.error("Error fetching source and status:", error);
+                }
+            }
+        };
+        fetchSourceAndStatus();
+    }, [isLeadLancerAddingStudent]);
 
     useEffect(() => {
         // Reset state ONLY on mount, not on every render
@@ -90,8 +124,12 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose }) => {
         previous_school: selectedObj?.previous_school || "",
         previous_school_id: selectedObj?.previous_school_id?.uid || selectedObj?.previous_school_id || "",
         graduation_year: selectedObj?.graduation_year || "",
-        source: selectedObj?.source?.uid || selectedObj?.source || "",
-        status: selectedObj?.status?.uid || selectedObj?.status || "",
+        source: isLeadLancerAddingStudent && leadLancerSourceId 
+            ? leadLancerSourceId 
+            : (selectedObj?.source?.uid || selectedObj?.source || ""),
+        status: isLeadLancerAddingStudent && reviewStatusId
+            ? reviewStatusId
+            : (selectedObj?.status?.uid || selectedObj?.status || ""),
         assigned_counselor: selectedObj?.assigned_counselor?.uid || selectedObj?.assigned_counselor || "",
     };
 
@@ -141,7 +179,9 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose }) => {
             .max(new Date().getFullYear() + 10, "Year cannot be too far in the future"),
         source: Yup.string().required("Source is required"),
         status: Yup.string().required("Status is required"),
-        assigned_counselor: Yup.string().required("Counselor is required"),
+        assigned_counselor: isLeadLancerAddingStudent 
+            ? Yup.string().nullable() 
+            : Yup.string().required("Counselor is required"),
     });
 
     const handleTabChange = useCallback(({ nextIndex }) => {
@@ -187,6 +227,11 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose }) => {
             if (!submitData.passport_expiry) delete submitData.passport_expiry;
             if (!submitData.highest_qualification) delete submitData.highest_qualification;
             if (!submitData.marital_status) delete submitData.marital_status;
+            
+            // For lead lancer adding student, don't include assigned_counselor
+            if (isLeadLancerAddingStudent) {
+                delete submitData.assigned_counselor;
+            }
 
             // Handle previous_school based on qualification type
             if (submitData.highest_qualification === 'advanced_secondary' || submitData.highest_qualification === 'ordinary_secondary') {
@@ -664,6 +709,7 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose }) => {
                                                     </div>
                                                 </div>
                                                 <div className="row text-start">
+                                                    {!isLeadLancer && (
                                                     <div className="col-md-4 mb-3">
                                                         <FormikSelect
                                                             name="source"
@@ -677,6 +723,8 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose }) => {
                                                         />
                                                         {errors.source && <div className="text-danger small">{errors.source}</div>}
                                                     </div>
+                                                    )}
+                                                    {!isLeadLancer && (
                                                     <div className="col-md-4 mb-3">
                                                         <FormikSelect
                                                             name="status"
@@ -690,19 +738,22 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose }) => {
                                                         />
                                                         {errors.status && <div className="text-danger small">{errors.status}</div>}
                                                     </div>
+                                                    )}
+                                                    {!isLeadLancer && (
                                                     <div className="col-md-4 mb-3">
-                                                        <FormikSelect
-                                                            name="assigned_counselor"
-                                                            label="Counselor *"
-                                                            url="/users-list/"
-                                                            containerClass="mb-0"
-                                                            filters={{ page: 1, page_size: 100, paginated: true }}
-                                                            mapOption={(item) => ({ value: item.guid || item.uid || item.id, label: `${item.first_name} ${item.last_name}` })}
-                                                            placeholder="Assign Counselor"
-                                                            isRequired={true}
-                                                        />
-                                                        {errors.assigned_counselor && <div className="text-danger small">{errors.assigned_counselor}</div>}
+                                                         <FormikSelect
+                                                              name="assigned_counselor"
+                                                              label="Counselor *"
+                                                              url="/users-list/"
+                                                              containerClass="mb-0"
+                                                              filters={{ page: 1, page_size: 100, paginated: true }}
+                                                              mapOption={(item) => ({ value: item.guid || item.uid || item.id, label: `${item.first_name} ${item.last_name}` })}
+                                                             placeholder="Assign Counselor"
+                                                             isRequired={true}
+                                                         />
+                                                         {errors.assigned_counselor && <div className="text-danger small">{errors.assigned_counselor}</div>}
                                                     </div>
+                                                    )}
                                                 </div>
                                             </FormWizard.TabContent>
                                         </FormWizard>

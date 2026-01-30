@@ -343,6 +343,96 @@
                 ]
             },
             {
+                "text": "Commissions",
+                "icon": "bx bx-dollar-circle",
+                "available": true,
+                "link": "",
+                "header": "COMMISSIONS & EARNINGS",
+                "submenu": [
+                    {
+                        "text": "Commission Records",
+                        "icon": "bx bx-receipt",
+                        "available": true,
+                        "link": "/unisync360/commissions",
+                        "permission": [
+                            "view_commission"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant",
+                            "unisync360_lead_lancer"
+                        ]
+                    },
+                    {
+                        "text": "Agent Commissions",
+                        "icon": "bx bx-wallet",
+                        "available": true,
+                        "link": "/unisync360/agent-commissions",
+                        "permission": [
+                            "view_agentcommission"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
+                        ]
+                    },
+                    {
+                        "text": "Commission Packages",
+                        "icon": "bx bx-box",
+                        "available": true,
+                        "link": "/unisync360/commission-packages",
+                        "permission": [
+                            "view_commissionpackage"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
+                        ]
+                    },
+                    {
+                        "text": "Commission Payments",
+                        "icon": "bx bx-credit-card",
+                        "available": true,
+                        "link": "/unisync360/commission-payments",
+                        "permission": [
+                            "view_commissionpayment"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
+                        ]
+                    },
+                    {
+                        "text": "Commission Targets",
+                        "icon": "bx bx-target-lock",
+                        "available": true,
+                        "link": "/unisync360/commission-targets",
+                        "permission": [
+                            "view_commissiontarget"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant",
+                            "unisync360_lead_lancer"
+                        ]
+                    },
+                    {
+                        "text": "Commission Predictions",
+                        "icon": "bx bx-trending-up",
+                        "available": true,
+                        "link": "/unisync360/commission-predictions",
+                        "permission": [
+                            "view_commissionprediction"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
+                        ]
+                    }
+                ]
+            },
+
+            {
                 "text": "Settings",
                 "icon": "bx bx-cog",
                 "available": true,
