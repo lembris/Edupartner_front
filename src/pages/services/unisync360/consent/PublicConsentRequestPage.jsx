@@ -248,569 +248,416 @@ export const PublicConsentRequestPage = () => {
                                 </div>
                                 <div className="text-center">
                                     <div className="bg-light rounded-circle p-3 d-inline-block mb-2 shadow-sm">
-                                        <i className="bx bx-support text-info fs-3"></i>
+                                        <i className="bx bx-lock-alt text-warning fs-3"></i>
                                     </div>
-                                    <div className="small fw-medium">24/7 Support</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="bg-light rounded-circle p-3 d-inline-block mb-2 shadow-sm">
-                                        <i className="bx bx-shield-alt text-warning fs-3"></i>
-                                    </div>
-                                    <div className="small fw-medium">SSL Encrypted</div>
+                                    <div className="small fw-medium">Data Protected</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Form Container - Full Width */}
+                {/* Main Form Section */}
                 <div className="row justify-content-center">
-                    <div className="col-12 col-xl-10">
-                        <div className="card shadow-lg border-0">
-                            <div className="card-header bg-white border-0 pt-4 pb-3 px-4 px-lg-5">
-                                <div className="d-flex justify-content-between align-items-center mb-2">
-                                    <div>
-                                        <h4 className="mb-1 fw-bold">
-                                            <i className="bx bx-edit-alt text-primary me-2"></i>
-                                            Complete Your Information
-                                        </h4>
-                                        <p className="text-muted mb-0">
-                                            Fill in all required fields to submit your consent request
-                                        </p>
+                    <div className="col-lg-10 col-xl-8">
+                        <form onSubmit={handleSubmit}>
+                            {/* Personal Information Section */}
+                            <div className="card shadow-sm border-0 mb-5">
+                                <div className="card-header bg-light border-bottom">
+                                    <div className="d-flex align-items-center">
+                                        <div className="step-badge me-3">
+                                            <span className="badge bg-primary">1</span>
+                                        </div>
+                                        <i className="bx bx-user text-primary me-2 fs-5"></i>
+                                        <div>
+                                            <h5 className="card-title mb-0 fw-bold">Personal Information</h5>
+                                            <p className="card-text text-muted small mb-0 mt-1">Please provide your basic details</p>
+                                        </div>
                                     </div>
-                                    {selectedCount > 0 && (
-                                        <span className="badge bg-success px-3 py-2 fs-6">
-                                            <i className="bx bx-check me-1"></i>
-                                            {selectedCount} services selected
-                                        </span>
-                                    )}
                                 </div>
+                                <div className="card-body">
+                                    <div className="row g-3">
+                                        {/* First Name */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="first_name" className="form-label fw-medium">
+                                                First Name <span className="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className={`form-control ${errors.first_name ? 'is-invalid' : ''}`}
+                                                id="first_name"
+                                                name="first_name"
+                                                value={formData.first_name}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter your first name"
+                                            />
+                                            {errors.first_name && (
+                                                <div className="invalid-feedback">{errors.first_name}</div>
+                                            )}
+                                        </div>
 
-                                {/* Progress Indicator */}
-                                <div className="progress mt-3" style={{ height: '8px' }}>
-                                    <div
-                                        className="progress-bar bg-primary"
-                                        role="progressbar"
-                                        style={{
-                                            width: `${(Object.keys(formData).filter(key =>
-                                                formData[key] && formData[key] !== "" &&
-                                                formData[key] !== false
-                                            ).length / 13) * 100}%`
-                                        }}
-                                    ></div>
+                                        {/* Middle Name */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="middle_name" className="form-label fw-medium">
+                                                Middle Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="middle_name"
+                                                name="middle_name"
+                                                value={formData.middle_name}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter your middle name (optional)"
+                                            />
+                                        </div>
+
+                                        {/* Last Name */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="last_name" className="form-label fw-medium">
+                                                Last Name <span className="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className={`form-control ${errors.last_name ? 'is-invalid' : ''}`}
+                                                id="last_name"
+                                                name="last_name"
+                                                value={formData.last_name}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter your last name"
+                                            />
+                                            {errors.last_name && (
+                                                <div className="invalid-feedback">{errors.last_name}</div>
+                                            )}
+                                        </div>
+
+                                        {/* Email */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="email" className="form-label fw-medium">
+                                                Email Address <span className="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                type="email"
+                                                className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                                id="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter your email"
+                                            />
+                                            {errors.email && (
+                                                <div className="invalid-feedback">{errors.email}</div>
+                                            )}
+                                        </div>
+
+                                        {/* Phone */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="phone" className="form-label fw-medium">
+                                                Phone Number <span className="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                type="tel"
+                                                className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
+                                                id="phone"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter your phone number"
+                                            />
+                                            {errors.phone && (
+                                                <div className="invalid-feedback">{errors.phone}</div>
+                                            )}
+                                        </div>
+
+                                        {/* Date of Birth */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="date_of_birth" className="form-label fw-medium">
+                                                Date of Birth
+                                            </label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                id="date_of_birth"
+                                                name="date_of_birth"
+                                                value={formData.date_of_birth}
+                                                onChange={handleInputChange}
+                                            />
+                                        </div>
+
+                                        {/* Additional Notes */}
+                                        <div className="col-12">
+                                            <label htmlFor="additional_notes" className="form-label fw-medium">
+                                                Additional Notes
+                                            </label>
+                                            <textarea
+                                                className="form-control"
+                                                id="additional_notes"
+                                                name="additional_notes"
+                                                value={formData.additional_notes}
+                                                onChange={handleInputChange}
+                                                placeholder="Any additional information you'd like to share"
+                                                rows="3"
+                                            ></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="card-body p-4 p-lg-5">
-                                {submitSuccess && (
-                                    <div className="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                                        <div className="d-flex align-items-center">
-                                            <i className="bx bx-check-circle fs-4 me-3"></i>
-                                            <div>
-                                                <strong>Success!</strong> Your request has been submitted successfully.
-                                            </div>
+                            {/* Emergency Contact Section */}
+                            <div className="card shadow-sm border-0 mb-5">
+                                <div className="card-header bg-light border-bottom">
+                                    <div className="d-flex align-items-center">
+                                        <div className="step-badge me-3">
+                                            <span className="badge bg-primary">2</span>
+                                        </div>
+                                        <i className="bx bx-phone-call text-primary me-2 fs-5"></i>
+                                        <div>
+                                            <h5 className="card-title mb-0 fw-bold">Emergency Contact / Parent Guardian</h5>
+                                            <p className="card-text text-muted small mb-0 mt-1">Please provide your parent or emergency contact details</p>
                                         </div>
                                     </div>
-                                )}
-
-                                <form onSubmit={handleSubmit}>
-                                    {/* Personal Information Section */}
-                                    <div className="mb-5">
-                                        <div className="section-header mb-4">
-                                            <div className="d-flex align-items-center mb-3">
-                                                <div className="icon-circle bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
-                                                    <i className="bx bx-user fs-5"></i>
-                                                </div>
-                                                <h5 className="mb-0 fw-semibold">Personal Information</h5>
-                                            </div>
-                                            <p className="text-muted small mb-0">
-                                                Provide your personal details for identification purposes
-                                            </p>
+                                </div>
+                                <div className="card-body">
+                                    <div className="row g-3">
+                                        {/* Full Name */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="emergency_full_name" className="form-label fw-medium">
+                                                Full Name <span className="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className={`form-control ${errors.emergency_full_name ? 'is-invalid' : ''}`}
+                                                id="emergency_full_name"
+                                                name="emergency_full_name"
+                                                value={formData.emergency_full_name}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter full name"
+                                            />
+                                            {errors.emergency_full_name && (
+                                                <div className="invalid-feedback">{errors.emergency_full_name}</div>
+                                            )}
                                         </div>
 
-                                        <div className="row g-4">
-                                            <div className="col-md-6 col-lg-4">
-                                                <label className="form-label fw-medium" htmlFor="first_name">
-                                                    First Name <span className="text-danger">*</span>
-                                                </label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-user"></i>
-                                                    </span>
-                                                    <input
-                                                        type="text"
-                                                        id="first_name"
-                                                        className={`form-control ${errors.first_name ? "is-invalid" : ""}`}
-                                                        name="first_name"
-                                                        value={formData.first_name}
-                                                        onChange={handleInputChange}
-                                                        placeholder="John"
-                                                    />
-                                                </div>
-                                                {errors.first_name && (
-                                                    <div className="invalid-feedback d-block">{errors.first_name}</div>
-                                                )}
-                                            </div>
-
-                                            <div className="col-md-6 col-lg-4">
-                                                <label className="form-label fw-medium" htmlFor="middle_name">Middle Name</label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-user"></i>
-                                                    </span>
-                                                    <input
-                                                        type="text"
-                                                        id="middle_name"
-                                                        className="form-control"
-                                                        name="middle_name"
-                                                        value={formData.middle_name}
-                                                        onChange={handleInputChange}
-                                                        placeholder="Michael"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6 col-lg-4">
-                                                <label className="form-label fw-medium" htmlFor="last_name">
-                                                    Last Name <span className="text-danger">*</span>
-                                                </label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-user"></i>
-                                                    </span>
-                                                    <input
-                                                        type="text"
-                                                        id="last_name"
-                                                        className={`form-control ${errors.last_name ? "is-invalid" : ""}`}
-                                                        name="last_name"
-                                                        value={formData.last_name}
-                                                        onChange={handleInputChange}
-                                                        placeholder="Doe"
-                                                    />
-                                                </div>
-                                                {errors.last_name && (
-                                                    <div className="invalid-feedback d-block">{errors.last_name}</div>
-                                                )}
-                                            </div>
-
-                                            <div className="col-md-6 col-lg-4">
-                                                <label className="form-label fw-medium" htmlFor="date_of_birth">Date of Birth</label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-calendar"></i>
-                                                    </span>
-                                                    <input
-                                                        type="date"
-                                                        id="date_of_birth"
-                                                        className="form-control"
-                                                        name="date_of_birth"
-                                                        value={formData.date_of_birth}
-                                                        onChange={handleInputChange}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6 col-lg-4">
-                                                <label className="form-label fw-medium" htmlFor="phone">
-                                                    Phone <span className="text-danger">*</span>
-                                                </label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-phone"></i>
-                                                    </span>
-                                                    <input
-                                                        type="tel"
-                                                        id="phone"
-                                                        className={`form-control ${errors.phone ? "is-invalid" : ""}`}
-                                                        name="phone"
-                                                        value={formData.phone}
-                                                        onChange={handleInputChange}
-                                                        placeholder="+1 555-123-4567"
-                                                    />
-                                                </div>
-                                                {errors.phone && (
-                                                    <div className="invalid-feedback d-block">{errors.phone}</div>
-                                                )}
-                                            </div>
-
-                                            <div className="col-md-6 col-lg-4">
-                                                <label className="form-label fw-medium" htmlFor="email">
-                                                    Email <span className="text-danger">*</span>
-                                                </label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-envelope"></i>
-                                                    </span>
-                                                    <input
-                                                        type="email"
-                                                        id="email"
-                                                        className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                                                        name="email"
-                                                        value={formData.email}
-                                                        onChange={handleInputChange}
-                                                        placeholder="john@example.com"
-                                                    />
-                                                </div>
-                                                {errors.email && (
-                                                    <div className="invalid-feedback d-block">{errors.email}</div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Parent/Guardian Contact Section */}
-                                    <div className="mb-5">
-                                        <div className="section-header mb-4">
-                                            <div className="d-flex align-items-center mb-3">
-                                                <div className="icon-circle bg-danger bg-opacity-10 text-danger rounded-circle p-2 me-3">
-                                                    <i className="bx bx-phone fs-5"></i>
-                                                </div>
-                                                <h5 className="mb-0 fw-semibold">Parent/Guardian Contact</h5>
-                                            </div>
-                                            <p className="text-muted small mb-0">
-                                                Provide your parent or guardian's contact information
-                                            </p>
+                                        {/* Relationship */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="emergency_relationship" className="form-label fw-medium">
+                                                Relationship <span className="text-danger">*</span>
+                                            </label>
+                                            <select
+                                                className={`form-select ${errors.emergency_relationship ? 'is-invalid' : ''}`}
+                                                id="emergency_relationship"
+                                                name="emergency_relationship"
+                                                value={formData.emergency_relationship}
+                                                onChange={handleInputChange}
+                                            >
+                                                <option value="">-- Select a relationship --</option>
+                                                <option value="Parent">Parent</option>
+                                                <option value="Guardian">Guardian</option>
+                                                <option value="Spouse">Spouse</option>
+                                                <option value="Sibling">Sibling</option>
+                                                <option value="Friend">Friend</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            {errors.emergency_relationship && (
+                                                <div className="invalid-feedback">{errors.emergency_relationship}</div>
+                                            )}
                                         </div>
 
-                                        <div className="row g-4">
-                                            <div className="col-md-6 col-lg-6">
-                                                <label className="form-label fw-medium" htmlFor="emergency_full_name">
-                                                    Parent/Guardian Name <span className="text-danger">*</span>
-                                                </label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-user"></i>
-                                                    </span>
-                                                    <input
-                                                        type="text"
-                                                        id="emergency_full_name"
-                                                        className={`form-control ${errors.emergency_full_name ? "is-invalid" : ""}`}
-                                                        name="emergency_full_name"
-                                                        value={formData.emergency_full_name}
-                                                        onChange={handleInputChange}
-                                                        placeholder="Jane Doe"
-                                                    />
-                                                </div>
-                                                {errors.emergency_full_name && (
-                                                    <div className="invalid-feedback d-block">{errors.emergency_full_name}</div>
-                                                )}
-                                            </div>
-
-                                            <div className="col-md-6 col-lg-6">
-                                                <label className="form-label fw-medium" htmlFor="emergency_relationship">
-                                                    Relationship <span className="text-danger">*</span>
-                                                </label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-group"></i>
-                                                    </span>
-                                                    <select
-                                                        id="emergency_relationship"
-                                                        className={`form-control ${errors.emergency_relationship ? "is-invalid" : ""}`}
-                                                        name="emergency_relationship"
-                                                        value={formData.emergency_relationship}
-                                                        onChange={handleInputChange}
-                                                    >
-                                                        <option value="">Select relationship</option>
-                                                        <option value="Father">Father</option>
-                                                        <option value="Mother">Mother</option>
-                                                        <option value="Guardian">Guardian</option>
-                                                        <option value="Grandparent">Grandparent</option>
-                                                        <option value="Uncle">Uncle</option>
-                                                        <option value="Aunt">Aunt</option>
-                                                        <option value="Other">Other</option>
-                                                    </select>
-                                                </div>
-                                                {errors.emergency_relationship && (
-                                                    <div className="invalid-feedback d-block">{errors.emergency_relationship}</div>
-                                                )}
-                                            </div>
-
-                                            <div className="col-md-6 col-lg-6">
-                                                <label className="form-label fw-medium" htmlFor="emergency_phone">
-                                                    Phone <span className="text-danger">*</span>
-                                                </label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-phone"></i>
-                                                    </span>
-                                                    <input
-                                                        type="tel"
-                                                        id="emergency_phone"
-                                                        className={`form-control ${errors.emergency_phone ? "is-invalid" : ""}`}
-                                                        name="emergency_phone"
-                                                        value={formData.emergency_phone}
-                                                        onChange={handleInputChange}
-                                                        placeholder="+1 555-123-4567"
-                                                    />
-                                                </div>
-                                                {errors.emergency_phone && (
-                                                    <div className="invalid-feedback d-block">{errors.emergency_phone}</div>
-                                                )}
-                                            </div>
-
-                                            <div className="col-md-6 col-lg-6">
-                                                <label className="form-label fw-medium" htmlFor="emergency_email">Email</label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-envelope"></i>
-                                                    </span>
-                                                    <input
-                                                        type="email"
-                                                        id="emergency_email"
-                                                        className="form-control"
-                                                        name="emergency_email"
-                                                        value={formData.emergency_email}
-                                                        onChange={handleInputChange}
-                                                        placeholder="jane@example.com"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Services Section */}
-                                    <div className="mb-5">
-                                        <div className="section-header mb-4">
-                                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                                <div className="d-flex align-items-center">
-                                                    <div className="icon-circle bg-success bg-opacity-10 text-success rounded-circle p-2 me-3">
-                                                        <i className="bx bx-list-ul fs-5"></i>
-                                                    </div>
-                                                    <h5 className="mb-0 fw-semibold">Select Services</h5>
-                                                </div>
-                                                <div className="text-end">
-                                                    <small className="text-muted fw-medium">
-                                                        Select all that apply
-                                                    </small>
-                                                </div>
-                                            </div>
-                                            <p className="text-muted small mb-0">
-                                                Choose the services you need consent for
-                                            </p>
+                                        {/* Email */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="emergency_email" className="form-label fw-medium">
+                                                Email Address
+                                            </label>
+                                            <input
+                                                type="email"
+                                                className="form-control"
+                                                id="emergency_email"
+                                                name="emergency_email"
+                                                value={formData.emergency_email}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter email address (optional)"
+                                            />
                                         </div>
 
-                                        {errors.services && (
-                                            <div className="alert alert-danger d-flex align-items-center mb-3">
-                                                <i className="bx bx-error-circle me-2"></i>
-                                                {errors.services}
-                                            </div>
-                                        )}
-
-                                        <div className="row g-3">
-                                            {services.map((service) => (
-                                                <div key={service.uid} className="col-12">
-                                                    <div
-                                                        className={`service-card border rounded-3 p-3 transition-all ${selectedServices[service.uid]
-                                                            ? "border-primary border-2 bg-primary bg-opacity-5"
-                                                            : "border-light hover-border-primary"
-                                                            }`}
-                                                        onClick={() => handleServiceToggle(service.uid)}
-                                                        style={{ cursor: 'pointer' }}
-                                                    >
-                                                        <div className="d-flex align-items-start">
-                                                            <div className="form-check me-3 mt-1">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    className="form-check-input"
-                                                                    checked={selectedServices[service.uid] || false}
-                                                                    onChange={() => { }}
-                                                                    style={{ width: '20px', height: '20px' }}
-                                                                />
-                                                            </div>
-                                                            <div className="flex-grow-1">
-                                                                <div className="d-flex justify-content-between align-items-start mb-2">
-                                                                    <h6 className="mb-0 fw-semibold">{service.name}</h6>
-                                                                    <span className="badge bg-light text-dark">
-                                                                        <i className="bx bx-category me-1"></i>
-                                                                        {service.category}
-                                                                    </span>
-                                                                </div>
-                                                                <p className="text-muted small mb-2">{service.description}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {services.length === 0 && (
-                                            <div className="text-center py-5">
-                                                <i className="bx bx-info-circle text-muted" style={{ fontSize: '3rem' }}></i>
-                                                <p className="text-muted mt-3 mb-0">No services available at the moment.</p>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Additional Information */}
-                                    <div className="mb-5">
-                                        <div className="section-header mb-4">
-                                            <div className="d-flex align-items-center mb-3">
-                                                <div className="icon-circle bg-warning bg-opacity-10 text-warning rounded-circle p-2 me-3">
-                                                    <i className="bx bx-note fs-5"></i>
-                                                </div>
-                                                <h5 className="mb-0 fw-semibold">Additional Information</h5>
-                                            </div>
-                                            <p className="text-muted small mb-0">
-                                                Provide any additional details or notes
-                                            </p>
-                                        </div>
-
-                                        <div className="row g-3">
-                                            <div className="col-md-6">
-                                                <label className="form-label fw-medium" htmlFor="parent_name">
-                                                    Parent/Guardian Name <span className="text-muted">(if different from above)</span>
-                                                </label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light">
-                                                        <i className="bx bx-user-plus"></i>
-                                                    </span>
-                                                    <input
-                                                        type="text"
-                                                        id="parent_name"
-                                                        className="form-control"
-                                                        name="parent_name"
-                                                        value={formData.parent_name}
-                                                        onChange={handleInputChange}
-                                                        placeholder="Only if different from parent/guardian above"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12">
-                                                <label className="form-label fw-medium" htmlFor="additional_notes">Additional Notes</label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text bg-light align-items-start pt-2">
-                                                        <i className="bx bx-comment"></i>
-                                                    </span>
-                                                    <textarea
-                                                        id="additional_notes"
-                                                        className="form-control"
-                                                        name="additional_notes"
-                                                        rows="4"
-                                                        value={formData.additional_notes}
-                                                        onChange={handleInputChange}
-                                                        placeholder="Any additional information you'd like us to know..."
-                                                    ></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Terms Agreement */}
-                                    <div className="mb-5">
-                                        <div className={`terms-card border rounded-3 p-4 ${errors.agreed_to_terms ? 'border-danger' : 'border-light'}`}>
-                                            <div className="form-check">
-                                                <input
-                                                    type="checkbox"
-                                                    id="agreed_to_terms"
-                                                    className={`form-check-input ${errors.agreed_to_terms ? "is-invalid" : ""}`}
-                                                    name="agreed_to_terms"
-                                                    checked={formData.agreed_to_terms}
-                                                    onChange={handleInputChange}
-                                                    style={{ width: '20px', height: '20px' }}
-                                                />
-                                                <label className="form-check-label ms-2 fw-medium" htmlFor="agreed_to_terms">
-                                                    I agree to the service terms and conditions <span className="text-danger">*</span>
-                                                </label>
-                                            </div>
-                                            <p className="text-muted small mb-0 ms-4 mt-2">
-                                                <i className="bx bx-info-circle me-1"></i>
-                                                By checking this box, you confirm that you have read and agree to our service terms and consent policies.
-                                            </p>
-                                            {errors.agreed_to_terms && (
-                                                <div className="text-danger small ms-4 mt-2">
-                                                    <i className="bx bx-error-circle me-1"></i>
-                                                    {errors.agreed_to_terms}
-                                                </div>
+                                        {/* Phone */}
+                                        <div className="col-md-6">
+                                            <label htmlFor="emergency_phone" className="form-label fw-medium">
+                                                Phone Number <span className="text-danger">*</span>
+                                            </label>
+                                            <input
+                                                type="tel"
+                                                className={`form-control ${errors.emergency_phone ? 'is-invalid' : ''}`}
+                                                id="emergency_phone"
+                                                name="emergency_phone"
+                                                value={formData.emergency_phone}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter phone number"
+                                            />
+                                            {errors.emergency_phone && (
+                                                <div className="invalid-feedback">{errors.emergency_phone}</div>
                                             )}
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
-                                    {/* Action Buttons */}
-                                    <div className="d-flex justify-content-between align-items-center pt-4 border-top">
-                                        <button
-                                            type="button"
-                                            className="btn btn-outline-secondary px-4"
-                                            onClick={() => {
-                                                if (window.confirm("Are you sure you want to clear the form? All entered data will be lost.")) {
-                                                    setFormData({
-                                                        first_name: "",
-                                                        middle_name: "",
-                                                        last_name: "",
-                                                        phone: "",
-                                                        email: "",
-                                                        date_of_birth: "",
-                                                        emergency_full_name: "",
-                                                        emergency_phone: "",
-                                                        emergency_email: "",
-                                                        emergency_relationship: "",
-                                                        parent_name: "",
-                                                        agreed_to_terms: false,
-                                                        additional_notes: ""
-                                                    });
-                                                    setSelectedServices({});
-                                                    loadServices();
-                                                    setErrors({});
-                                                }
-                                            }}
-                                        >
-                                            <i className="bx bx-refresh me-2"></i>
-                                            Clear Form
-                                        </button>
+                            {/* Services Selection Section */}
+                            <div className="card shadow-sm border-0 mb-5">
+                                <div className="card-header bg-light border-bottom">
+                                    <div className="d-flex align-items-center">
+                                        <div className="step-badge me-3">
+                                            <span className="badge bg-primary">3</span>
+                                        </div>
+                                        <i className="bx bx-list-check text-primary me-2 fs-5"></i>
+                                        <div>
+                                            <h5 className="card-title mb-0 fw-bold">Select Services</h5>
+                                            <p className="card-text text-muted small mb-0 mt-1">Select the services you need ({selectedCount} selected)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-body">
+                                    {errors.services && (
+                                        <div className="alert alert-danger mb-4" role="alert">
+                                            <i className="bx bx-exclamation-circle me-2"></i>
+                                            {errors.services}
+                                        </div>
+                                    )}
+                                    <div className="row g-3">
+                                        {services.map((service) => (
+                                            <div key={service.uid} className="col-md-6">
+                                                <div
+                                                    className={`service-card card h-100 border-2 cursor-pointer ${
+                                                        selectedServices[service.uid] ? 'border-primary' : 'border-light'
+                                                    }`}
+                                                    onClick={() => handleServiceToggle(service.uid)}
+                                                    role="button"
+                                                    tabIndex="0"
+                                                    onKeyPress={(e) => {
+                                                        if (e.key === 'Enter' || e.key === ' ') {
+                                                            handleServiceToggle(service.uid);
+                                                        }
+                                                    }}
+                                                >
+                                                    <div className="card-body">
+                                                        <div className="d-flex align-items-start">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-check-input me-3 mt-1"
+                                                                id={`service-${service.uid}`}
+                                                                checked={selectedServices[service.uid] || false}
+                                                                onChange={() => handleServiceToggle(service.uid)}
+                                                            />
+                                                            <label htmlFor={`service-${service.uid}`} className="form-check-label flex-grow-1">
+                                                                <h6 className="card-title mb-2 fw-bold">{service.name}</h6>
+                                                                {service.description && (
+                                                                    <p className="card-text text-muted small">{service.description}</p>
+                                                                )}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
 
-                                        <div className="d-flex gap-3">
-                                            <button
-                                                type="submit"
-                                                disabled={loading}
-                                                className="btn btn-primary btn-lg px-5 shadow-sm"
-                                            >
-                                                {loading ? (
-                                                    <>
-                                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                                        Submitting...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <i className="bx bx-send me-2"></i>
-                                                        Submit Request
-                                                    </>
-                                                )}
-                                            </button>
+                            {/* Terms & Conditions Section */}
+                            <div className="card shadow-sm border-0 mb-5">
+                                <div className="card-header bg-light border-bottom">
+                                    <div className="d-flex align-items-center">
+                                        <div className="step-badge me-3">
+                                            <span className="badge bg-primary">4</span>
+                                        </div>
+                                        <i className="bx bx-file-blank text-primary me-2 fs-5"></i>
+                                        <div>
+                                            <h5 className="card-title mb-0 fw-bold">Terms & Conditions</h5>
+                                            <p className="card-text text-muted small mb-0 mt-1">Please review and accept the terms</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-body">
+                                    <div className="terms-card p-4 rounded mb-4">
+                                        <h6 className="fw-bold mb-3">Standard Terms & Conditions</h6>
+                                        <p className="text-muted small mb-0">
+                                            By submitting this form, you agree to our service terms and acknowledge that your information will be processed securely.
+                                        </p>
+                                    </div>
+
+                                    <div className="alert alert-info mb-4" role="alert">
+                                        <div className="d-flex">
+                                            <i className="bx bx-lock-alt me-2 flex-shrink-0 mt-1"></i>
+                                            <div>
+                                                <strong>Secure & Confidential Submission</strong>
+                                                <p className="text-muted small mb-0 mt-1">
+                                                    Your information is encrypted and protected with 256-bit SSL encryption. We never share your data with third parties.
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="text-center mt-4 pt-3 border-top">
-                                        <p className="text-muted small">
-                                            <i className="bx bx-shield-alt me-1"></i>
-                                            Your submission is protected by 256-bit SSL encryption.
-                                            All fields marked with <span className="text-danger">*</span> are required.
-                                        </p>
+                                    <div className="form-check">
+                                        <input
+                                            type="checkbox"
+                                            className={`form-check-input ${errors.agreed_to_terms ? 'is-invalid' : ''}`}
+                                            id="agreed_to_terms"
+                                            name="agreed_to_terms"
+                                            checked={formData.agreed_to_terms}
+                                            onChange={handleInputChange}
+                                        />
+                                        <label className="form-check-label" htmlFor="agreed_to_terms">
+                                            I agree to the terms and conditions <span className="text-danger">*</span>
+                                        </label>
+                                        {errors.agreed_to_terms && (
+                                            <div className="invalid-feedback d-block">{errors.agreed_to_terms}</div>
+                                        )}
                                     </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>
+
+                            {/* Form Actions */}
+                            <div className="mt-5 pt-4 border-top">
+                                <div className="row g-3">
+                                    <div className="col-12 d-flex gap-2 justify-content-center">
+                                        <button
+                                            type="submit"
+                                            className="btn btn-primary btn-lg"
+                                            disabled={loading}
+                                        >
+                                            {loading ? (
+                                                <>
+                                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                    Processing...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <i className="bx bx-check-circle me-2"></i>
+                                                    Submit Request
+                                                </>
+                                            )}
+                                        </button>
+                                        <button
+                                            type="reset"
+                                            className="btn btn-outline-secondary btn-lg"
+                                            disabled={loading}
+                                        >
+                                            <i className="bx bx-reset me-2"></i>
+                                            Clear Form
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="text-center mt-4 pt-3">
+                                    <p className="text-muted small">
+                                        <i className="bx bx-shield-alt me-1"></i>
+                                        Your submission is protected by 256-bit SSL encryption.
+                                        All fields marked with <span className="text-danger">*</span> are required.
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-
-                {/* Footer */}
-                {/* <div className="text-center mt-5 pt-5">
-                    <div className="security-notice bg-light rounded-3 p-4 mb-4 mx-auto" style={{ maxWidth: '600px' }}>
-                        <div className="d-flex align-items-center justify-content-center mb-3">
-                            <i className="bx bx-lock-alt text-success fs-3 me-3"></i>
-                            <div>
-                                <h6 className="mb-1 fw-semibold">Secure & Confidential Submission</h6>
-                                <p className="text-muted small mb-0">Your information is encrypted and will never be shared with third parties</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p className="text-muted small">
-                        Need assistance? Contact our support team at <a href="mailto:support@example.com" className="text-primary fw-medium">support@example.com</a>
-                        <br />
-                        <small>© {new Date().getFullYear()} All rights reserved.</small>
-                    </p>
-                </div> */}
             </div>
 
             <style>
@@ -979,6 +826,28 @@ export const PublicConsentRequestPage = () => {
                     margin-top: 0.25rem;
                 }
                 
+                .step-badge {
+                    display: inline-block;
+                }
+                
+                .step-badge .badge {
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                }
+                
+                .cursor-pointer {
+                    cursor: pointer;
+                }
+                
+                .text-dark {
+                    color: #1a1a1a;
+                }
+                
                 /* Responsive Adjustments */
                 @media (max-width: 768px) {
                     .container-fluid {
@@ -1026,3 +895,5 @@ export const PublicConsentRequestPage = () => {
         </PublicLayout>
     );
 };
+
+export default PublicConsentRequestPage;

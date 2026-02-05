@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import Footer from './Footer';
 
 /**
- * PublicLayout - Layout wrapper for public pages with no sidebar
- * Used for public landing pages, consent forms, etc.
- * Follows the Sneat Bootstrap HTML template pattern
+ * PublicLayout - Truly isolated layout for external public pages
+ * NO sidebar container, NO main layout inheritance
+ * 100% full-width, completely separate from dashboard layout
+ * Used for public landing pages, consent forms, registration, etc.
  */
 export const PublicLayout = ({ children }) => {
   useEffect(() => {
@@ -13,17 +14,13 @@ export const PublicLayout = ({ children }) => {
   }, []);
 
   return (
-    <div className="public-layout">
-      <div className="layout-page">
-        <div className="content-wrapper">
-          <main className="flex-grow-1" role="main">
-            {children}
-          </main>
-          <footer className="footer">
-            <Footer />
-          </footer>
-        </div>
-      </div>
+    <div className="public-layout-isolated">
+      <main className="public-layout-main" role="main">
+        {children}
+      </main>
+      <footer className="public-layout-footer">
+        <Footer />
+      </footer>
     </div>
   );
 };

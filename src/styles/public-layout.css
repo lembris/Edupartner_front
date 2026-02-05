@@ -1,31 +1,20 @@
-/* Public Layout Styles - No Sidebar */
+/* Public Layout Styles - Truly Isolated, No Sidebar, No Layout Inheritance */
 
-.public-layout {
+.public-layout-isolated {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
   background: #fff;
+  position: relative;
 }
 
-.public-layout .layout-page {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.public-layout .content-wrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-}
-
-.public-layout main {
+.public-layout-main {
   flex: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 100%;
 }
 
 /* Public Page Background - Landing Page Style */
@@ -36,29 +25,31 @@
 }
 
 /* Footer positioning */
-.public-layout .footer {
+.public-layout-footer {
   margin-top: auto;
   width: 100%;
 }
 
-/* Remove any padding/margins that might be applied from main layout */
-.public-layout .container-p-y {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+/* Ensure no sidebar styles apply */
+.public-layout-isolated .layout-sidenav,
+.public-layout-isolated .layout-sidenav-toggle,
+.public-layout-isolated #layout-menu,
+.public-layout-isolated .layout-navbar,
+.public-layout-isolated .layout-container {
+  display: none !important;
 }
 
-.public-layout .container-fluid {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+/* Full width overrides */
+.public-layout-isolated body {
   width: 100%;
   max-width: 100%;
 }
 
-/* Ensure no layout container styling interferes */
-.public-layout .layout-container {
+.public-layout-isolated .container-fluid {
   width: 100%;
+  max-width: 100%;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 /* Responsive adjustments */
@@ -72,17 +63,7 @@
   }
 }
 
-/* Remove sidebar-related classes if accidentally applied */
-.public-layout .layout-sidenav,
-.public-layout .layout-sidenav-toggle,
-.public-layout #layout-menu {
-  display: none !important;
-}
 
-/* Ensure navbar doesn't appear in public layout */
-.public-layout .layout-navbar {
-  display: none !important;
-}
 
 /* Clean scrollbar styling */
 .public-layout ::-webkit-scrollbar {
