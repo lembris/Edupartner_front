@@ -318,23 +318,23 @@ export const PublicConsentRequestPage = () => {
           <div className="d-flex justify-content-between align-items-center py-3">
             <div className="d-flex align-items-center">
               <img
-                src="/assets/ielets.png"
+                src="/assets/ielts_oficial_partners.png"
                 alt="Organization Logo"
                 className="top-logo me-3"
-                style={{ height: "45px" }}
+                style={{ height: "100px" }}
                 loading="lazy"
-                width="60"
-                height="45"
+                width="140"
+                height="100"
               />
-              <div className="vr mx-3" style={{ height: "35px", opacity: "0.3" }}></div>
+              <div className="vr mx-3" style={{ height: "85px", opacity: "0.3" }}></div>
               <img
-                src="/assets/img/logo/edupartners_nav_logo.png"
+                src="/assets/img/logo/edupartner_neo_logo.png"
                 alt="System Logo"
                 className="top-logo"
-                style={{ height: "45px" }}
+                style={{ height: "100px" }}
                 loading="lazy"
-                width="120"
-                height="45"
+                width="240"
+                height="100"
               />
             </div>
             <div className="d-flex align-items-center gap-3">

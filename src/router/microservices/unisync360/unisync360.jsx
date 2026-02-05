@@ -21,6 +21,8 @@ import { StudentStatusListPage } from "../../../pages/services/unisync360/studen
 import { ConsentListPage } from "../../../pages/services/unisync360/consent/ConsentListPage.jsx";
 import { ConsentDetailsPage } from "../../../pages/services/unisync360/consent/ConsentDetailsPage.jsx";
 import { PublicConsentRequestPage } from "../../../pages/services/unisync360/consent/PublicConsentRequestPage.jsx";
+import { ServiceSetupListPage } from "../../../pages/services/unisync360/service-setup/ServiceSetupListPage.jsx";
+import { ServiceSetupDetailsPage } from "../../../pages/services/unisync360/service-setup/ServiceSetupDetailsPage.jsx";
 import { CourseAllocationListPage } from "../../../pages/services/unisync360/applications/course-allocations/CourseAllocationListPage.jsx";
 import { CourseAllocationDetailsPage } from "../../../pages/services/unisync360/applications/course-allocations/CourseAllocationDetailsPage.jsx";
 import { DocumentRequirementListPage } from "../../../pages/services/unisync360/applications/documents/DocumentRequirementListPage.jsx";
@@ -671,6 +673,29 @@ export const unisync360Routes = [
             </ProtectedRoute>
         ),
     },
+    // Service Setup Route
+    {
+        path: "/unisync360/service-setup",
+        element: (
+            <ProtectedRoute
+                requiredPermissions={[]}
+                requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer"]}
+            >
+                <ServiceSetupListPage />
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: "/unisync360/service-setup/:id",
+        element: (
+            <ProtectedRoute
+                requiredPermissions={[]}
+                requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer"]}
+            >
+                <ServiceSetupDetailsPage />
+            </ProtectedRoute>
+        ),
+    },
     
     {
         path: "/unisync360/applications/course-allocations",
@@ -1087,4 +1112,6 @@ export const unisync360Routes = [
         path: "/unisync360/service-consent",
         element: <PublicConsentRequestPage />,
     },
-]
+];
+
+export default unisync360Routes;

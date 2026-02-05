@@ -39,9 +39,9 @@ export const AuthWrapper = ({ children, maxWidth, disableLogo }) => {
                     <div className="app-brand-link gap-2" style={{ cursor: "default", pointerEvents: "none" }}>
                       <span className="app-brand-logo demo">
                         <img
-                          src="/assets/img/logo/edupartners_logo.png"
+                          src="/assets/img/logo/edupartner_neo_logo.png"
                           alt="erp-360-logo"
-                          height={"150px"}
+                          height={"80px"}
                         />
                       </span>
                     </div>
@@ -53,9 +53,9 @@ export const AuthWrapper = ({ children, maxWidth, disableLogo }) => {
                     >
                       <span className="app-brand-logo demo">
                         <img
-                          src="/assets/img/logo/edupartners_logo.png"
+                          src="/assets/img/logo/edupartner_neo_logo.png"
                           alt="erp-360-logo"
-                          height={"150px"}
+                          height={"80px"}
                         />
                       </span>
                     </Link>

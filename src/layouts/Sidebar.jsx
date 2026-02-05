@@ -167,11 +167,11 @@ const Sidebar = ({ isService = false }) => {
             style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
           >
             <img
-              src="/assets/img/logo/edupartners_nav_logo.png"
+              src="/assets/img/logo/edupartner_neo_logo.png"
               alt="sneat-logo"
               style={{
                 height: "auto",
-                width: "250px",
+                width: "150px",
                 objectFit: "contain",
               }}
               aria-label="ERP360 logo image"

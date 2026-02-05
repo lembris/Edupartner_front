@@ -175,6 +175,30 @@
                             "unisync360_external_counselor",
                             "unisync360_lead_lancer"
                         ]
+                    }
+                ]
+            },
+            {
+                "text": "Services",
+                "icon": "bx bxs-user",
+                "available": true,
+                "link": "",
+                "header": "Services",
+                "submenu": [
+                    {
+                        "text": "Service setup",
+                        "icon": "bx bx-cog",
+                        "available": true,
+                        "link": "/unisync360/service-setup",
+                        "permission": [],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
+                        ]
                     },
                     {
                         "text": "Consents",
