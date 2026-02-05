@@ -18,7 +18,8 @@ function App() {
     location.pathname.includes("under-maintenance") ||
     location.pathname.includes("blank") ||
     location.pathname === "/unisync360/external-counselor-login" ||
-    location.pathname === "/unisync360/lead-lancer-login";
+    location.pathname === "/unisync360/lead-lancer-login" ||
+    location.pathname === "/unisync360/service-consent";
 
   const isService = location.pathname === "/";
 

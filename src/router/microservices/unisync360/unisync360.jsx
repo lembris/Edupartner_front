@@ -16,6 +16,11 @@ import { StudentDetailsPage } from "../../../pages/services/unisync360/students/
 import AIInsightsPage from "../../../pages/services/unisync360/students/ai/AIInsightsPage.jsx";
 import { StudentSourceListPage } from "../../../pages/services/unisync360/students/source/StudentSourceListPage.jsx";
 import { StudentStatusListPage } from "../../../pages/services/unisync360/students/status/StudentStatusListPage.jsx";
+
+// Consent Management
+import { ConsentListPage } from "../../../pages/services/unisync360/consent/ConsentListPage.jsx";
+import { ConsentDetailsPage } from "../../../pages/services/unisync360/consent/ConsentDetailsPage.jsx";
+import { PublicConsentRequestPage } from "../../../pages/services/unisync360/consent/PublicConsentRequestPage.jsx";
 import { CourseAllocationListPage } from "../../../pages/services/unisync360/applications/course-allocations/CourseAllocationListPage.jsx";
 import { CourseAllocationDetailsPage } from "../../../pages/services/unisync360/applications/course-allocations/CourseAllocationDetailsPage.jsx";
 import { DocumentRequirementListPage } from "../../../pages/services/unisync360/applications/documents/DocumentRequirementListPage.jsx";
@@ -642,6 +647,31 @@ export const unisync360Routes = [
             </ProtectedRoute>
         ),
     },
+    
+    // Consent Management Routes
+    {
+        path: "/unisync360/consent",
+        element: (
+            <ProtectedRoute
+                requiredPermissions={unisync360Permissions.student.view}
+                requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer", "unisync360_counselor", "unisync360_external_counselor", "unisync360_lead_lancer"]}
+            >
+                <ConsentListPage />
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: "/unisync360/consent/:id",
+        element: (
+            <ProtectedRoute
+                requiredPermissions={unisync360Permissions.student.viewDetails}
+                requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer", "unisync360_counselor", "unisync360_external_counselor", "unisync360_lead_lancer"]}
+            >
+                <ConsentDetailsPage />
+            </ProtectedRoute>
+        ),
+    },
+    
     {
         path: "/unisync360/applications/course-allocations",
         element: (
@@ -1050,5 +1080,11 @@ export const unisync360Routes = [
                 <WardDetailsPage />
             </ProtectedRoute>
         ),
+    },
+
+    // PUBLIC ROUTE - Service Consent Request (No Authentication Required)
+    {
+        path: "/unisync360/service-consent",
+        element: <PublicConsentRequestPage />,
     },
 ]

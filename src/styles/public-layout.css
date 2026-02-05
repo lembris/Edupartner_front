@@ -1,0 +1,365 @@
+/* Public Layout Styles - No Sidebar */
+
+.public-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background: #fff;
+}
+
+.public-layout .layout-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.public-layout .content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+
+.public-layout main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Public Page Background - Landing Page Style */
+.public-layout .min-h-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Footer positioning */
+.public-layout .footer {
+  margin-top: auto;
+  width: 100%;
+}
+
+/* Remove any padding/margins that might be applied from main layout */
+.public-layout .container-p-y {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.public-layout .container-fluid {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Ensure no layout container styling interferes */
+.public-layout .layout-container {
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .public-layout {
+    min-height: 100vh;
+  }
+
+  .public-layout .min-h-screen {
+    padding: 1rem 0.5rem;
+  }
+}
+
+/* Remove sidebar-related classes if accidentally applied */
+.public-layout .layout-sidenav,
+.public-layout .layout-sidenav-toggle,
+.public-layout #layout-menu {
+  display: none !important;
+}
+
+/* Ensure navbar doesn't appear in public layout */
+.public-layout .layout-navbar {
+  display: none !important;
+}
+
+/* Clean scrollbar styling */
+.public-layout ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.public-layout ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.public-layout ::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.public-layout ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Public Form Styles */
+.public-layout form {
+  width: 100%;
+}
+
+.public-layout input[type="text"],
+.public-layout input[type="email"],
+.public-layout input[type="tel"],
+.public-layout input[type="date"],
+.public-layout textarea,
+.public-layout select {
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.public-layout input[type="text"]:focus,
+.public-layout input[type="email"]:focus,
+.public-layout input[type="tel"]:focus,
+.public-layout input[type="date"]:focus,
+.public-layout textarea:focus,
+.public-layout select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+/* Checkbox and Radio Styling */
+.public-layout input[type="checkbox"],
+.public-layout input[type="radio"] {
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.public-layout label {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Button Styling */
+.public-layout button {
+  font-family: inherit;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.public-layout button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Gradient Background - Landing Page */
+.public-layout .bg-gradient-to-br {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+}
+
+/* Animation Classes */
+.public-layout .animate__animated {
+  animation-duration: 0.6s;
+}
+
+/* Grid and Spacing */
+.public-layout .max-w-4xl {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+@media (min-width: 896px) {
+  .public-layout .max-w-4xl {
+    max-width: 56rem;
+  }
+}
+
+/* Card Styling */
+.public-layout .rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.public-layout .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.public-layout .shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Ensure overflow is handled properly */
+.public-layout .overflow-hidden {
+  overflow: hidden;
+}
+
+/* Text utilities */
+.public-layout .text-center {
+  text-align: center;
+}
+
+.public-layout .text-left {
+  text-align: left;
+}
+
+.public-layout .text-right {
+  text-align: right;
+}
+
+/* Flexbox utilities for form layout */
+.public-layout .flex {
+  display: flex;
+}
+
+.public-layout .flex-col {
+  flex-direction: column;
+}
+
+.public-layout .flex-grow-1 {
+  flex: 1 1 0%;
+}
+
+.public-layout .gap-4 {
+  gap: 1rem;
+}
+
+.public-layout .gap-3 {
+  gap: 0.75rem;
+}
+
+.public-layout .gap-6 {
+  gap: 1.5rem;
+}
+
+/* Grid utilities */
+.public-layout .grid {
+  display: grid;
+}
+
+.public-layout .grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .public-layout .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .public-layout .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Spacing utilities */
+.public-layout .m-0 { margin: 0; }
+.public-layout .mb-2 { margin-bottom: 0.5rem; }
+.public-layout .mb-4 { margin-bottom: 1rem; }
+.public-layout .mb-6 { margin-bottom: 1.5rem; }
+.public-layout .mb-8 { margin-bottom: 2rem; }
+.public-layout .mt-1 { margin-top: 0.25rem; }
+.public-layout .mt-2 { margin-top: 0.5rem; }
+.public-layout .mt-4 { margin-top: 1rem; }
+.public-layout .mt-8 { margin-top: 2rem; }
+
+.public-layout .p-0 { padding: 0; }
+.public-layout .p-4 { padding: 1rem; }
+.public-layout .p-6 { padding: 1.5rem; }
+.public-layout .p-8 { padding: 2rem; }
+
+.public-layout .px-4 { padding-left: 1rem; padding-right: 1rem; }
+.public-layout .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.public-layout .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.public-layout .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.public-layout .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+
+/* Width and Height utilities */
+.public-layout .w-full { width: 100%; }
+.public-layout .w-4 { width: 1rem; }
+.public-layout .h-4 { height: 1rem; }
+
+/* Border utilities */
+.public-layout .border {
+  border: 1px solid #e5e7eb;
+}
+
+.public-layout .border-2 {
+  border: 2px solid;
+}
+
+.public-layout .border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.public-layout .border-red-500 {
+  border-color: #ef4444;
+}
+
+.public-layout .border-blue-500 {
+  border-color: #3b82f6;
+}
+
+.public-layout .border-l-4 {
+  border-left: 4px solid;
+}
+
+.public-layout .border-l-4.border-green-400 {
+  border-left-color: #4ade80;
+}
+
+.public-layout .border-l-4.border-red-400 {
+  border-left-color: #f87171;
+}
+
+.public-layout .border-b-2 {
+  border-bottom: 2px solid;
+}
+
+.public-layout .border-b-2.border-blue-500 {
+  border-bottom-color: #3b82f6;
+}
+
+/* Background color utilities */
+.public-layout .bg-white { background-color: #ffffff; }
+.public-layout .bg-gray-50 { background-color: #f9fafb; }
+.public-layout .bg-gray-300 { background-color: #d1d5db; }
+.public-layout .bg-green-50 { background-color: #f0fdf4; }
+.public-layout .bg-red-50 { background-color: #fef2f2; }
+.public-layout .bg-blue-50 { background-color: #eff6ff; }
+.public-layout .bg-blue-100 { background-color: #dbeafe; }
+.public-layout .bg-blue-600 { background-color: #2563eb; }
+.public-layout .bg-blue-700 { background-color: #1d4ed8; }
+
+/* Text color utilities */
+.public-layout .text-gray-600 { color: #4b5563; }
+.public-layout .text-gray-700 { color: #374151; }
+.public-layout .text-gray-900 { color: #111827; }
+.public-layout .text-green-700 { color: #15803d; }
+.public-layout .text-red-500 { color: #ef4444; }
+.public-layout .text-red-700 { color: #b91c1c; }
+.public-layout .text-blue-600 { color: #2563eb; }
+.public-layout .text-blue-700 { color: #1d4ed8; }
+.public-layout .text-blue-800 { color: #1e40af; }
+.public-layout .text-white { color: #ffffff; }
+
+/* Font utilities */
+.public-layout .text-sm { font-size: 0.875rem; }
+.public-layout .text-lg { font-size: 1.125rem; }
+.public-layout .text-2xl { font-size: 1.5rem; }
+.public-layout .text-3xl { font-size: 1.875rem; }
+.public-layout .text-4xl { font-size: 2.25rem; }
+
+.public-layout .font-medium { font-weight: 500; }
+.public-layout .font-semibold { font-weight: 600; }
+.public-layout .font-bold { font-weight: 700; }
+
+/* Display utilities */
+.public-layout .inline-block { display: inline-block; }
+.public-layout .block { display: block; }
+.public-layout .hidden { display: none; }
+.public-layout .items-start { align-items: flex-start; }
+.public-layout .items-center { align-items: center; }
+.public-layout .justify-center { justify-content: center; }
+
+/* Cursor utilities */
+.public-layout .cursor-pointer { cursor: pointer; }

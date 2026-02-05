@@ -4,6 +4,9 @@
 /* UniSync360 Specific Color Overrides - Secondary Gray as Primary */
 @import './styles/unisync360-colors.css';
 
+/* Public Layout Styles - No Sidebar */
+@import './styles/public-layout.css';
+
 #root {
   max-width: 1280px;
   margin: 0 auto;

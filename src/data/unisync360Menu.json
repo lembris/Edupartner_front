@@ -175,6 +175,21 @@
                             "unisync360_external_counselor",
                             "unisync360_lead_lancer"
                         ]
+                    },
+                    {
+                        "text": "Consents",
+                        "icon": "bx bx-check-circle",
+                        "available": true,
+                        "link": "/unisync360/consent",
+                        "permission": [],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
+                        ]
                     }
                 ]
             },
@@ -431,7 +446,6 @@
                     }
                 ]
             },
-
             {
                 "text": "Settings",
                 "icon": "bx bx-cog",
