@@ -139,6 +139,55 @@ export const ConsentListPage = () => {
         }
     };
 
+    const handleUpdateStatus = async (consent) => {
+        if (!consent) return;
+
+        try {
+            const { value: newStatus } = await Swal.fire({
+                title: "Update Consent Status",
+                input: "select",
+                inputOptions: {
+                    "draft": "Draft",
+                    "submitted": "Submitted",
+                    "pending_review": "Pending Review",
+                    "approved": "Approved",
+                    "rejected": "Rejected",
+                    "expired": "Expired",
+                    "revoked": "Revoked"
+                },
+                inputValue: consent.request_status,
+                showCancelButton: true,
+                confirmButtonColor: "#0d6efd",
+                cancelButtonColor: "#aaa",
+                confirmButtonText: "Update Status",
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "Please select a status";
+                    }
+                }
+            });
+
+            if (newStatus && newStatus !== consent.request_status) {
+                await updateConsentRequest(consent.uid, {
+                    request_status: newStatus
+                });
+                Swal.fire(
+                    "Updated!",
+                    `The consent request status has been updated to ${newStatus}.`,
+                    "success"
+                );
+                setTableRefresh((prev) => prev + 1);
+            }
+        } catch (error) {
+            console.error("Error updating consent status:", error);
+            Swal.fire(
+                "Error!",
+                "Unable to update consent request status. Please try again or contact support.",
+                "error"
+            );
+        }
+    };
+
     const handleExport = async (consent) => {
         try {
             const csvContent = [
@@ -281,6 +330,13 @@ export const ConsentListPage = () => {
                         },
                         condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && 
                                            (row.request_status === "draft" || row.request_status === "pending_review"),
+                    },
+                    {
+                        label: "Update Status",
+                        icon: "bx bx-refresh",
+                        onClick: (row) => handleUpdateStatus(row),
+                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]),
+                        className: "text-info",
                     },
                     {
                         label: "Approve",

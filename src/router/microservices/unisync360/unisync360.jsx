@@ -21,8 +21,8 @@ import { StudentStatusListPage } from "../../../pages/services/unisync360/studen
 import { ConsentListPage } from "../../../pages/services/unisync360/consent/ConsentListPage.jsx";
 import { ConsentDetailsPage } from "../../../pages/services/unisync360/consent/ConsentDetailsPage.jsx";
 import { PublicConsentRequestPage } from "../../../pages/services/unisync360/consent/PublicConsentRequestPage.jsx";
-import { ServiceSetupListPage } from "../../../pages/services/unisync360/service-setup/ServiceSetupListPage.jsx";
-import { ServiceSetupDetailsPage } from "../../../pages/services/unisync360/service-setup/ServiceSetupDetailsPage.jsx";
+import { ServiceSetupListPage } from "../../../pages/services/unisync360/consent-services/ServiceSetupListPage.jsx";
+import { ServiceSetupDetailsPage } from "../../../pages/services/unisync360/consent-services/ServiceSetupDetailsPage.jsx";
 import { CourseAllocationListPage } from "../../../pages/services/unisync360/applications/course-allocations/CourseAllocationListPage.jsx";
 import { CourseAllocationDetailsPage } from "../../../pages/services/unisync360/applications/course-allocations/CourseAllocationDetailsPage.jsx";
 import { DocumentRequirementListPage } from "../../../pages/services/unisync360/applications/documents/DocumentRequirementListPage.jsx";
@@ -469,6 +469,23 @@ const unisync360Permissions = {
         editUsers: ["change_user"],
         deleteUsers: ["delete_user"],
     },
+
+    // Service Management (Service Setup, Consents)
+    service: {
+        // Service Setup
+        viewSetup: ["view_consentservice"],
+        addSetup: ["add_consentservice"],
+        changeSetup: ["change_consentservice"],
+        deleteSetup: ["delete_consentservice"],
+        viewSetupDetails: ["view_consentservice"],
+
+        // Consent Management
+        viewConsent: ["view_student"],
+        addConsent: ["add_student"],
+        changeConsent: ["change_student"],
+        deleteConsent: ["delete_student"],
+        viewConsentDetails: ["view_student"],
+    },
 }
 
 
@@ -649,13 +666,13 @@ export const unisync360Routes = [
             </ProtectedRoute>
         ),
     },
-    
+
     // Consent Management Routes
     {
         path: "/unisync360/consent",
         element: (
             <ProtectedRoute
-                requiredPermissions={unisync360Permissions.student.view}
+                requiredPermissions={unisync360Permissions.service.viewConsent}
                 requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer", "unisync360_counselor", "unisync360_external_counselor", "unisync360_lead_lancer"]}
             >
                 <ConsentListPage />
@@ -666,7 +683,7 @@ export const unisync360Routes = [
         path: "/unisync360/consent/:id",
         element: (
             <ProtectedRoute
-                requiredPermissions={unisync360Permissions.student.viewDetails}
+                requiredPermissions={unisync360Permissions.service.viewConsentDetails}
                 requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer", "unisync360_counselor", "unisync360_external_counselor", "unisync360_lead_lancer"]}
             >
                 <ConsentDetailsPage />
@@ -675,28 +692,28 @@ export const unisync360Routes = [
     },
     // Service Setup Route
     {
-        path: "/unisync360/service-setup",
+        path: "/unisync360/consent-service",
         element: (
             <ProtectedRoute
-                requiredPermissions={[]}
-                requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer"]}
+                requiredPermissions={unisync360Permissions.service.view_consentservice}
+                requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer", "unisync360_counselor", "unisync360_external_counselor", "unisync360_lead_lancer"]}
             >
                 <ServiceSetupListPage />
             </ProtectedRoute>
         ),
     },
     {
-        path: "/unisync360/service-setup/:id",
+        path: "/unisync360/consent-service/:id",
         element: (
             <ProtectedRoute
-                requiredPermissions={[]}
-                requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer"]}
+                requiredPermissions={unisync360Permissions.service.viewSetupDetails}
+                requiredRoles={["unisync360_super_admin", "unisync360_facilitation_officer", "unisync360_counselor", "unisync360_external_counselor", "unisync360_lead_lancer"]}
             >
                 <ServiceSetupDetailsPage />
             </ProtectedRoute>
         ),
     },
-    
+
     {
         path: "/unisync360/applications/course-allocations",
         element: (
@@ -1114,4 +1131,4 @@ export const unisync360Routes = [
     },
 ];
 
-export default unisync360Routes;
+export default unisync360Routes; 

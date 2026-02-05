@@ -186,10 +186,10 @@
                 "header": "Services",
                 "submenu": [
                     {
-                        "text": "Service setup",
+                        "text": "Consent services",
                         "icon": "bx bx-cog",
                         "available": true,
-                        "link": "/unisync360/service-setup",
+                        "link": "/unisync360/consent-service",
                         "permission": [],
                         "role": [
                             "unisync360_super_admin",

@@ -19,8 +19,8 @@ const ConsentServiceSelectionModal = ({ show, onHide, consentRequestId, onSucces
     const loadServices = async () => {
         try {
             setLoadingServices(true);
-            const data = await fetchConsentServices();
-            setServices(data.results || data);
+            const response = await fetchConsentServices();
+            setServices(response.data || response.results || response);
         } catch (error) {
             console.error("Error loading services:", error);
             Swal.fire("Error!", "Failed to load services.", "error");
