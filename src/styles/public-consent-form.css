@@ -241,3 +241,32 @@
     font-size: 0.875rem !important;
   }
 }
+
+/* Skeleton Loader */
+.skeleton-loader {
+  background: #f8f9fa;
+  border-radius: 8px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.skeleton-text {
+  background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+}
+
+.skeleton-animate {
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import { createConsentRequest, fetchConsentServices } from "./Queries";
 import PublicLayout from "../../../../layouts/PublicLayout";
 import "../../../../styles/public-consent-form.css";
+
+const Swal = lazy(() => import("sweetalert2").then(mod => ({ default: mod.default })));
+import { createConsentRequest, fetchConsentServices } from "./Queries";
 
 // Memoized service card component
 const ServiceCard = React.memo(({ service, isSelected, onToggle }) => (
@@ -47,9 +48,71 @@ const ServiceCard = React.memo(({ service, isSelected, onToggle }) => (
 
 ServiceCard.displayName = "ServiceCard";
 
+const showSwal = async (options) => {
+  const SwalModule = await import("sweetalert2");
+  return SwalModule.default.fire(options);
+};
+
+const SkeletonLoader = () => (
+  <div className="skeleton-loader p-4">
+    <div className="skeleton-text skeleton-animate" style={{ width: "60%", height: "20px", marginBottom: "12px" }}></div>
+    <div className="skeleton-text skeleton-animate" style={{ width: "100%", height: "40px" }}></div>
+  </div>
+);
+
+const MemoizedInput = React.memo(({ label, name, type = "text", required = false, placeholder = "", options = [], value, onChange, error, className = "" }) => {
+  const inputId = `${name}-${React.useId()}`;
+
+  return (
+    <div className={className}>
+      <label htmlFor={inputId} className="form-label fw-medium">
+        {label} {required && <span className="text-danger">*</span>}
+      </label>
+      {type === "select" ? (
+        <select
+          className={`form-select ${error ? "is-invalid" : ""}`}
+          id={inputId}
+          name={name}
+          value={value}
+          onChange={onChange}
+        >
+          <option value="">-- Select a relationship --</option>
+          {options.map((opt) => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
+      ) : type === "textarea" ? (
+        <textarea
+          className="form-control"
+          id={inputId}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          rows="3"
+        />
+      ) : (
+        <input
+          type={type}
+          className={`form-control ${error ? "is-invalid" : ""}`}
+          id={inputId}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+        />
+      )}
+      {error && <div className="invalid-feedback">{error}</div>}
+    </div>
+  );
+});
+
+MemoizedInput.displayName = "MemoizedInput";
+
 export const PublicConsentRequestPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState({});
@@ -78,6 +141,7 @@ export const PublicConsentRequestPage = () => {
 
   const loadServices = useCallback(async () => {
     try {
+      setInitialLoading(true);
       const data = await fetchConsentServices();
       const serviceList = data.results || data || [];
       setServices(serviceList);
@@ -88,11 +152,14 @@ export const PublicConsentRequestPage = () => {
       setSelectedServices(initialServices);
     } catch (error) {
       console.error("Error loading services:", error);
-      Swal.fire(
+      const SwalModule = await import("sweetalert2");
+      SwalModule.default.fire(
         "Error",
         "Failed to load consent services. Please ensure the API server is running.",
         "error"
       );
+    } finally {
+      setInitialLoading(false);
     }
   }, []);
 
@@ -103,14 +170,7 @@ export const PublicConsentRequestPage = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value
     }));
-    // Clear error for this field
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: null
-      }));
-    }
-  }, [errors]);
+  }, []);
 
   // Memoized service toggle handler
   const handleServiceToggle = useCallback((serviceUid) => {
@@ -169,7 +229,8 @@ export const PublicConsentRequestPage = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      Swal.fire("Validation Error", "Please fill in all required fields", "error");
+      const SwalModule = await import("sweetalert2");
+      SwalModule.default.fire("Validation Error", "Please fill in all required fields", "error");
       return;
     }
 
@@ -182,7 +243,8 @@ export const PublicConsentRequestPage = () => {
       });
 
       setSubmitSuccess(true);
-      Swal.fire({
+      const SwalModule = await import("sweetalert2");
+      SwalModule.default.fire({
         title: "Success!",
         html: `<div>
             <p>Your consent request has been submitted successfully.</p>
@@ -194,7 +256,6 @@ export const PublicConsentRequestPage = () => {
         confirmButtonText: "Close"
       });
 
-      // Reset after delay
       setTimeout(() => {
         setFormData({
           first_name: "",
@@ -217,7 +278,8 @@ export const PublicConsentRequestPage = () => {
       }, 3000);
     } catch (error) {
       console.error("Error submitting request:", error);
-      Swal.fire(
+      const SwalModule = await import("sweetalert2");
+      SwalModule.default.fire(
         "Error!",
         error.message || "Failed to submit consent request. Please try again.",
         "error"
@@ -248,6 +310,7 @@ export const PublicConsentRequestPage = () => {
   );
 
   return (
+    <Suspense fallback={<div className="text-center py-5">Loading...</div>}>
     <PublicLayout>
       {/* Enhanced Top Bar with Two Logos */}
       <div className="top-bar">
@@ -259,6 +322,9 @@ export const PublicConsentRequestPage = () => {
                 alt="Organization Logo"
                 className="top-logo me-3"
                 style={{ height: "45px" }}
+                loading="lazy"
+                width="60"
+                height="45"
               />
               <div className="vr mx-3" style={{ height: "35px", opacity: "0.3" }}></div>
               <img
@@ -266,6 +332,9 @@ export const PublicConsentRequestPage = () => {
                 alt="System Logo"
                 className="top-logo"
                 style={{ height: "45px" }}
+                loading="lazy"
+                width="120"
+                height="45"
               />
             </div>
             <div className="d-flex align-items-center gap-3">
@@ -355,128 +424,79 @@ export const PublicConsentRequestPage = () => {
                 </div>
                 <div className="card-body">
                   <div className="row g-3">
-                    {/* First Name */}
-                    <div className="col-md-6">
-                      <label htmlFor="first_name" className="form-label fw-medium">
-                        First Name <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className={`form-control ${errors.first_name ? "is-invalid" : ""}`}
-                        id="first_name"
-                        name="first_name"
-                        value={formData.first_name}
-                        onChange={handleInputChange}
-                        placeholder="Enter your first name"
-                      />
-                      {errors.first_name && (
-                        <div className="invalid-feedback">{errors.first_name}</div>
-                      )}
-                    </div>
+                    <MemoizedInput
+                      label="First Name"
+                      name="first_name"
+                      required
+                      placeholder="Enter your first name"
+                      value={formData.first_name}
+                      onChange={handleInputChange}
+                      error={errors.first_name}
+                      className="col-md-6"
+                    />
 
-                    {/* Middle Name */}
-                    <div className="col-md-6">
-                      <label htmlFor="middle_name" className="form-label fw-medium">
-                        Middle Name
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="middle_name"
-                        name="middle_name"
-                        value={formData.middle_name}
-                        onChange={handleInputChange}
-                        placeholder="Enter your middle name (optional)"
-                      />
-                    </div>
+                    <MemoizedInput
+                      label="Middle Name"
+                      name="middle_name"
+                      placeholder="Enter your middle name (optional)"
+                      value={formData.middle_name}
+                      onChange={handleInputChange}
+                      className="col-md-6"
+                    />
 
-                    {/* Last Name */}
-                    <div className="col-md-6">
-                      <label htmlFor="last_name" className="form-label fw-medium">
-                        Last Name <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className={`form-control ${errors.last_name ? "is-invalid" : ""}`}
-                        id="last_name"
-                        name="last_name"
-                        value={formData.last_name}
-                        onChange={handleInputChange}
-                        placeholder="Enter your last name"
-                      />
-                      {errors.last_name && (
-                        <div className="invalid-feedback">{errors.last_name}</div>
-                      )}
-                    </div>
+                    <MemoizedInput
+                      label="Last Name"
+                      name="last_name"
+                      required
+                      placeholder="Enter your last name"
+                      value={formData.last_name}
+                      onChange={handleInputChange}
+                      error={errors.last_name}
+                      className="col-md-6"
+                    />
 
-                    {/* Email */}
-                    <div className="col-md-6">
-                      <label htmlFor="email" className="form-label fw-medium">
-                        Email Address <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="Enter your email"
-                      />
-                      {errors.email && (
-                        <div className="invalid-feedback">{errors.email}</div>
-                      )}
-                    </div>
+                    <MemoizedInput
+                      label="Email Address"
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      error={errors.email}
+                      className="col-md-6"
+                    />
 
-                    {/* Phone */}
-                    <div className="col-md-6">
-                      <label htmlFor="phone" className="form-label fw-medium">
-                        Phone Number <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        className={`form-control ${errors.phone ? "is-invalid" : ""}`}
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="Enter your phone number"
-                      />
-                      {errors.phone && (
-                        <div className="invalid-feedback">{errors.phone}</div>
-                      )}
-                    </div>
+                    <MemoizedInput
+                      label="Phone Number"
+                      name="phone"
+                      type="tel"
+                      required
+                      placeholder="Enter your phone number"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      error={errors.phone}
+                      className="col-md-6"
+                    />
 
-                    {/* Date of Birth */}
-                    <div className="col-md-6">
-                      <label htmlFor="date_of_birth" className="form-label fw-medium">
-                        Date of Birth
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        id="date_of_birth"
-                        name="date_of_birth"
-                        value={formData.date_of_birth}
-                        onChange={handleInputChange}
-                      />
-                    </div>
+                    <MemoizedInput
+                      label="Date of Birth"
+                      name="date_of_birth"
+                      type="date"
+                      value={formData.date_of_birth}
+                      onChange={handleInputChange}
+                      className="col-md-6"
+                    />
 
-                    {/* Additional Notes */}
-                    <div className="col-12">
-                      <label htmlFor="additional_notes" className="form-label fw-medium">
-                        Additional Notes
-                      </label>
-                      <textarea
-                        className="form-control"
-                        id="additional_notes"
-                        name="additional_notes"
-                        value={formData.additional_notes}
-                        onChange={handleInputChange}
-                        placeholder="Any additional information you'd like to share"
-                        rows="3"
-                      ></textarea>
-                    </div>
+                    <MemoizedInput
+                      label="Additional Notes"
+                      name="additional_notes"
+                      type="textarea"
+                      placeholder="Any additional information you'd like to share"
+                      value={formData.additional_notes}
+                      onChange={handleInputChange}
+                      className="col-12"
+                    />
                   </div>
                 </div>
               </div>
@@ -501,90 +521,50 @@ export const PublicConsentRequestPage = () => {
                 </div>
                 <div className="card-body">
                   <div className="row g-3">
-                    {/* Full Name */}
-                    <div className="col-md-6">
-                      <label htmlFor="emergency_full_name" className="form-label fw-medium">
-                        Full Name <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className={`form-control ${
-                          errors.emergency_full_name ? "is-invalid" : ""
-                        }`}
-                        id="emergency_full_name"
-                        name="emergency_full_name"
-                        value={formData.emergency_full_name}
-                        onChange={handleInputChange}
-                        placeholder="Enter full name"
-                      />
-                      {errors.emergency_full_name && (
-                        <div className="invalid-feedback">{errors.emergency_full_name}</div>
-                      )}
-                    </div>
+                    <MemoizedInput
+                      label="Full Name"
+                      name="emergency_full_name"
+                      required
+                      placeholder="Enter full name"
+                      value={formData.emergency_full_name}
+                      onChange={handleInputChange}
+                      error={errors.emergency_full_name}
+                      className="col-md-6"
+                    />
 
-                    {/* Relationship */}
-                    <div className="col-md-6">
-                      <label htmlFor="emergency_relationship" className="form-label fw-medium">
-                        Relationship <span className="text-danger">*</span>
-                      </label>
-                      <select
-                        className={`form-select ${
-                          errors.emergency_relationship ? "is-invalid" : ""
-                        }`}
-                        id="emergency_relationship"
-                        name="emergency_relationship"
-                        value={formData.emergency_relationship}
-                        onChange={handleInputChange}
-                      >
-                        <option value="">-- Select a relationship --</option>
-                        <option value="Parent">Parent</option>
-                        <option value="Guardian">Guardian</option>
-                        <option value="Spouse">Spouse</option>
-                        <option value="Sibling">Sibling</option>
-                        <option value="Friend">Friend</option>
-                        <option value="Other">Other</option>
-                      </select>
-                      {errors.emergency_relationship && (
-                        <div className="invalid-feedback">
-                          {errors.emergency_relationship}
-                        </div>
-                      )}
-                    </div>
+                    <MemoizedInput
+                      label="Relationship"
+                      name="emergency_relationship"
+                      type="select"
+                      required
+                      value={formData.emergency_relationship}
+                      onChange={handleInputChange}
+                      error={errors.emergency_relationship}
+                      options={["Parent", "Guardian", "Spouse", "Sibling", "Friend", "Other"]}
+                      className="col-md-6"
+                    />
 
-                    {/* Email */}
-                    <div className="col-md-6">
-                      <label htmlFor="emergency_email" className="form-label fw-medium">
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="emergency_email"
-                        name="emergency_email"
-                        value={formData.emergency_email}
-                        onChange={handleInputChange}
-                        placeholder="Enter email address (optional)"
-                      />
-                    </div>
+                    <MemoizedInput
+                      label="Email Address"
+                      name="emergency_email"
+                      type="email"
+                      placeholder="Enter email address (optional)"
+                      value={formData.emergency_email}
+                      onChange={handleInputChange}
+                      className="col-md-6"
+                    />
 
-                    {/* Phone */}
-                    <div className="col-md-6">
-                      <label htmlFor="emergency_phone" className="form-label fw-medium">
-                        Phone Number <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        className={`form-control ${errors.emergency_phone ? "is-invalid" : ""}`}
-                        id="emergency_phone"
-                        name="emergency_phone"
-                        value={formData.emergency_phone}
-                        onChange={handleInputChange}
-                        placeholder="Enter phone number"
-                      />
-                      {errors.emergency_phone && (
-                        <div className="invalid-feedback">{errors.emergency_phone}</div>
-                      )}
-                    </div>
+                    <MemoizedInput
+                      label="Phone Number"
+                      name="emergency_phone"
+                      type="tel"
+                      required
+                      placeholder="Enter phone number"
+                      value={formData.emergency_phone}
+                      onChange={handleInputChange}
+                      error={errors.emergency_phone}
+                      className="col-md-6"
+                    />
                   </div>
                 </div>
               </div>
@@ -612,7 +592,17 @@ export const PublicConsentRequestPage = () => {
                       {errors.services}
                     </div>
                   )}
-                  <div className="row g-3">{serviceCards}</div>
+                  {initialLoading ? (
+                    <div className="row g-3">
+                      {[1, 2, 3, 4].map((i) => (
+                        <div className="col-md-6" key={i}>
+                          <SkeletonLoader />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="row g-3">{serviceCards}</div>
+                  )}
                 </div>
               </div>
 
@@ -728,6 +718,7 @@ export const PublicConsentRequestPage = () => {
         </div>
       </div>
     </PublicLayout>
+    </Suspense>
   );
 };
 
