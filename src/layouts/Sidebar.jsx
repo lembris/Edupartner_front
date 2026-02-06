@@ -1,46 +1,15 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useMenuData } from '../hooks/useMenuData';
 
-// Menu data imports
-import eApprovalMenu from '../data/eApprovalMenu.json';
-import ictAssetsMenu from '../data/ictAssetsMenu.json';
-import unisync360Menu from '../data/unisync360Menu.json';
-import leadLancerMenu from '../data/leadLancerMenu.json';
-import externalCounselorMenu from '../data/externalCounselorMenu.json';
-import biMenu from '../data/biMenu.json';
+// Static imports only for immediately needed data
 import servicesList from '../data/servicesList.json';
 
-// Namespace to menu mapping
+// Menu mapping - UniSync360 menu loaded dynamically via useMenuData hook
 const MENU_CONFIG = {
-  'e-approval': {
-    data: eApprovalMenu,
-    title: 'E-Approval',
-    type: 'sections' // Array of sections with header + items
-  },
-  'ict-assets': {
-    data: ictAssetsMenu[0]?.items || [],
-    title: 'ICT Assets',
-    type: 'nested' // Array of items with header + submenu
-  },
   'unisync360': {
-    data: unisync360Menu[0]?.items || [],
     title: 'UniSync360',
-    type: 'nested'
-  },
-  'lead-lancer': {
-    data: leadLancerMenu[0]?.items || [],
-    title: 'Lead Lancer Portal',
-    type: 'nested'
-  },
-  'external-counselor': {
-    data: externalCounselorMenu[0]?.items || [],
-    title: 'External Counselor Portal',
-    type: 'nested'
-  },
-  'bi': {
-    data: biMenu[0]?.items || [],
-    title: 'Business Intelligence',
     type: 'nested'
   }
 };
@@ -77,38 +46,16 @@ const hasAnyVisibleItem = (items, userPermissions, userRoles) => {
   });
 };
 
-// Extract namespace from URL path
+// Extract namespace from URL path (UniSync360 only)
 const getNamespaceFromPath = (pathname) => {
   const segments = pathname.split('/').filter(Boolean);
   if (segments.length === 0) return DEFAULT_NAMESPACE;
 
   const firstSegment = segments[0].toLowerCase();
-  const secondSegment = segments[1]?.toLowerCase() || '';
 
-  // Check for portal-specific paths (e.g., /unisync360/external-counselor or /unisync360/lead-lancer)
+  // Only support UniSync360
   if (firstSegment === 'unisync360') {
-    if (secondSegment === 'external-counselor') {
-      return 'external-counselor';
-    }
-    if (secondSegment === 'lead-lancer') {
-      return 'lead-lancer';
-    }
-  }
-
-  // Check if the namespace exists in our config
-  if (MENU_CONFIG[firstSegment]) {
-    return firstSegment;
-  }
-
-  // Check servicesList for matching link patterns
-  const matchedService = servicesList.find(service => {
-    const serviceSegment = service.link.split('/').filter(Boolean)[0];
-    return serviceSegment === firstSegment;
-  });
-
-  if (matchedService) {
-    const serviceNamespace = matchedService.link.split('/').filter(Boolean)[0];
-    return MENU_CONFIG[serviceNamespace] ? serviceNamespace : DEFAULT_NAMESPACE;
+    return 'unisync360';
   }
 
   return DEFAULT_NAMESPACE;
@@ -120,6 +67,9 @@ const Sidebar = ({ isService = false }) => {
   const userRoles = user?.groups;
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Lazy load UniSync360 menu data only
+  const { menuData: unisync360Data } = useMenuData('unisync360');
 
   // Listen for sidebar toggle events
   useEffect(() => {
@@ -135,8 +85,18 @@ const Sidebar = ({ isService = false }) => {
     return getNamespaceFromPath(location.pathname);
   }, [location.pathname]);
 
+  // Build menu config with lazy-loaded UniSync360 data
+  const menuConfigWithData = useMemo(() => ({
+    ...MENU_CONFIG,
+    'unisync360': {
+      ...MENU_CONFIG['unisync360'],
+      // unisync360Data is an array with one element containing the items
+      data: (Array.isArray(unisync360Data) && unisync360Data[0]?.items) || unisync360Data || []
+    }
+  }), [unisync360Data]);
+
   // Get menu config for current namespace
-  const menuConfig = MENU_CONFIG[activeNamespace] || MENU_CONFIG[DEFAULT_NAMESPACE];
+  const menuConfig = menuConfigWithData[activeNamespace] || menuConfigWithData[DEFAULT_NAMESPACE];
 
   // Format namespace for display
   const formattedTitle = menuConfig.title || activeNamespace
