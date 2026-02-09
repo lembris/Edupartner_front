@@ -28,7 +28,8 @@ const ServiceCard = React.memo(({ service, isSelected, onToggle }) => (
                         className="form-check-input me-3 mt-1"
                         id={`service-${service.uid}`}
                         checked={isSelected || false}
-                        onChange={() => onToggle(service.uid)}
+                        onChange={(e) => e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}
                     />
                     <label
                         htmlFor={`service-${service.uid}`}
@@ -141,7 +142,7 @@ export const PublicConsentRequestPage = () => {
         try {
             setInitialLoading(true);
             const response = await fetchConsentServices();
-            const serviceList = response.data || response.results || response || [];
+            const serviceList = Array.isArray(response) ? response : (response.data || response.results || response || []);
             setServices(serviceList);
             const initialServices = {};
             serviceList.forEach(service => {
@@ -209,14 +210,6 @@ export const PublicConsentRequestPage = () => {
             newErrors.emergency_phone = "Invalid phone format";
         }
 
-        if (!Object.values(selectedServices).some(v => v)) {
-            newErrors.services = "Please select at least one service";
-        }
-
-        if (!formData.agreed_to_terms) {
-            newErrors.agreed_to_terms = "You must agree to the terms";
-        }
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     }, [formData, selectedServices]);
@@ -233,9 +226,14 @@ export const PublicConsentRequestPage = () => {
         try {
             setLoading(true);
 
+            // Get selected service UIDs
+            const selectedServiceUids = Object.keys(selectedServices).filter(uid => selectedServices[uid]);
+
             const response = await createConsentRequest({
                 ...formData,
-                request_status: "submitted"
+                request_status: "draft",
+                agreed_to_terms: formData.agreed_to_terms,
+                selectedServices: selectedServiceUids
             });
 
             setSubmitSuccess(true);
@@ -273,11 +271,30 @@ export const PublicConsentRequestPage = () => {
             }, 3000);
         } catch (error) {
             console.error("Error submitting request:", error);
-            Swal.fire(
-                "Error!",
-                error.message || "Failed to submit consent request. Please try again.",
-                "error"
-            );
+            
+            let errorMessage = "Failed to submit consent request. Please try again.";
+            let errorHtml = null;
+
+            // Extract validation errors from response
+            // error is already the response.data from the catch in Queries.jsx
+            const errorData = error?.data || error?.response?.data?.data;
+            
+            if (errorData && typeof errorData === 'object') {
+                // Build HTML from validation errors
+                const errorLines = Object.entries(errorData).map(([field, messages]) => {
+                    const messageList = Array.isArray(messages) ? messages : [messages];
+                    return `<strong>${field}:</strong> ${messageList.join(', ')}`;
+                });
+                if (errorLines.length > 0) {
+                    errorHtml = `<div style="text-align: left;">${errorLines.join('<br />')}</div>`;
+                }
+            }
+
+            Swal.fire({
+                title: "Validation Error",
+                html: errorHtml || errorMessage,
+                icon: "error"
+            });
         } finally {
             setLoading(false);
         }
@@ -578,12 +595,10 @@ export const PublicConsentRequestPage = () => {
                                     </div>
                                 </div>
                                 <div className="card-body">
-                                    {errors.services && (
-                                        <div className="alert alert-danger mb-4" role="alert">
-                                            <i className="bx bx-exclamation-circle me-2"></i>
-                                            {errors.services}
-                                        </div>
-                                    )}
+                                    <p className="text-muted small mb-4">
+                                        <i className="bx bx-info-circle me-1"></i>
+                                        Services are optional and can be added later.
+                                    </p>
                                     {initialLoading ? (
                                         <div className="row g-3">
                                             {[1, 2, 3, 4].map((i) => (
@@ -637,25 +652,22 @@ export const PublicConsentRequestPage = () => {
                                     </div>
 
                                     <div className="form-check">
-                                        <input
-                                            type="checkbox"
-                                            className={`form-check-input ${errors.agreed_to_terms ? "is-invalid" : ""
-                                                }`}
-                                            id="agreed_to_terms"
-                                            name="agreed_to_terms"
-                                            checked={formData.agreed_to_terms}
-                                            onChange={handleInputChange}
-                                        />
-                                        <label className="form-check-label" htmlFor="agreed_to_terms">
-                                            I agree to the terms and conditions{" "}
-                                            <span className="text-danger">*</span>
-                                        </label>
-                                        {errors.agreed_to_terms && (
-                                            <div className="invalid-feedback d-block">
-                                                {errors.agreed_to_terms}
-                                            </div>
-                                        )}
-                                    </div>
+                                         <input
+                                             type="checkbox"
+                                             className="form-check-input"
+                                             id="agreed_to_terms"
+                                             name="agreed_to_terms"
+                                             checked={formData.agreed_to_terms}
+                                             onChange={handleInputChange}
+                                         />
+                                         <label className="form-check-label" htmlFor="agreed_to_terms">
+                                             I agree to the terms and conditions (optional)
+                                         </label>
+                                     </div>
+                                     <p className="text-muted small mt-3">
+                                         <i className="bx bx-info-circle me-1"></i>
+                                         You can review and agree to terms later before final submission.
+                                     </p>
                                 </div>
                             </div>
 

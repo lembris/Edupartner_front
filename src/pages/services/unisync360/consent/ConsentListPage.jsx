@@ -299,11 +299,24 @@ export const ConsentListPage = () => {
                     {
                         key: "services",
                         label: "Services",
-                        render: (row) => (
-                            <span className="badge bg-light text-dark">
-                                {row.service_count || 0} service(s)
-                            </span>
-                        ),
+                        render: (row) => {
+                            const serviceCount = row.service_count || 0;
+                            const serviceNames = row.service_names || [];
+                            return (
+                                <div>
+                                    <span className="badge bg-light text-dark" title={serviceNames.join(", ")}>
+                                        {serviceCount} service(s)
+                                    </span>
+                                    {serviceNames.length > 0 && (
+                                        <div className="small text-muted mt-1">
+                                            {serviceNames.map((name, idx) => (
+                                                <div key={idx}>{name}</div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        },
                     },
                     {
                         key: "reviewer",
@@ -311,6 +324,14 @@ export const ConsentListPage = () => {
                         render: (row) =>
                             row.reviewed_by_details?.first_name
                                 ? `${row.reviewed_by_details.first_name} ${row.reviewed_by_details.last_name}`
+                                : "-",
+                    },
+                    {
+                        key: "assigned",
+                        label: "Assigned To",
+                        render: (row) =>
+                            row.assigned_to_details?.first_name
+                                ? `${row.assigned_to_details.first_name} ${row.assigned_to_details.last_name}`
                                 : "-",
                     },
                 ]}

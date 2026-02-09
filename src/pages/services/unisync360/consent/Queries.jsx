@@ -10,7 +10,7 @@ const API_URL = `${API_BASE_URL}/api`;
 export const fetchConsentRequests = async (params = {}) => {
     try {
         const response = await api.get(`${API_URL}/unisync360-consent-requests/`, { params });
-        return response.data;
+        return response.data.data || response.data;
     } catch (error) {
         console.error("Error fetching consent requests:", error);
         throw error;
@@ -20,7 +20,7 @@ export const fetchConsentRequests = async (params = {}) => {
 export const fetchConsentRequest = async (uid) => {
     try {
         const response = await api.get(`${API_URL}/unisync360-consent-requests/${uid}/`);
-        return response.data;
+        return response.data.data || response.data;
     } catch (error) {
         console.error("Error fetching consent request:", error);
         throw error;
@@ -69,6 +69,38 @@ export const approveConsentRequest = async (uid) => {
     }
 };
 
+export const assignConsentRequestToStaff = async (uid, staffUid) => {
+    try {
+        const response = await api.patch(
+            `${API_URL}/unisync360-consent-requests/${uid}/assign/`,
+            {
+                assigned_to: staffUid
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error assigning consent request:", error);
+        throw error;
+    }
+};
+
+export const unassignConsentRequest = async (uid) => {
+    try {
+        const response = await api.patch(`${API_URL}/unisync360-consent-requests/${uid}/assign/`, {
+            assigned_to: null
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error unassigning consent request:", error);
+        throw error;
+    }
+};
+
 /**
  * CONSENT SERVICES
  */
@@ -76,7 +108,7 @@ export const approveConsentRequest = async (uid) => {
 export const fetchConsentServices = async (params = {}) => {
     try {
         const response = await api.get(`${API_URL}/unisync360-consent-services/`, { params });
-        return response.data;
+        return response.data.data || response.data;
     } catch (error) {
         console.error("Error fetching consent services:", error);
         throw error;
@@ -86,7 +118,7 @@ export const fetchConsentServices = async (params = {}) => {
 export const fetchConsentService = async (uid) => {
     try {
         const response = await api.get(`${API_URL}/unisync360-consent-services/${uid}/`);
-        return response.data;
+        return response.data.data || response.data;
     } catch (error) {
         console.error("Error fetching consent service:", error);
         throw error;
@@ -130,7 +162,7 @@ export const deleteConsentService = async (uid) => {
 export const fetchConsentServiceSelections = async (params = {}) => {
     try {
         const response = await api.get(`${API_URL}/unisync360-consent-service-selections/`, { params });
-        return response.data;
+        return response.data.data || response.data;
     } catch (error) {
         console.error("Error fetching service selections:", error);
         throw error;

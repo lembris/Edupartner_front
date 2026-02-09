@@ -3,10 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import BreadCumb from "../../../../layouts/BreadCumb";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import { fetchConsentRequest, updateConsentRequest, approveConsentRequest } from "./Queries";
+import { fetchConsentRequest, updateConsentRequest, approveConsentRequest, deleteConsentRequest } from "./Queries";
 import { formatDate } from "../../../../helpers/DateFormater";
 import { hasAccess } from "../../../../hooks/AccessHandler";
 import ConsentServiceSelectionModal from "./ConsentServiceSelectionModal";
+import { StaffAssignmentModal } from "./StaffAssignmentModal";
 
 export const ConsentDetailsPage = () => {
     const { id } = useParams();
@@ -14,6 +15,7 @@ export const ConsentDetailsPage = () => {
     const [consent, setConsent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showServiceModal, setShowServiceModal] = useState(false);
+    const [showAssignmentModal, setShowAssignmentModal] = useState(false);
     const user = useSelector((state) => state.userReducer?.data);
 
     useEffect(() => {
@@ -103,6 +105,161 @@ export const ConsentDetailsPage = () => {
         } catch (error) {
             console.error("Error updating status:", error);
             Swal.fire("Error!", "Failed to update status.", "error");
+        }
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const result = await Swal.fire({
+                title: "Submit Request?",
+                text: "Are you sure you want to submit this consent request for review?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#0d6efd",
+                cancelButtonColor: "#aaa",
+                confirmButtonText: "Yes, submit it!",
+            });
+            if (result.isConfirmed) {
+                await updateConsentRequest(id, {
+                    request_status: "submitted",
+                    submission_date: new Date().toISOString()
+                });
+                Swal.fire("Success!", "Request submitted successfully.", "success");
+                loadConsent();
+            }
+        } catch (error) {
+            console.error("Error submitting:", error);
+            Swal.fire("Error!", "Failed to submit request.", "error");
+        }
+    };
+
+    const handleMarkPendingReview = async () => {
+        try {
+            const result = await Swal.fire({
+                title: "Mark as Pending Review?",
+                text: "Are you sure you want to mark this as pending review?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#ffc107",
+                cancelButtonColor: "#aaa",
+                confirmButtonText: "Yes, mark it!",
+            });
+            if (result.isConfirmed) {
+                await updateConsentRequest(id, {
+                    request_status: "pending_review"
+                });
+                Swal.fire("Success!", "Status updated to pending review.", "success");
+                loadConsent();
+            }
+        } catch (error) {
+            console.error("Error updating status:", error);
+            Swal.fire("Error!", "Failed to update status.", "error");
+        }
+    };
+
+    const handleRevertToDraft = async () => {
+        try {
+            const result = await Swal.fire({
+                title: "Revert to Draft?",
+                text: "Are you sure you want to revert this to draft status? All reviews will be cleared.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#6c757d",
+                cancelButtonColor: "#aaa",
+                confirmButtonText: "Yes, revert it!",
+            });
+            if (result.isConfirmed) {
+                await updateConsentRequest(id, {
+                    request_status: "draft",
+                    reviewed_by: null,
+                    review_date: null,
+                    rejection_reason: null
+                });
+                Swal.fire("Success!", "Reverted to draft status.", "success");
+                loadConsent();
+            }
+        } catch (error) {
+            console.error("Error reverting:", error);
+            Swal.fire("Error!", "Failed to revert status.", "error");
+        }
+    };
+
+    const handleReopen = async () => {
+        try {
+            const result = await Swal.fire({
+                title: "Reopen Request?",
+                text: "Are you sure you want to reopen this request? It will be marked as submitted.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#17a2b8",
+                cancelButtonColor: "#aaa",
+                confirmButtonText: "Yes, reopen it!",
+            });
+            if (result.isConfirmed) {
+                await updateConsentRequest(id, {
+                    request_status: "submitted"
+                });
+                Swal.fire("Success!", "Request reopened.", "success");
+                loadConsent();
+            }
+        } catch (error) {
+            console.error("Error reopening:", error);
+            Swal.fire("Error!", "Failed to reopen request.", "error");
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            const result = await Swal.fire({
+                title: "Delete Request?",
+                text: "Are you sure you want to delete this consent request? This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#aaa",
+                confirmButtonText: "Yes, delete it!",
+            });
+            if (result.isConfirmed) {
+                await deleteConsentRequest(id);
+                Swal.fire("Success!", "Request deleted successfully.", "success");
+                navigate("/unisync360/consent");
+            }
+        } catch (error) {
+            console.error("Error deleting:", error);
+            Swal.fire("Error!", "Failed to delete request.", "error");
+        }
+    };
+
+    const handleExport = async () => {
+        try {
+            const csvContent = [
+                ["Consent Request Details"],
+                [],
+                ["Name", consent.full_name],
+                ["Email", consent.email],
+                ["Phone", consent.phone],
+                ["Status", consent.request_status],
+                ["Agreed to Terms", consent.agreed_to_terms ? "Yes" : "No"],
+                ["Submitted", consent.submission_date ? formatDate(consent.submission_date) : "-"],
+                ["Parent/Guardian", consent.emergency_full_contact],
+                ["Guardian Phone", consent.emergency_phone],
+                ["Additional Notes", consent.additional_notes || "-"],
+            ]
+                .map(row => row.map(cell => `"${cell}"`).join(","))
+                .join("\n");
+
+            const element = document.createElement("a");
+            element.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent));
+            element.setAttribute("download", `consent_${id}.csv`);
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+
+            Swal.fire("Success!", "Consent request exported successfully.", "success");
+        } catch (error) {
+            console.error("Error exporting:", error);
+            Swal.fire("Error!", "Failed to export consent request.", "error");
         }
     };
 
@@ -327,6 +484,11 @@ export const ConsentDetailsPage = () => {
                             </div>
 
                             <div className="mb-3">
+                                <label className="form-label fw-bold">Date of Request</label>
+                                <p>{consent.created_at ? formatDate(consent.created_at) : "-"}</p>
+                            </div>
+
+                            <div className="mb-3">
                                 <label className="form-label fw-bold">Submitted</label>
                                 <p>{consent.submission_date ? formatDate(consent.submission_date) : "-"}</p>
                             </div>
@@ -343,6 +505,22 @@ export const ConsentDetailsPage = () => {
                                     <label className="form-label fw-bold">Review Date</label>
                                     <p>{formatDate(consent.review_date)}</p>
                                 </div>
+                            )}
+
+                            {consent.assigned_to_details && (
+                                <>
+                                    <hr />
+                                    <div className="mb-3">
+                                        <label className="form-label fw-bold">Assigned To</label>
+                                        <p>{consent.assigned_to_details.first_name} {consent.assigned_to_details.last_name}</p>
+                                    </div>
+                                    {consent.assigned_at && (
+                                        <div className="mb-3">
+                                            <label className="form-label fw-bold">Assigned Date</label>
+                                            <p>{formatDate(consent.assigned_at)}</p>
+                                        </div>
+                                    )}
+                                </>
                             )}
 
                             <div className="mb-3">
@@ -363,19 +541,151 @@ export const ConsentDetailsPage = () => {
                             <h5 className="mb-0">Actions</h5>
                         </div>
                         <div className="card-body d-flex flex-column gap-2">
+                            {/* Always Available */}
                             <button 
-                                className="btn btn-secondary"
+                                className="btn btn-secondary btn-sm"
                                 onClick={() => navigate("/unisync360/consent")}
                             >
                                 <i className="bx bx-arrow-back"></i> Back to List
                             </button>
-                            {hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && (
-                                <button 
-                                    className="btn btn-primary"
-                                    onClick={() => navigate(`/unisync360/consent/${id}/edit`)}
-                                >
-                                    <i className="bx bx-pencil"></i> Edit
-                                </button>
+                            <button 
+                                className="btn btn-info btn-sm"
+                                onClick={handleExport}
+                            >
+                                <i className="bx bx-download"></i> Export
+                            </button>
+                            <button 
+                                className="btn btn-primary btn-sm"
+                                onClick={() => setShowAssignmentModal(true)}
+                                disabled={!hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"])}
+                            >
+                                <i className="bx bx-user-plus"></i> {consent?.assigned_to_details ? "Reassign" : "Assign to Staff"}
+                            </button>
+
+                            {/* Draft Status Actions */}
+                            {consent.request_status === "draft" && hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && (
+                                <>
+                                    <hr className="my-2" />
+                                    <button 
+                                        className="btn btn-primary btn-sm"
+                                        onClick={() => navigate(`/unisync360/consent/${id}/edit`)}
+                                    >
+                                        <i className="bx bx-pencil"></i> Edit
+                                    </button>
+                                    <button 
+                                        className="btn btn-info btn-sm"
+                                        onClick={handleSubmit}
+                                    >
+                                        <i className="bx bx-send"></i> Submit
+                                    </button>
+                                    <button 
+                                        className="btn btn-warning btn-sm"
+                                        onClick={handleMarkPendingReview}
+                                    >
+                                        <i className="bx bx-hourglass"></i> Mark Pending Review
+                                    </button>
+                                    <button 
+                                        className="btn btn-danger btn-sm"
+                                        onClick={handleDelete}
+                                    >
+                                        <i className="bx bx-trash"></i> Delete
+                                    </button>
+                                </>
+                            )}
+
+                            {/* Submitted Status Actions */}
+                            {consent.request_status === "submitted" && hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && (
+                                <>
+                                    <hr className="my-2" />
+                                    <button 
+                                        className="btn btn-warning btn-sm"
+                                        onClick={handleMarkPendingReview}
+                                    >
+                                        <i className="bx bx-hourglass"></i> Mark Pending Review
+                                    </button>
+                                    <button 
+                                        className="btn btn-secondary btn-sm"
+                                        onClick={handleRevertToDraft}
+                                    >
+                                        <i className="bx bx-undo"></i> Revert to Draft
+                                    </button>
+                                </>
+                            )}
+
+                            {/* Pending Review Status Actions */}
+                            {consent.request_status === "pending_review" && hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && (
+                                <>
+                                    <hr className="my-2" />
+                                    <button 
+                                        className="btn btn-success btn-sm"
+                                        onClick={handleApprove}
+                                    >
+                                        <i className="bx bx-check-circle"></i> Approve
+                                    </button>
+                                    <button 
+                                        className="btn btn-danger btn-sm"
+                                        onClick={handleReject}
+                                    >
+                                        <i className="bx bx-x-circle"></i> Reject
+                                    </button>
+                                    <button 
+                                        className="btn btn-secondary btn-sm"
+                                        onClick={handleRevertToDraft}
+                                    >
+                                        <i className="bx bx-undo"></i> Revert to Draft
+                                    </button>
+                                </>
+                            )}
+
+                            {/* Approved Status Actions */}
+                            {consent.request_status === "approved" && hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && (
+                                <>
+                                    <hr className="my-2" />
+                                    <button 
+                                        className="btn btn-secondary btn-sm"
+                                        onClick={handleRevertToDraft}
+                                    >
+                                        <i className="bx bx-undo"></i> Revert to Draft
+                                    </button>
+                                </>
+                            )}
+
+                            {/* Rejected Status Actions */}
+                            {consent.request_status === "rejected" && hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && (
+                                <>
+                                    <hr className="my-2" />
+                                    <button 
+                                        className="btn btn-info btn-sm"
+                                        onClick={handleReopen}
+                                    >
+                                        <i className="bx bx-reset"></i> Reopen
+                                    </button>
+                                    <button 
+                                        className="btn btn-secondary btn-sm"
+                                        onClick={handleRevertToDraft}
+                                    >
+                                        <i className="bx bx-undo"></i> Revert to Draft
+                                    </button>
+                                </>
+                            )}
+
+                            {/* Expired/Revoked Status Actions */}
+                            {(consent.request_status === "expired" || consent.request_status === "revoked") && hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && (
+                                <>
+                                    <hr className="my-2" />
+                                    <button 
+                                        className="btn btn-info btn-sm"
+                                        onClick={handleReopen}
+                                    >
+                                        <i className="bx bx-reset"></i> Reopen
+                                    </button>
+                                    <button 
+                                        className="btn btn-secondary btn-sm"
+                                        onClick={handleRevertToDraft}
+                                    >
+                                        <i className="bx bx-undo"></i> Revert to Draft
+                                    </button>
+                                </>
                             )}
                         </div>
                     </div>
@@ -391,6 +701,20 @@ export const ConsentDetailsPage = () => {
                         setShowServiceModal(false);
                         loadConsent();
                     }}
+                />
+            )}
+
+            {showAssignmentModal && (
+                <StaffAssignmentModal
+                    show={showAssignmentModal}
+                    onHide={() => setShowAssignmentModal(false)}
+                    consentId={id}
+                    currentAssignee={consent?.assigned_to_details}
+                    onSuccess={() => {
+                        loadConsent();
+                    }}
+                    title="Assign Consent Request to Staff"
+                    description="Select a staff member to process this consent request"
                 />
             )}
         </>
