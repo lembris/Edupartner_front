@@ -1,20 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import getGreetingMessage from "../utils/greetingHandler";
 import { logout } from "../redux/actions/authentication/logoutAction";
-import { Navigate, useNavigate } from "react-router-dom";
-import React, { useState, useEffect, activeService } from "react";
-import servicesList from "../data/servicesList.json";
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 
 const Navbar = ({ isService = false }) => {
   const user = useSelector((state) => state.userReducer?.data);
 
-  const [showDropdown, setShowDropdown] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
 
   const toggleProfileDropdown = () => {
     setShowProfileDropdown(!showProfileDropdown);
@@ -40,86 +34,7 @@ const Navbar = ({ isService = false }) => {
       id="layout-navbar"
       style={{ position: 'sticky', top: 0, zIndex: 1000 }}
     >
-      <style>
-        {`
 
-          .service-content{
-              background: #fff;
-              border: 0.2px solid transparent;
-              border-radius: 20px;
-              padding: 10px;
-              background:
-                linear-gradient(#fff, #fff) padding-box,
-                linear-gradient(135deg, #475569 0%, #64748b 100%) border-box;
-              transition:
-                background 1s ease,
-                border-color 1s ease,
-                border-image 1s ease,
-                box-shadow 0.4s ease,
-                transform 0.4s ease,
-                opacity 0.4s ease;
-              box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-              animation: fadeInSlideUp 0.5s ease forwards;
-              opacity: 0;
-              transform: translateY(10px);
-          }
-
-          .dropdown-services-box {
-              background: #fff;
-              border: 2.5px solid transparent;
-              border-radius: 5px;
-              min-height: 300px;
-              background:
-                linear-gradient(#fff, #fff) padding-box,
-                linear-gradient(135deg, #475569 0%, #64748b 100%) border-box;
-              transition:
-                background 1s ease,
-                border-color 1s ease,
-                border-image 1s ease,
-                box-shadow 0.4s ease,
-                transform 0.4s ease,
-                opacity 0.4s ease;
-              box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-              animation: fadeInSlideUp 0.5s ease forwards;
-              opacity: 0;
-              transform: translateY(10px);
-            }
-
-            .dropdown-services-box.show {
-              opacity: 1;
-              transform: translateY(0);
-            }
-
-            .service-list-item:active,
-            .service-list-item:hover,
-            .service-list-item:focus {
-              box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-              transform: translateX(40px);
-            }
-            /* Icons inside cards */
-            .dropdown-services-box .bx {
-              font-size: 2rem;
-              color: #475569;
-            }
-
-            /* Gradient titles */
-            .dropdown-services-box .service-title {
-              font-weight: bold;
-              color: #334155;
-            }
-
-            /* Animation keyframe */
-            @keyframes fadeInSlideUp {
-              from {
-                opacity: 0;
-                transform: translateX(-50px);
-              }
-              to {
-                opacity: 1;
-                transform: translateX(0);
-              }
-            }`}
-      </style>
 
       <div className="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
         <button
@@ -139,77 +54,10 @@ const Navbar = ({ isService = false }) => {
         {isService ? (
           getGreetingMessage(user ? user.first_name : "")
         ) : (
-          <div className="position-relative">
-            <button
-              aria-label="Click me"
-              type="button"
-              className="btn btn-sm btn-outline-secondary me-2 me-xl-4"
-              onClick={toggleDropdown}
-              style={{ color: '#475569', borderColor: '#cbd5e1' }}
-            >
-              <i className="bx bx-menu me-1"></i> Quick Access to Services
-              {activeService && (
-                <span className="active-service-badge ms-2 text-dark">&nbsp;|&nbsp;&nbsp;&nbsp;
-                  {activeService.split('-').map(word => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                  ).join(' ')}
-                </span>
-              )}
-            </button>
-            {/* Dropdown */}
-            {showDropdown && (
-              <div
-                className={`dropdown-services-box show`}
-                style={{
-                  position: "absolute",
-                  left: 0, // right below the button
-                  top: 23,
-                  right: 0,
-                  width: "350px",
-                  marginTop: "10px",
-                  zIndex: 1000,
-                  padding: "20px",
-                }}
-              >
-                <div className="row">
-                  <h5 className="text-secondary"> Choose The Services</h5>
-                  <p className="text-muted">
-                    The below is list of mnh-Connect Service you Included
-                  </p>
-                </div>
-                <div
-                  className="row mb-4"
-                  style={{
-                    overflowY: "auto",
-                    overflowX: "hidden",
-                    maxHeight: "300px",
-                  }}
-                >
-                  {servicesList
-                    .filter(doc => doc.id === 'unisync360' || doc.id === 'external-counselor-portal' || doc.id === 'lead-lancer-portal')
-                    .map((doc, idx) => ( 
-                    <div
-                      className="d-flex align-items-center service-list-item cursor-pointer me-3 mb-3"
-                      key={"docs_index_" + idx}
-                      onClick={() => {
-                        navigate(doc.link);
-                        setShowDropdown(false);
-                      }}
-                    >
-                      <i className={`${doc.icon} icon-size me-3`}></i>
-                      <div>
-                        <div className="service-title">{doc.text}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <span className="text-secondary text-truncate  mt-3">
-              <i className="bx bx-user me-1 mb-1"></i>
-              {user ? `${user.first_name} ${user.last_name}` : ""}
-            </span>
-          </div>
+          <span className="text-secondary text-truncate">
+            <i className="bx bx-user me-1 mb-1"></i>
+            {user ? `${user.first_name} ${user.last_name}` : ""}
+          </span>
         )}
 
 

@@ -46,6 +46,9 @@ import { UserListPage } from "../../../pages/services/unisync360/users/UserListP
 import { RoleListPage } from "../../../pages/services/unisync360/roles/RoleListPage.jsx";
 import { PermissionListPage } from "../../../pages/services/unisync360/permissions/PermissionListPage.jsx";
 
+// Site Settings
+import SiteSettingsPage from "../../../pages/services/unisync360/site/SiteSettingsPage.jsx";
+
 // User Manual
 import { UserManualPage } from "../../../pages/services/unisync360/usermanual/UserManualPage.jsx";
 import { LeadLancerUserManualPage } from "../../../pages/services/unisync360/lead-lancer/LeadLancerUserManualPage.jsx";
@@ -485,6 +488,14 @@ const unisync360Permissions = {
         changeConsent: ["change_student"],
         deleteConsent: ["delete_student"],
         viewConsentDetails: ["view_student"],
+    },
+
+    // Site Settings Management
+    siteSettings: {
+        view: ["view_sitesetting"],
+        add: ["add_sitesetting"],
+        change: ["change_sitesetting"],
+        delete: ["delete_sitesetting"],
     },
 }
 
@@ -1096,6 +1107,19 @@ export const unisync360Routes = [
                 requiredRoles={[]}
             >
                 <CommissionPackagesListPage />
+            </ProtectedRoute>
+        ),
+    },
+
+    // Site Settings
+    {
+        path: "/unisync360/site",
+        element: (
+            <ProtectedRoute
+                requiredPermissions={unisync360Permissions.siteSettings.view}
+                requiredRoles={["unisync360_super_admin"]}
+            >
+                <SiteSettingsPage />
             </ProtectedRoute>
         ),
     },

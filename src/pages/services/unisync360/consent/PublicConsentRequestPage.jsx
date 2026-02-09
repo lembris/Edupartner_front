@@ -357,13 +357,12 @@ export const PublicConsentRequestPage = () => {
                         </span>
                     </div>
                     <h1 className="display-5 fw-bold text-dark mb-3">
-                        Service Consent Request
+                        Premium Student Support at No Cost
                     </h1>
                     <div className="row justify-content-center">
                         <div className="col-lg-8 col-xl-6">
                             <p className="text-muted fs-5 mb-4">
-                                Complete this secure form to request consent for educational services.
-                                Your information is encrypted and protected.
+                                For students enrolled in international schools across East Africa. EduPartners International removes admissions and relocation friction so students can focus on academic readiness and transition success.
                             </p>
                         </div>
                     </div>

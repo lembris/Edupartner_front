@@ -506,6 +506,16 @@
                         "role": [
                             "unisync360_super_admin"
                         ]
+                    },
+                    {
+                        "text": "Site Settings",
+                        "icon": "bx bx-globe",
+                        "available": true,
+                        "link": "/unisync360/site",
+                        "permission": [],
+                        "role": [
+                            "unisync360_super_admin"
+                        ]
                     }
                 ]
             }
