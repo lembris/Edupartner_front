@@ -680,7 +680,7 @@ export const unisync360Routes = [
 
     // Consent Management Routes
     {
-        path: "/unisync360/consent",
+        path: "/unisync360/consent-enquiry",
         element: (
             <ProtectedRoute
                 requiredPermissions={unisync360Permissions.service.viewConsent}
@@ -691,7 +691,7 @@ export const unisync360Routes = [
         ),
     },
     {
-        path: "/unisync360/consent/:id",
+        path: "/unisync360/consent-enquiry/:id",
         element: (
             <ProtectedRoute
                 requiredPermissions={unisync360Permissions.service.viewConsentDetails}

@@ -229,12 +229,12 @@ export const ConsentListPage = () => {
     return (
         <>
             <BreadCumb pageList={["Students", "Consents"]} />
-            
+
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h4>Consent Requests</h4>
                 {hasAccess(user?.roles, user?.permissions, [], ["add_consentrequest"]) && (
-                    <button 
-                        className="btn btn-primary" 
+                    <button
+                        className="btn btn-primary"
                         onClick={handleAddNew}
                     >
                         <i className="bx bx-plus"></i> New Consent Request
@@ -262,7 +262,7 @@ export const ConsentListPage = () => {
                                 <div>
                                     <span
                                         className="text-primary cursor-pointer fw-semibold"
-                                        onClick={() => navigate(`/unisync360/consent/${row.uid}`)}
+                                        onClick={() => navigate(`/unisync360/consent-enquiry/${row.uid}`)}
                                     >
                                         {row.full_name}
                                     </span>
@@ -349,8 +349,8 @@ export const ConsentListPage = () => {
                             setSelectedObj(row);
                             setShowModal(true);
                         },
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && 
-                                           (row.request_status === "draft" || row.request_status === "pending_review"),
+                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) &&
+                            (row.request_status === "draft" || row.request_status === "pending_review"),
                     },
                     {
                         label: "Update Status",
@@ -363,16 +363,16 @@ export const ConsentListPage = () => {
                         label: "Approve",
                         icon: "bx bx-check-circle",
                         onClick: (row) => handleApprove(row),
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && 
-                                           row.request_status === "pending_review",
+                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) &&
+                            row.request_status === "pending_review",
                         className: "text-success",
                     },
                     {
                         label: "Reject",
                         icon: "bx bx-x-circle",
                         onClick: (row) => handleReject(row),
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) && 
-                                           row.request_status === "pending_review",
+                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) &&
+                            row.request_status === "pending_review",
                         className: "text-warning",
                     },
                     {
@@ -385,8 +385,8 @@ export const ConsentListPage = () => {
                         label: "Delete",
                         icon: "bx bx-trash",
                         onClick: (row) => handleDelete(row),
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["delete_consentrequest"]) && 
-                                           row.request_status === "draft",
+                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["delete_consentrequest"]) &&
+                            row.request_status === "draft",
                         className: "text-danger",
                     },
                 ]}

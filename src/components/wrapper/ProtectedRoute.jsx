@@ -109,13 +109,21 @@ function ProtectedRoute({
 
     Swal.fire({
       title: "Access Denied",
-      text: "You don't have permission to access this page.",
+      text: "You don't have permission to access this page. Taking you home in 3 seconds...",
       icon: "warning",
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
-      confirmButtonText: "Go to Dashboard",
+      confirmButtonText: "Get Back Home",
+      didOpen: () => {
+        // Auto-close and redirect after 3 seconds
+        setTimeout(() => {
+          Swal.close();
+          window.location.href = redirectUrl;
+        }, 3000);
+      }
     }).then(() => {
+      // If user clicks the button, redirect immediately
       window.location.href = redirectUrl;
     });
 

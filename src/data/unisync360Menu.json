@@ -201,10 +201,10 @@
                         ]
                     },
                     {
-                        "text": "Consents",
+                        "text": "Consent Enquiry",
                         "icon": "bx bx-check-circle",
                         "available": true,
-                        "link": "/unisync360/consent",
+                        "link": "/unisync360/consent-enquiry",
                         "permission": [],
                         "role": [
                             "unisync360_super_admin",
