@@ -187,33 +187,24 @@ export const RecommendedCourseListPage = () => {
                             )
                         ),
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "100px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                <button
-                                    className="btn btn-sm btn-outline-primary border-0"
-                                    onClick={() => navigate(`/unisync360/academics/university-courses/${row.university_course_uid}`)}
-                                    title="View Course"
-                                >
-                                    <i className="bx bx-show"></i>
-                                </button>
-                                {hasAccess(user, ["delete_recommendedcourse"]) && (
-                                    <button
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Remove"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "View",
+                        icon: "bx bx-show",
+                        onClick: (row) => navigate(`/unisync360/academics/university-courses/${row.university_course_uid}`),
+                        className: "btn-outline-secondary",
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, ["delete_recommendedcourse"]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 filters={[
                     { label: "All", value: "ALL" },
                     { label: "80%+", value: "80" },

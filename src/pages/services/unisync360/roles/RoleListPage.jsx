@@ -107,49 +107,34 @@ export const RoleListPage = () => {
                             </button>
                         ),
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "200px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary border-0"
-                                    onClick={() => {
-                                        setSelectedRole(row);
-                                        setShowModal(true);
-                                    }}
-                                    title="Edit Role"
-                                >
-                                    <i className="bx bx-edit"></i>
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-warning border-0"
-                                    onClick={() => {
-                                        setSelectedRole(row);
-                                        setShowPermissionModal(true);
-                                    }}
-                                    title="Manage Permissions"
-                                >
-                                    <i className="bx bx-lock"></i>
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-danger border-0"
-                                    onClick={() => handleDelete(row)}
-                                    title="Delete Role"
-                                >
-                                    <i className="bx bx-trash"></i>
-                                </button>
-                            </div>
-                        ),
+                        label: "Edit",
+                        icon: "bx bx-edit",
+                        onClick: (row) => {
+                            setSelectedRole(row);
+                            setShowModal(true);
+                        },
+                        className: "btn-outline-primary text-primary",
+                    },
+                    {
+                        label: "Permissions",
+                        icon: "bx bx-lock",
+                        onClick: (row) => {
+                            setSelectedRole(row);
+                            setShowPermissionModal(true);
+                        },
+                        className: "btn-outline-warning text-warning",
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                fixedActions={true}
                 buttons={[
                     {
                         label: "Add Role",

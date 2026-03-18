@@ -957,47 +957,64 @@ export const SchoolDetailsPage = () => {
                                     <div className="card-body">
                                         <form onSubmit={handleScrape}>
                                             <div className="mb-3">
-                                                <label className="form-label">Exam Type</label>
-                                                <select
-                                                    className="form-select"
-                                                    value={nectaExamType}
-                                                    onChange={(e) => setNectaExamType(e.target.value)}
-                                                >
-                                                    <option value="CSEE">CSEE (Form 4)</option>
-                                                    <option value="ACSEE">ACSEE (Form 6)</option>
-                                                </select>
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Year</label>
-                                                <input
-                                                    type="number"
-                                                    className="form-control"
-                                                    value={nectaYear}
-                                                    onChange={(e) => setNectaYear(e.target.value)}
-                                                    min="2000"
-                                                    max={new Date().getFullYear()}
-                                                />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Result Page URL</label>
-                                                <input
-                                                    type="url"
-                                                    className="form-control"
-                                                    value={nectaUrl}
-                                                    onChange={(e) => setNectaUrl(e.target.value)}
-                                                    placeholder="https://onlinesys.necta.go.tz/..."
-                                                    required
-                                                />
-                                                <div className="form-text">
-                                                    {schoolData?.registration_number ? (
-                                                        <span className="text-success">
-                                                            <i className="bx bx-check-circle me-1"></i>
-                                                            Auto-generated from Reg# {schoolData.registration_number}
-                                                        </span>
-                                                    ) : (
-                                                        "Paste the direct link to the school's result page"
-                                                    )}
-                                                </div>
+                                                 <label className="form-label">Exam Type</label>
+                                                 <select
+                                                     className="form-select"
+                                                     value={nectaExamType}
+                                                     onChange={(e) => {
+                                                         setNectaExamType(e.target.value);
+                                                         // Auto-fill URL when CSEE 2025 is selected
+                                                         if (e.target.value === "CSEE" && nectaYear === 2025) {
+                                                             setNectaUrl("https://matokeo.necta.go.tz");
+                                                         }
+                                                     }}
+                                                 >
+                                                     <option value="CSEE">CSEE (Form 4)</option>
+                                                     <option value="ACSEE">ACSEE (Form 6)</option>
+                                                 </select>
+                                                 </div>
+                                                 <div className="mb-3">
+                                                 <label className="form-label">Year</label>
+                                                 <input
+                                                     type="number"
+                                                     className="form-control"
+                                                     value={nectaYear}
+                                                     onChange={(e) => {
+                                                         setNectaYear(e.target.value);
+                                                         // Auto-fill URL when year is set to 2025 and exam is CSEE
+                                                         if (nectaExamType === "CSEE" && e.target.value === 2025) {
+                                                             setNectaUrl("https://matokeo.necta.go.tz");
+                                                         }
+                                                     }}
+                                                     min="2000"
+                                                     max={new Date().getFullYear()}
+                                                 />
+                                                 </div>
+                                                 <div className="mb-3">
+                                                 <label className="form-label">Result Page URL</label>
+                                                 <input
+                                                     type="url"
+                                                     className="form-control"
+                                                     value={nectaUrl}
+                                                     onChange={(e) => setNectaUrl(e.target.value)}
+                                                     placeholder="https://matokeo.necta.go.tz"
+                                                     required
+                                                 />
+                                                 <div className="form-text">
+                                                     {nectaExamType === "CSEE" && nectaYear === 2025 ? (
+                                                         <span className="text-info">
+                                                             <i className="bx bx-info-circle me-1"></i>
+                                                             Auto-filled for 2025 CSEE
+                                                         </span>
+                                                     ) : schoolData?.registration_number ? (
+                                                         <span className="text-success">
+                                                             <i className="bx bx-check-circle me-1"></i>
+                                                             Auto-generated from Reg# {schoolData.registration_number}
+                                                         </span>
+                                                     ) : (
+                                                         "Paste the direct link to the school's result page"
+                                                     )}
+                                                 </div>
                                             </div>
                                             <button
                                                 type="submit"

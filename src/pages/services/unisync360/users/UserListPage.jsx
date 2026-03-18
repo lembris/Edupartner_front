@@ -272,85 +272,60 @@ export const UserListPage = () => {
                             </span>
                         )
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "180px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                {hasAccess(user, [["change_user"]]) && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-primary border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowModal(true);
-                                        }}
-                                        title="Edit User"
-                                    >
-                                        <i className="bx bx-edit"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["assign_role"]]) && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-info border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowRoleModal(true);
-                                        }}
-                                        title="Manage Roles"
-                                    >
-                                        <i className="bx bx-shield"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["change_password"]]) && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-warning border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowPasswordModal(true);
-                                        }}
-                                        title="Change Password"
-                                    >
-                                        <i className="bx bx-key"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["change_user"]]) && (
-                                    <button
-                                        type="button"
-                                        className={`btn btn-sm border-0 ${row.is_active ? 'btn-outline-secondary' : 'btn-outline-success'}`}
-                                        onClick={() => handleToggleActivation(row)}
-                                        title={row.is_active ? "Deactivate" : "Activate"}
-                                    >
-                                        <i className={`bx ${row.is_active ? 'bx-pause' : 'bx-play'}`}></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["delete_user"]]) && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete User"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "Edit",
+                        icon: "bx bx-edit",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowModal(true);
+                        },
+                        condition: () => hasAccess(user, ["change_user"]),
+                        className: "btn-outline-primary text-primary",
+                    },
+                    {
+                        label: "Roles",
+                        icon: "bx bx-shield",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowRoleModal(true);
+                        },
+                        condition: () => hasAccess(user, ["assign_role"]),
+                        className: "btn-outline-info text-info",
+                    },
+                    {
+                        label: "Password",
+                        icon: "bx bx-key",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowPasswordModal(true);
+                        },
+                        condition: () => hasAccess(user, ["change_password"]),
+                        className: "btn-outline-warning text-warning",
+                    },
+                    {
+                        label: row => row.is_active ? "Deactivate" : "Activate",
+                        icon: row => row.is_active ? "bx bx-pause" : "bx bx-play",
+                        onClick: (row) => handleToggleActivation(row),
+                        condition: () => hasAccess(user, ["change_user"]),
+                        className: row => `btn-outline-${row.is_active ? 'secondary' : 'success'} ${row.is_active ? 'text-secondary' : 'text-success'}`,
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, ["delete_user"]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 buttons={[
                     {
                         label: "Add User",
                         render: () => (
-                            hasAccess(user, [["add_user"]]) && (
+                            hasAccess(user, ["add_user"]) && (
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"

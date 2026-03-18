@@ -172,14 +172,22 @@ const ServiceSetupModal = ({ show, onClose, service, onSuccess, categories }) =>
             </h5>
             <button
               type="button"
-              className="btn-close"
+              className="btn btn-secondary"
               onClick={onClose}
               disabled={loading}
-            ></button>
+              style={{ 
+                padding: '0.25rem 0.5rem', 
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#5a6268'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+            >
+              <i className="bx bx-x" style={{ fontSize: '1.5rem' }}></i>
+            </button>
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="modal-body">
+            <div className="modal-body" style={{ maxHeight: "calc(100vh - 250px)", overflowY: "auto" }}>
               <div className="row g-3">
                 {/* Name */}
                 <div className="col-md-6">
@@ -466,7 +474,7 @@ const ServiceSetupModal = ({ show, onClose, service, onSuccess, categories }) =>
             <div className="modal-footer">
               <button
                 type="button"
-                className="btn btn-outline-secondary"
+                className="btn btn-secondary"
                 onClick={onClose}
                 disabled={loading}
               >

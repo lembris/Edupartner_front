@@ -246,6 +246,8 @@ export const ConsentListPage = () => {
                 fetchPath="/unisync360-consent-requests/"
                 title="Consent Requests"
                 refreshTrigger={tableRefresh}
+                user={user}
+                fixedActions={true}
                 columns={[
                     {
                         key: "name",
@@ -338,58 +340,59 @@ export const ConsentListPage = () => {
                 actions={[
                     {
                         label: "View",
-                        icon: "bx bx-eye",
+                        icon: "bx-eye",
                         onClick: (row) => navigate(`/unisync360/consent/${row.uid}`),
                         condition: () => true,
                     },
                     {
                         label: "Edit",
-                        icon: "bx bx-pencil",
+                        icon: "bx-pencil",
                         onClick: (row) => {
                             setSelectedObj(row);
                             setShowModal(true);
                         },
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) &&
+                        condition: (row) => hasAccess(user, ["change_consentrequest"], []) &&
                             (row.request_status === "draft" || row.request_status === "pending_review"),
                     },
                     {
                         label: "Update Status",
-                        icon: "bx bx-refresh",
+                        icon: "bx-refresh",
                         onClick: (row) => handleUpdateStatus(row),
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]),
+                        condition: (row) => hasAccess(user, ["change_consentrequest"], []),
                         className: "text-info",
                     },
                     {
                         label: "Approve",
-                        icon: "bx bx-check-circle",
+                        icon: "bx-check-circle",
                         onClick: (row) => handleApprove(row),
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) &&
+                        condition: (row) => hasAccess(user, ["change_consentrequest"], []) &&
                             row.request_status === "pending_review",
                         className: "text-success",
                     },
                     {
                         label: "Reject",
-                        icon: "bx bx-x-circle",
+                        icon: "bx-x-circle",
                         onClick: (row) => handleReject(row),
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["change_consentrequest"]) &&
+                        condition: (row) => hasAccess(user, ["change_consentrequest"], []) &&
                             row.request_status === "pending_review",
                         className: "text-warning",
                     },
                     {
                         label: "Export",
-                        icon: "bx bx-download",
+                        icon: "bx-download",
                         onClick: (row) => handleExport(row),
                         condition: () => true,
                     },
                     {
                         label: "Delete",
-                        icon: "bx bx-trash",
+                        icon: "bxs-trash",
                         onClick: (row) => handleDelete(row),
-                        condition: (row) => hasAccess(user?.roles, user?.permissions, [], ["delete_consentrequest"]) &&
+                        condition: (row) => hasAccess(user, ["delete_consentrequest"], []) &&
                             row.request_status === "draft",
-                        className: "text-danger",
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
             />
 
             {showModal && (

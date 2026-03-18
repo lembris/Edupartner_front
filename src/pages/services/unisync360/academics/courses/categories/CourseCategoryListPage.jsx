@@ -79,47 +79,30 @@ export const CourseCategoryListPage = () => {
                             </span>
                         )
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "120px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                {hasAccess(user, [["change_coursecategory"]]) && (
-                                    <button
-                                        aria-label="Edit"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-primary border-0"
-                                        onClick={() => setSelectedObj(row)}
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#courseCategoryModal"
-                                        title="Edit Category"
-                                    >
-                                        <i className="bx bx-edit"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["delete_coursecategory"]]) && (
-                                    <button
-                                        aria-label="Delete"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete Category"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "Edit",
+                        icon: "bx bx-edit",
+                        onClick: (row) => setSelectedObj(row),
+                        condition: () => hasAccess(user, ["change_coursecategory"]),
+                        className: "btn-outline-primary text-primary",
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, ["delete_coursecategory"]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 buttons={[
                     {
                         label: "Add Category",
                         render: () => (
-                            hasAccess(user, [["add_coursecategory"]]) && (
+                            hasAccess(user, ["add_coursecategory"]) && (
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"

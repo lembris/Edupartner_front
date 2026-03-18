@@ -7,6 +7,7 @@ import showToast from "../../../../helpers/ToastHelper";
 import FormWizard from "react-form-wizard-component";
 import "react-form-wizard-component/dist/style.css";
 import FormikSelect from "../../../../components/ui-templates/form-components/FormikSelect";
+import { useSelector } from "react-redux";
 
 export const StudentModal = ({ selectedObj, onSuccess, onClose, isLeadLancer = false }) => {
     const [errors, setOtherError] = useState({});
@@ -16,6 +17,14 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose, isLeadLancer = f
     const [modalInstance, setModalInstance] = useState(null);
     const modalRef = useRef(null);
     const previousTabIndexRef = useRef(0);
+    
+    // Get user from Redux
+    const user = useSelector((state) => state.userReducer?.data);
+    
+    // Check if user is admin
+    const isAdmin = user?.is_superuser || user?.groups?.some(g => 
+        g.includes('admin') || g.includes('super_admin')
+    );
     
     // Check if this is a new student being added by lead lancer
     const isLeadLancerAddingStudent = isLeadLancer && !selectedObj;
@@ -130,7 +139,9 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose, isLeadLancer = f
         status: isLeadLancerAddingStudent && reviewStatusId
             ? reviewStatusId
             : (selectedObj?.status?.uid || selectedObj?.status || ""),
-        assigned_counselor: selectedObj?.assigned_counselor?.uid || selectedObj?.assigned_counselor || "",
+        // Auto-set assigned_counselor for non-admin users when creating new student
+        assigned_counselor: selectedObj?.assigned_counselor?.uid || selectedObj?.assigned_counselor 
+            || (!isAdmin && !isLeadLancerAddingStudent && user?.guid ? user.guid : ""),
     };
 
     const validationSchema = Yup.object().shape({
@@ -178,10 +189,12 @@ export const StudentModal = ({ selectedObj, onSuccess, onClose, isLeadLancer = f
             .min(1900, "Invalid Year")
             .max(new Date().getFullYear() + 10, "Year cannot be too far in the future"),
         source: Yup.string().required("Source is required"),
-        status: Yup.string().required("Status is required"),
-        assigned_counselor: isLeadLancerAddingStudent 
-            ? Yup.string().nullable() 
-            : Yup.string().required("Counselor is required"),
+        // For non-admin users adding students, assigned_counselor is auto-set
+        assigned_counselor: (!isAdmin && !isLeadLancerAddingStudent)
+            ? Yup.string().nullable()  // Auto-set, not required
+            : isLeadLancerAddingStudent 
+                ? Yup.string().nullable() 
+                : Yup.string().required("Counselor is required"),
     });
 
     const handleTabChange = useCallback(({ nextIndex }) => {

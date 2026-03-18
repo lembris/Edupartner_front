@@ -18,6 +18,10 @@ const PaginatedTable = ({
   filterSelected = ["ALL"],
   filterGroups = [],
   isFullPath = false,
+  additionalFilters = {},
+  fixedActions = false,
+  actions = [],
+  user = null,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -37,7 +41,6 @@ const PaginatedTable = ({
     }, {})
   );
   
-  // Track if component is mounted
   const isMounted = useRef(true);
   const lastFetchParams = useRef("");
   const doFetchRef = useRef(null);
@@ -52,12 +55,10 @@ const PaginatedTable = ({
     if (paramsKey === lastFetchParams.current) return;
     lastFetchParams.current = paramsKey;
 
-    // Cancel previous request if one is in progress
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
     
-    // Create new AbortController for this request
     abortControllerRef.current = new AbortController();
 
     setLoading(true);
@@ -80,6 +81,7 @@ const PaginatedTable = ({
           search: search,
           filters: selFilters.join(","),
           ...formattedFilterGroups,
+          ...additionalFilters,
         },
         signal: abortControllerRef.current.signal,
       });
@@ -89,11 +91,9 @@ const PaginatedTable = ({
       if (result.status === 200 || result.status === 8000 || result.status === "success") {
         setRowRecords(result.data || []);
         setError(false);
-        // Always set total count - handle empty results properly
         const total = result.pagination?.total ?? (result.data ? result.data.length : 0);
         setTotalCount(total);
         
-        // Only show warning if search was used and no results found
         if (debouncedSearchQuery && (!result.data || result.data.length === 0)) {
           showToast("No Records Found", "info", "Search completed");
         }
@@ -104,7 +104,6 @@ const PaginatedTable = ({
         showToast("Failed to fetch records", "warning", "Fetch completed");
       }
     } catch (err) {
-      // Ignore abort errors - they're expected when canceling requests
       if (err.name === 'AbortError') {
         return;
       }
@@ -116,44 +115,36 @@ const PaginatedTable = ({
     } finally {
       if (isMounted.current) setLoading(false);
     }
-  }, [fetchPath, isFullPath]);
+  }, [fetchPath, isFullPath, additionalFilters, debouncedSearchQuery]);
 
-  // Store reference for use in other effects
   useEffect(() => {
     doFetchRef.current = doFetch;
   }, [doFetch]);
 
-  // Main fetch effect - triggers on pagination, page size, filters, or DEBOUNCED search
   useEffect(() => {
     doFetch(currentPage, pageSize, debouncedSearchQuery, selectedFilters, selectedFilterGroups);
   }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, debouncedSearchQuery]);
 
-  // Handle search debounce - waits 400ms before updating debouncedSearchQuery
-  // This prevents multiple API calls while user is still typing
   useEffect(() => {
-    // Clear any existing timeout
     if (searchDebounceRef.current) {
       clearTimeout(searchDebounceRef.current);
     }
     
-    // Set new timeout to update debouncedSearchQuery after user stops typing
     searchDebounceRef.current = setTimeout(() => {
       if (isMounted.current) {
-        lastFetchParams.current = ""; // Reset to force fetch with new search
-        setCurrentPage(1); // Reset to page 1 when search changes
+        lastFetchParams.current = "";
+        setCurrentPage(1);
         setDebouncedSearchQuery(searchQuery);
       }
-    }, 400); // 400ms debounce delay - prevents excessive API calls
+    }, 400);
     
-    // Cleanup: clear timeout on unmount or before next effect runs
     return () => {
       if (searchDebounceRef.current) {
         clearTimeout(searchDebounceRef.current);
       }
     };
-  }, [searchQuery]); // Only depend on raw searchQuery - NOT debouncedSearchQuery
+  }, [searchQuery]);
 
-  // Handle isRefresh - force re-fetch
   useEffect(() => {
     if (isRefresh > 0) {
       lastFetchParams.current = "";
@@ -161,18 +152,15 @@ const PaginatedTable = ({
     }
   }, [isRefresh]);
 
-  // Cleanup
   useEffect(() => {
     return () => { 
       isMounted.current = false;
-      // Cancel any pending requests on unmount
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
     };
   }, []);
 
-  // Handle group filter change
   const handleGroupFilterChange = (group, selected) => {
     const values = selected ? selected.map((opt) => opt.value) : [];
     const newGroups = { ...selectedFilterGroups, [group]: values };
@@ -182,7 +170,6 @@ const PaginatedTable = ({
     doFetch(1, pageSize, searchQuery, selectedFilters, newGroups);
   };
 
-  // Handle Group filter reset
   const resetAllFilters = () => {
     const cleared = {};
     filterGroups.forEach((g) => (cleared[g.group] = []));
@@ -191,12 +178,22 @@ const PaginatedTable = ({
     doFetch(1, pageSize, searchQuery, selectedFilters, cleared);
   };
 
+  const getCellContent = (col, row, rowIndex, page, size) => {
+    if (col.render) {
+      const content = col.render(row, rowIndex, page, size);
+      if (col.key === "SN") {
+        return page * size - size + rowIndex + 1;
+      }
+      return content !== undefined && content !== null ? content : "N/A";
+    }
+    return row[col.key] !== undefined && row[col.key] !== null ? row[col.key] : "N/A";
+  };
 
   return (
     <div className="card">
       <div className="d-flex justify-content-between align-items-center card-header mb-1">
         <h5 className="mb-0">{title || "Presentation Table"}</h5>
-        <div key="action_button_div" className=" d-flex align-items-center">
+        <div key="action_button_div" className="d-flex align-items-center">
           {buttons &&
             buttons.length > 0 &&
             buttons.map((button, index) =>
@@ -207,9 +204,7 @@ const PaginatedTable = ({
               ) : (
                 <button
                   key={"action_button_" + index}
-                  className={`btn btn-sm ${
-                    button.className || "btn-primary"
-                  } me-2`}
+                  className={`btn btn-sm ${button.className || "btn-primary"} me-2`}
                   onClick={button.onClick}
                 >
                   {button.label}
@@ -219,27 +214,20 @@ const PaginatedTable = ({
         </div>
       </div>
       <div className="card-body">
-        <div className="row d-flex justify-content-between align-items-center mb-2 ">
-         
-          {/* Multiple Filters */}
+        <div className="row d-flex justify-content-between align-items-center mb-2">
           {filterGroups.length > 0 && (
             <div className="row g-2 mb-2">
               {filterGroups.map((group) => (
                 <div key={group.group} className="col-auto">
                   <div className="input-group">
-                    <span className="input-group-text text-info">
-                      {group.label}
-                    </span>
-
+                    <span className="input-group-text text-info">{group.label}</span>
                     <Select
                       isMulti
                       options={group.options}
                       value={group.options.filter((opt) =>
                         selectedFilterGroups[group.group]?.includes(opt.value)
                       )}
-                      onChange={(selected) =>
-                        handleGroupFilterChange(group.group, selected)
-                      }
+                      onChange={(selected) => handleGroupFilterChange(group.group, selected)}
                       placeholder={group.placeholder || `Select ${group.label}`}
                       classNamePrefix="react-select"
                       styles={{
@@ -257,68 +245,57 @@ const PaginatedTable = ({
                   </div>
                 </div>
               ))}
-              {/*Reset All Button */}
               <div className="col-auto d-flex align-items-center">
-                  <button
-                    className="btn btn-outline-info me-2"
-                    onClick={resetAllFilters}
-                    title="Reset All Filters"
-                  >
-                    <i className="tf-icons bx bx-refresh"></i> Reset All
-                  </button>
-                </div>
+                <button
+                  className="btn btn-outline-info me-2"
+                  onClick={resetAllFilters}
+                  title="Reset All Filters"
+                >
+                  <i className="tf-icons bx bx-refresh"></i> Reset All
+                </button>
+              </div>
             </div>
-            )}
+          )}
             
-            <div className="d-flex align-items-center col-md-8 col-sm-6 mt-2">
-                <Select
-                  options={pageSizeData.map((size) => ({
-                  value: size,
-                  label: `${size}`,
-                  }))}
-                  value={{ value: pageSize, label: `${pageSize}` }}
-                  onChange={(selected) => {
-                    setPageSize(Number(selected.value));
-                    setCurrentPage(1);
-                  }}
-                className="me-2"
-                classNamePrefix="react-select"
-                styles={{
-                  control: (base) => ({
-                    ...base,
-                    minHeight: "32px",
-                    width: "95px",
-                  }),
-                  menuPortal: (base) => ({
-                    ...base,
-                    zIndex: 99999,
-                  }),
-                }}
-                menuPortalTarget={document.body}
+          <div className="d-flex align-items-center col-md-8 col-sm-6 mt-2">
+            <Select
+              options={pageSizeData.map((size) => ({ value: size, label: `${size}` }))}
+              value={{ value: pageSize, label: `${pageSize}` }}
+              onChange={(selected) => {
+                setPageSize(Number(selected.value));
+                setCurrentPage(1);
+              }}
+              className="me-2"
+              classNamePrefix="react-select"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  minHeight: "32px",
+                  width: "95px",
+                }),
+                menuPortal: (base) => ({
+                  ...base,
+                  zIndex: 99999,
+                }),
+              }}
+              menuPortalTarget={document.body}
             />
 
             {filters.length > 0 && (
-              <div className="input-group " style={{ minWidth: "250px" }}>
+              <div className="input-group" style={{ minWidth: "250px" }}>
                 <span className="input-group-text text-info">
                   <i className="tf-icons bx bx-filter-alt"></i>
                 </span>
                 <Select
                   isMulti
                   options={filters}
-                  value={filters.filter((f) =>
-                    selectedFilters?.includes(f.value)
-                  )}
+                  value={filters.filter((f) => selectedFilters?.includes(f.value))}
                   onChange={(selected) => {
-                    let values = selected
-                      ? selected.map((opt) => opt.value)
-                      : [];
-
+                    let values = selected ? selected.map((opt) => opt.value) : [];
                     if (values.includes("ALL")) {
-                      // If ALL is selected, clear all others and keep only ALL
                       values = ["ALL"];
                       selected = filters.filter((f) => f.value === "ALL");
                     } else {
-                      // Remove ALL if it was previously selected
                       values = values.filter((v) => v !== "ALL");
                     }
                     setSelectedFilters(values);
@@ -340,7 +317,7 @@ const PaginatedTable = ({
             )}           
           </div>
 
-          <div className=" col-md-4 col-sm-6  animate__animated animate__fadeInRight animate__fast">
+          <div className="col-md-4 col-sm-6 animate__animated animate__fadeInRight animate__fast">
             <form className="d-flex">
               <div className="input-group">
                 <span className="input-group-text">
@@ -351,144 +328,171 @@ const PaginatedTable = ({
                   className="form-control"
                   placeholder="Search..."
                   value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                  }}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </form>
           </div>
         </div>
 
-        <div className=" text-nowrap animate__animated animate__fadeInUp animate__faster">
-          <div className="table-responsive text-nowrap">
-            <table className="table table-hover table-align-middle mb-0 table-bordered">
-              <thead style={{ backgroundColor: "#f1f1f1" }}>
-                <tr>
-                  {columns.map((col, idx) => (
-                    <th
-                      key={col.key || col.label || idx}
-                      className={col.className || ""}
-                      style={col.style || {}}
-                    >
-                      {col.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody className="table-border-bottom-0">
-                {loading ? (
-                  <tr>
-                    <td colSpan="100%">
-                      <div className="col-md-12 col-lg-12 col-sm-12 p-2">
-                        <center>
-                          <ReactLoading
-                            type={"cylon"}
-                            color={"#696cff"}
-                            height={"30px"}
-                            width={"50px"}
-                          />
-                        </center>
-                        <center className="mt-1">
-                          <h6 className="text-muted">Fetching Records...</h6>
-                        </center>
-                      </div>
-                    </td>
-                  </tr>
-                ) : error ? (
-                  <tr>
-                    <td colSpan="100%">
-                      <div className="alert alert-danger" role="alert">
-                        <div className="alert-body text-center">
-                          <p className="mb-0">
-                            Unable to fetching Records. Please try again later.
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ) : rowRecords.length === 0 ? (
-                   <tr>
-                     <td colSpan="100%">
-                       <div className="alert alert-info" role="alert">
-                         <div className="alert-body text-center py-4">
-                           <i className="bx bx-search-alt" style={{ fontSize: '2rem', color: '#17a2b8' }}></i>
-                           <p className="mb-1 mt-2 fw-semibold">No Records Found</p>
-                           <small className="text-muted">
-                             {debouncedSearchQuery || selectedFilters?.length > 1 
-                               ? "Try adjusting your search or filters" 
-                               : "No data available. Create a new record to get started."}
-                           </small>
-                         </div>
-                       </div>
-                     </td>
-                   </tr>
-                 ) : (
-                  rowRecords.map((row, rowIndex) => (
-                    <tr
-                      key={row.id || rowIndex}
-                      onClick={() => onSelect && onSelect(row)}
-                    >
-                      {columns.map((col) => {
-                        const content = col.render
-                          ? col.render(row, rowIndex, currentPage, pageSize)
-                          : row[col.key];
-
-                        return (
-                          <td
-                            key={col.key}
-                            className={col.className}
-                            style={col.style}
-                          >
-                            {col.key === "SN"
-                              ? currentPage * pageSize - pageSize + rowIndex + 1
-                              : content !== undefined && content !== null
-                              ? content
-                              : "N/A"}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))
+        <div className="table-wrapper" style={{ overflowX: 'auto', overflowY: 'visible', position: 'relative' }}>
+          <table className="table table-hover table-bordered mb-0" style={{ tableLayout: 'auto', minWidth: '100%' }}>
+            <thead style={{ backgroundColor: "#f1f1f1", position: 'sticky', top: 0, zIndex: 11 }}>
+              <tr>
+                {columns.map((col, idx) => (
+                  <th
+                    key={col.key || col.label || idx}
+                    className={col.className || ""}
+                    style={{ 
+                      ...col.style, 
+                      padding: '0.75rem',
+                      backgroundColor: '#f1f1f1',
+                      position: 'relative',
+                      zIndex: 9
+                    }}
+                  >
+                    {col.label}
+                  </th>
+                ))}
+                {actions && actions.length > 0 && (
+                  <th 
+                    className="text-center" 
+                    style={{ 
+                      width: `${Math.max(actions.length * 45, 120)}px`, 
+                      minWidth: `${Math.max(actions.length * 45, 120)}px`,
+                      padding: '0.75rem', 
+                      backgroundColor: '#f1f1f1',
+                      ...(fixedActions ? {
+                        position: 'sticky',
+                        right: 0,
+                        zIndex: 10,
+                        borderLeft: '1px solid #dee2e6'
+                      } : {})
+                    }}
+                  >
+                    Actions
+                  </th>
                 )}
-              </tbody>
-            </table>
-          </div>
+              </tr>
+            </thead>
 
-          <div className="d-flex justify-content-between align-items-center mt-3">
-            <div className="text-muted">
-              {totalCount > 0
-                ? `Showing ${
-                    currentPage * pageSize - pageSize + 1
-                  } to ${Math.min(
-                    currentPage * pageSize,
-                    totalCount
-                  )} of ${totalCount} records`
-                : "No records to show"}
-            </div>
-            {/* Your content here */}
-            <div></div>
-            <ReactPaginate
-              previousLabel={<i className="tf-icons bx bx-chevrons-left"></i>}
-              nextLabel={<i className="tf-icons bx bx-chevrons-right"></i>}
-              breakLabel={"..."}
-              pageCount={Math.ceil((totalCount || 0) / (pageSize || 1))}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={handlePageClick}
-              containerClassName={"pagination justify-content-center"}
-              pageClassName={"page-item"}
-              pageLinkClassName={"page-link"}
-              previousClassName={"page-item"}
-              previousLinkClassName={"page-link"}
-              nextClassName={"page-item"}
-              nextLinkClassName={"page-link"}
-              breakClassName={"page-item"}
-              breakLinkClassName={"page-link"}
-              activeClassName={"active"}
-            />
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="100%">
+                    <div className="text-center p-4">
+                      <ReactLoading type={"cylon"} color={"#696cff"} height={"30px"} width={"50px"} />
+                      <p className="mt-2 text-muted">Fetching Records...</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan="100%">
+                    <div className="alert alert-danger m-3">
+                      <div className="text-center">
+                        <p className="mb-0">Unable to fetch Records. Please try again later.</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ) : rowRecords.length === 0 ? (
+                <tr>
+                  <td colSpan="100%">
+                    <div className="text-center py-4">
+                      <i className="bx bx-search-alt fs-1 text-info"></i>
+                      <p className="mt-2 fw-semibold">No Records Found</p>
+                      <small className="text-muted">
+                        {debouncedSearchQuery || (selectedFilters?.length > 1)
+                          ? "Try adjusting your search or filters"
+                          : "No data available. Create a new record to get started."}
+                      </small>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                rowRecords.map((row, rowIndex) => (
+                  <tr key={row.id || rowIndex} onClick={() => onSelect && onSelect(row)}>
+                    {columns.map((col) => (
+                      <td key={col.key} className={col.className} style={{ 
+                        ...col.style, 
+                        padding: '0.75rem',
+                        backgroundColor: 'white',
+                        position: 'relative',
+                        zIndex: 1
+                      }}>
+                        {getCellContent(col, row, rowIndex, currentPage, pageSize)}
+                      </td>
+                    ))}
+                    {actions && actions.length > 0 && (
+                      <td 
+                        className="text-center" 
+                        style={{ 
+                          width: `${Math.max(actions.length * 45, 120)}px`,
+                          minWidth: `${Math.max(actions.length * 45, 120)}px`,
+                          padding: '0.5rem',
+                          ...(fixedActions ? {
+                            position: 'sticky',
+                            right: 0,
+                            zIndex: 5,
+                            backgroundColor: 'white',
+                            borderLeft: '1px solid #dee2e6'
+                          } : {})
+                        }}
+                      >
+                        <div className="btn-group">
+                          {actions.map((action, actionIdx) => {
+                            const showAction = action.condition ? action.condition(row, user) : true;
+                            if (!showAction) return null;
+                            return (
+                              <button
+                                key={actionIdx}
+                                className={`btn btn-sm border-0 ${action.className || 'btn-outline-secondary'}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  action.onClick && action.onClick(row);
+                                }}
+                                title={action.label}
+                              >
+                                <i className={`bx ${action.icon}`}></i>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <div className="text-muted">
+            {totalCount > 0
+              ? `Showing ${currentPage * pageSize - pageSize + 1} to ${Math.min(currentPage * pageSize, totalCount)} of ${totalCount} records`
+              : "No records to show"}
           </div>
+          <ReactPaginate
+            previousLabel={<i className="tf-icons bx bx-chevrons-left"></i>}
+            nextLabel={<i className="tf-icons bx bx-chevrons-right"></i>}
+            breakLabel="..."
+            pageCount={Math.ceil((totalCount || 0) / (pageSize || 1))}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName="pagination justify-content-center"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            activeClassName="active"
+          />
         </div>
       </div>
     </div>
@@ -539,6 +543,18 @@ PaginatedTable.propTypes = {
       placeholder: PropTypes.string,
     })
   ),
+  additionalFilters: PropTypes.object,
+  fixedActions: PropTypes.bool,
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      icon: PropTypes.string,
+      onClick: PropTypes.func.isRequired,
+      condition: PropTypes.func,
+      className: PropTypes.string,
+    })
+  ),
+  user: PropTypes.object,
 };
 
 export default PaginatedTable;

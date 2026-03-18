@@ -157,33 +157,24 @@ export const RecommendationEngineListPage = () => {
                             </div>
                         ),
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "100px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                <button
-                                    className="btn btn-sm btn-outline-primary border-0"
-                                    onClick={() => navigate(`/unisync360/recommendations/recommended-courses?engine=${row.uid}`)}
-                                    title="View Recommendations"
-                                >
-                                    <i className="bx bx-show"></i>
-                                </button>
-                                {hasAccess(user, ["delete_courserecommendationengine"]) && (
-                                    <button
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "View",
+                        icon: "bx bx-show",
+                        onClick: (row) => navigate(`/unisync360/recommendations/recommended-courses?engine=${row.uid}`),
+                        className: "btn-outline-secondary",
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, ["delete_courserecommendationengine"]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 filters={[
                     { label: "All", value: "ALL" },
                 ]}

@@ -19,6 +19,14 @@ export const StudentListPage = () => {
     const navigate = useNavigate();
     const user = useSelector((state) => state.userReducer?.data);
 
+    // Check if user is admin
+    const isAdmin = user?.is_superuser || user?.groups?.some(g =>
+        g.includes('admin') || g.includes('super_admin')
+    );
+
+    // For non-admin users (counselors), backend auto-filters by assigned_counselor
+    // No need to pass additional filters from frontend
+
     const handleDelete = async (student) => {
         if (!student) return;
 
@@ -58,6 +66,7 @@ export const StudentListPage = () => {
             <PaginatedTable
                 fetchPath="/unisync360-students/"
                 title="Students"
+                fixedActions={true}
                 columns={[
                     {
                         key: "name",
@@ -122,61 +131,45 @@ export const StudentListPage = () => {
                         )
                     },
                     {
-                        key: "created_by",
-                        label: "Created By",
+                        key: "counselor",
+                        label: "Counselor",
                         render: (row) => (
                             <div className="d-flex flex-column">
                                 <span className="fw-semibold">
-                                    {row.created_by_details?.first_name} {row.created_by_details?.last_name}
+                                    {row.assigned_counselor_name || "-"}
                                 </span>
-                                <small className="text-muted">{row.created_by_details?.email}</small>
+                                {row.assigned_counselor_email && (
+                                    <small className="text-muted">{row.assigned_counselor_email}</small>
+                                )}
                             </div>
                         )
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "120px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                <button
-                                    className="btn btn-sm btn-outline-secondary border-0"
-                                    onClick={() => navigate(`/unisync360/students/${row.uid}`)}
-                                    title="View Details"
-                                >
-                                    <i className="bx bx-show"></i>
-                                </button>
-                                {hasAccess(user, [["change_student"]]) && (
-                                    <button
-                                        aria-label="Edit"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-primary border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowModal(true);
-                                        }}
-                                        title="Edit Student"
-                                    >
-                                        <i className="bx bx-edit"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["delete_student"]]) && (
-                                    <button
-                                        aria-label="Delete"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete Student"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "View",
+                        icon: "bx-show",
+                        onClick: (row) => navigate(`/unisync360/students/${row.uid}`),
+                        condition: () => true,
+                    },
+                    {
+                        label: "Edit",
+                        icon: "bx-edit",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowModal(true);
+                        },
+                        condition: () => hasAccess(user, [["change_student"]]),
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bxs-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, [["delete_student"]]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
                 buttons={[
                     {
                         label: "Add Student",

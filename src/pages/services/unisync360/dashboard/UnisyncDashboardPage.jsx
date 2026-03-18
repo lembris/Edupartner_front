@@ -19,11 +19,35 @@ import {
 export const UnisyncDashboardPage = () => {
     const user = useSelector((state) => state.userReducer?.data);
     const navigate = useNavigate();
-    const [dashboardData, setDashboardData] = useState(null);
+    const [dashboardData, setDashboardData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useActiveTab('unisync360-dashboard', 'overview');
     const [showStudentModal, setShowStudentModal] = useState(false);
+
+    // Check if user has a specific role
+    const hasRole = (rolePattern) => {
+        return user?.groups?.some(group => group.includes(rolePattern)) || 
+               user?.role === rolePattern;
+    };
+
+    // Determine if user is super admin (should see overview) or staff (see role-specific dashboard)
+    const isSuperAdmin = user?.is_superuser || hasRole('super_admin');
+    const isCounselor = hasRole('counselor');
+    const isManager = hasRole('manager');
+
+    // Auto-det tab based on user roleect appropriate
+    // - Super Admin: sees overview by default
+    // - Counselor: sees their dashboard by default
+    // - Manager: sees management dashboard by default
+    const getDefaultTab = () => {
+        if (isSuperAdmin) return 'overview';
+        if (isCounselor) return 'counselor';
+        if (isManager) return 'manager';
+        return 'overview';
+    };
+
+    // Use persisted tab, but override with role-appropriate default if needed
+    const [activeTab, setActiveTab] = useActiveTab('unisync360-dashboard', getDefaultTab());
 
     // Fetch dashboard data
     const fetchDashboardData = async () => {
@@ -31,13 +55,32 @@ export const UnisyncDashboardPage = () => {
             setLoading(true);
             setError(null);
 
-            let data;
-            if (activeTab === 'counselor' && user?.role === 'counselor') {
-                data = await dashboardService.getCounselorDashboard();
-            } else if (activeTab === 'manager' && user?.role === 'manager') {
-                data = await dashboardService.getManagerDashboard();
+            let data = {};
+
+            // Fetch based on active tab
+            if (activeTab === 'counselor' && hasRole('counselor')) {
+                try {
+                    data = await dashboardService.getCounselorDashboard();
+                } catch (dashboardErr) {
+                    console.error('Counselor dashboard error:', dashboardErr);
+                    // Use empty counselor data
+                    data = getEmptyCounselorData();
+                }
+            } else if (activeTab === 'manager' && hasRole('manager')) {
+                try {
+                    data = await dashboardService.getManagerDashboard();
+                } catch (managerErr) {
+                    console.error('Manager dashboard error:', managerErr);
+                    data = {};
+                }
             } else {
-                data = await dashboardService.getAllDashboardData();
+                // Overview - for non-admins, this is also filtered
+                try {
+                    data = await dashboardService.getAllDashboardData();
+                } catch (overviewErr) {
+                    console.error('Overview dashboard error:', overviewErr);
+                    data = {};
+                }
             }
 
             setDashboardData(data);
@@ -45,32 +88,52 @@ export const UnisyncDashboardPage = () => {
         } catch (err) {
             console.error('Dashboard fetch error:', err);
             setError(err.message || 'Failed to load dashboard data');
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Dashboard Error',
-                text: 'Failed to load dashboard data. Please try again.',
-                confirmButtonText: 'Retry',
-                showCancelButton: true,
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetchDashboardData();
-                }
-            });
+            // Set empty data to prevent undefined errors
+            setDashboardData({});
         } finally {
             setLoading(false);
         }
     };
 
+    // Helper function for empty counselor data
+    const getEmptyCounselorData = () => ({
+        my_students_count: 0,
+        active_applications: 0,
+        my_conversion_rate: 0,
+        pipeline_stages: {},
+        recent_student_updates: [],
+        urgent_actions_required: [],
+        pending_tasks: 0,
+        upcoming_appointments: 0,
+        student_metrics: {},
+        application_metrics: {},
+    });
+
+    // Auto-switch to role-appropriate tab when user data is available
     useEffect(() => {
+        if (!user) return;
+
+        // Auto-switch to counselor tab if user is a counselor and currently on overview
+        if (isCounselor && activeTab === 'overview') {
+            setActiveTab('counselor');
+        }
+        // Auto-switch to manager tab if user is a manager and currently on overview
+        else if (isManager && activeTab === 'overview') {
+            setActiveTab('manager');
+        }
+    }, [user, isCounselor, isManager]);
+
+    // Fetch dashboard data when tab changes
+    useEffect(() => {
+        // Only fetch if user data is available
+        if (!user) return;
         fetchDashboardData();
-    }, [activeTab, user?.role]);
+    }, [activeTab, user?.role, user?.groups]);
 
     // Handle tab change
     const handleTabChange = (tab) => {
         setActiveTab(tab);
-        setDashboardData(null);
+        setDashboardData({});
     };
 
     // Handle student modal success
@@ -137,11 +200,11 @@ export const UnisyncDashboardPage = () => {
         recent_activities = [],
         pending_tasks = [],
         upcoming_deadlines = [],
-        // Counselor specific data
-        my_students_count = 0,
-        active_applications = 0,
-        my_conversion_rate = 0,
-        pipeline_stages = {},
+        // Counselor specific data (from counselor dashboard OR filtered overview)
+        my_students_count = dashboardData?.my_students_count || 0,
+        active_applications = dashboardData?.active_applications || dashboardData?.application_metrics?.applications_pending || 0,
+        my_conversion_rate = dashboardData?.my_conversion_rate || 0,
+        pipeline_stages = dashboardData?.pipeline_stages || {},
         // Manager specific data
         team_performance = {},
         kpi_tracking = {}
@@ -152,16 +215,27 @@ export const UnisyncDashboardPage = () => {
 
     // Render different dashboard based on active tab and user role
     const renderDashboardContent = () => {
-        if (activeTab === 'counselor' && user?.role === 'counselor') {
+        // If counselor tries to access overview, redirect to counselor dashboard
+        if (!isSuperAdmin && !isManager && activeTab === 'overview') {
             return renderCounselorDashboard();
-        } else if (activeTab === 'manager' && user?.role === 'manager') {
+        }
+        // Counselor dashboard
+        if (activeTab === 'counselor' && hasRole('counselor')) {
+            return renderCounselorDashboard();
+        }
+        // Manager dashboard
+        if (activeTab === 'manager' && hasRole('manager')) {
             return renderManagerDashboard();
-        } else {
+        }
+        // Admin overview
+        if (activeTab === 'overview' && isSuperAdmin) {
             return renderOverviewDashboard();
         }
+        // Default to counselor dashboard
+        return renderCounselorDashboard();
     };
 
-    // Overview Dashboard (Default)
+    // Overview Dashboard (Default - for Admins only)
     const renderOverviewDashboard = () => (
         <>
             {/* Welcome Card */}
@@ -175,8 +249,10 @@ export const UnisyncDashboardPage = () => {
                                         Welcome to Unisync360, {user?.first_name} {user?.last_name}!
                                     </h5>
                                     <p className="mb-4">
-                                        Your comprehensive education management dashboard. Monitor student progress,
-                                        track applications, and optimize your counseling operations.
+                                        {isSuperAdmin 
+                                            ? "Your comprehensive education management dashboard. Monitor all students, track applications, and manage your counseling operations."
+                                            : "Your comprehensive education management dashboard. Monitor student progress, track applications, and optimize your counseling operations."
+                                        }
                                     </p>
                                     <div className="d-flex gap-2 flex-wrap">
                                         <button
@@ -634,28 +710,28 @@ export const UnisyncDashboardPage = () => {
     const renderCounselorDashboard = () => (
         <>
             {/* Counselor Welcome Card */}
-            <div className="row">
-                <div className="col-12 mb-4">
-                    <div className="card bg-primary text-white">
-                        <div className="card-body">
-                            <div className="row align-items-center">
-                                <div className="col-md-8">
-                                    <h5 className="card-title text-white">
-                                        Counselor Dashboard - {user?.first_name} {user?.last_name}
-                                    </h5>
-                                    <p className="mb-0">
-                                        Track your students' progress and manage applications efficiently.
-                                    </p>
-                                </div>
-                                <div className="col-md-4 text-end">
-                                    <div className="display-6 fw-bold">{my_conversion_rate}%</div>
-                                    <small>Your Conversion Rate</small>
+                <div className="row">
+                    <div className="col-12 mb-4">
+                        <div className="card bg-primary text-white">
+                            <div className="card-body">
+                                <div className="row align-items-center">
+                                    <div className="col-md-8">
+                                        <h5 className="card-title text-white">
+                                            Counselor Dashboard - {user?.first_name} {user?.last_name}
+                                        </h5>
+                                        <p className="mb-0">
+                                            Track your students' progress and manage applications efficiently.
+                                        </p>
+                                    </div>
+                                    <div className="col-md-4 text-end">
+                                        <div className="display-6 fw-bold">{my_conversion_rate}%</div>
+                                        <small>Your Conversion Rate</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
             {/* Counselor Metrics */}
             <div className="row">
@@ -766,9 +842,9 @@ export const UnisyncDashboardPage = () => {
                                 </div>
                             </div>
                         </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
         </>
     );
 
@@ -780,16 +856,20 @@ export const UnisyncDashboardPage = () => {
                     <div className="card">
                         <div className="card-body">
                             <ul className="nav nav-pills">
-                                <li className="nav-item">
-                                    <button
-                                        className={`nav-link ${activeTab === 'overview' ? 'active' : ''}`}
-                                        onClick={() => handleTabChange('overview')}
-                                    >
-                                        <i className="bx bx-home me-1"></i>
-                                        Overview
-                                    </button>
-                                </li>
-                                {user?.role === 'counselor' && (
+                                {/* Overview tab - ONLY for admins */}
+                                {isSuperAdmin && (
+                                    <li className="nav-item">
+                                        <button
+                                            className={`nav-link ${activeTab === 'overview' ? 'active' : ''}`}
+                                            onClick={() => handleTabChange('overview')}
+                                        >
+                                            <i className="bx bx-home me-1"></i>
+                                            Overview
+                                        </button>
+                                    </li>
+                                )}
+                                {/* Counselor Dashboard - for counselors */}
+                                {hasRole('counselor') && (
                                     <li className="nav-item">
                                         <button
                                             className={`nav-link ${activeTab === 'counselor' ? 'active' : ''}`}
@@ -800,7 +880,8 @@ export const UnisyncDashboardPage = () => {
                                         </button>
                                     </li>
                                 )}
-                                {user?.role === 'manager' && (
+                                {/* Management tab - for managers */}
+                                {hasRole('manager') && (
                                     <li className="nav-item">
                                         <button
                                             className={`nav-link ${activeTab === 'manager' ? 'active' : ''}`}

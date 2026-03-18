@@ -96,10 +96,10 @@ const Sidebar = ({ isService = false }) => {
   }), [unisync360Data]);
 
   // Get menu config for current namespace
-  const menuConfig = menuConfigWithData[activeNamespace] || menuConfigWithData[DEFAULT_NAMESPACE];
+  const menuConfig = menuConfigWithData[activeNamespace] || menuConfigWithData[DEFAULT_NAMESPACE] || { title: 'Home', data: [] };
 
   // Format namespace for display
-  const formattedTitle = menuConfig.title || activeNamespace
+  const formattedTitle = (menuConfig?.title || activeNamespace)
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
