@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
 import ReactLoading from "react-loading";
-import ReactPaginate from "react-paginate";
 import { fetchData } from "../../utils/GlobalQueries";
 import showToast from "../../helpers/ToastHelper";
 import Select from "react-select";
@@ -23,7 +22,7 @@ const PaginatedTable = ({
   actions = [],
   user = null,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
   const [rowRecords, setRowRecords] = useState([]);
@@ -45,9 +44,40 @@ const PaginatedTable = ({
   const lastFetchParams = useRef("");
   const doFetchRef = useRef(null);
   const abortControllerRef = useRef(null);
-
-  const handlePageClick = (event) => {
-    setCurrentPage(event.selected + 1);
+  
+  const totalPages = Math.ceil((totalCount || 0) / (pageSize || 1));
+  
+  const getPageNumbers = (current, total) => {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    
+    const pages = [];
+    const minVisible = 2;
+    const maxVisible = total - 1;
+    
+    pages.push(1);
+    
+    if (current > minVisible + 2) {
+      pages.push('...');
+    }
+    
+    const start = Math.max(minVisible, current - minVisible);
+    const end = Math.min(maxVisible, current + minVisible);
+    
+    for (let i = start; i <= end; i++) {
+      if (!pages.includes(i)) pages.push(i);
+    }
+    
+    if (current < total - 3) {
+      pages.push('...');
+    }
+    
+    if (!pages.includes(total)) {
+      pages.push(total);
+    }
+    
+    return pages;
   };
 
   const doFetch = useCallback(async (page, size, search, selFilters, selFilterGroups) => {
@@ -468,31 +498,107 @@ const PaginatedTable = ({
           </table>
         </div>
 
-        <div className="d-flex justify-content-between align-items-center mt-3">
-          <div className="text-muted">
+<div className="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+          <div className="text-muted small">
             {totalCount > 0
               ? `Showing ${currentPage * pageSize - pageSize + 1} to ${Math.min(currentPage * pageSize, totalCount)} of ${totalCount} records`
               : "No records to show"}
           </div>
-          <ReactPaginate
-            previousLabel={<i className="tf-icons bx bx-chevrons-left"></i>}
-            nextLabel={<i className="tf-icons bx bx-chevrons-right"></i>}
-            breakLabel="..."
-            pageCount={Math.ceil((totalCount || 0) / (pageSize || 1))}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={handlePageClick}
-            containerClassName="pagination justify-content-center"
-            pageClassName="page-item"
-            pageLinkClassName="page-link"
-            previousClassName="page-item"
-            previousLinkClassName="page-link"
-            nextClassName="page-item"
-            nextLinkClassName="page-link"
-            breakClassName="page-item"
-            breakLinkClassName="page-link"
-            activeClassName="active"
-          />
+          
+          {totalPages > 1 && (
+            <nav aria-label="Table navigation">
+              <style>{`
+                .unisync-pagination .page-link {
+                  min-width: 36px;
+                  height: 36px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  padding: 0 6px;
+                  border-radius: 6px;
+                }
+                @media (max-width: 576px) {
+                  .unisync-pagination .page-btn-extended {
+                    display: none !important;
+                  }
+                  .unisync-pagination .page-link {
+                    min-width: 34px;
+                    height: 34px;
+                  }
+                  .unisync-pagination .mobile-info {
+                    display: flex !important;
+                  }
+                }
+                .unisync-pagination .mobile-info {
+                  display: none;
+                  align-items: center;
+                  gap: 8px;
+                }
+              `}</style>
+              <ul className="pagination pagination-sm mb-0 unisync-pagination">
+                <li className={`page-item page-btn-extended ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button 
+                    className="page-link" 
+                    onClick={() => setCurrentPage(1)}
+                    disabled={currentPage === 1}
+                    title="First page"
+                  >
+                    <i className="tf-icons bx bx-chevrons-left"></i>
+                  </button>
+                </li>
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button 
+                    className="page-link" 
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    title="Previous page"
+                  >
+                    <i className="tf-icons bx bx-chevron-left"></i>
+                  </button>
+                </li>
+                
+                <div className="mobile-info text-muted small">
+                  <span>Page {currentPage} of {totalPages}</span>
+                </div>
+                
+                {getPageNumbers(currentPage, totalPages).map((page, idx) => (
+                  <li 
+                    key={idx} 
+                    className={`page-item ${page === currentPage ? 'active' : ''} ${page === '...' ? 'disabled' : ''}`}
+                  >
+                    <button 
+                      className="page-link"
+                      onClick={() => page !== '...' && setCurrentPage(page)}
+                      disabled={page === '...'}
+                    >
+                      {page}
+                    </button>
+                  </li>
+                ))}
+                
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button 
+                    className="page-link" 
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                    title="Next page"
+                  >
+                    <i className="tf-icons bx bx-chevron-right"></i>
+                  </button>
+                </li>
+                <li className={`page-item page-btn-extended ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button 
+                    className="page-link" 
+                    onClick={() => setCurrentPage(totalPages)}
+                    disabled={currentPage === totalPages}
+                    title="Last page"
+                  >
+                    <i className="tf-icons bx bx-chevrons-right"></i>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </div>
