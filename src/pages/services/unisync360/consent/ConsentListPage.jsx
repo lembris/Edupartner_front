@@ -392,7 +392,6 @@ export const ConsentListPage = () => {
                         className: "btn-outline-secondary text-danger",
                     },
                 ]}
-                user={user}
             />
 
             {showModal && (

@@ -190,12 +190,10 @@ export const SchoolListPage = () => {
                         label: "Delete",
                         icon: "bx bx-trash",
                         onClick: (row) => handleDelete(row),
-                        condition: () => hasAccess(user, ["delete_school"]),
+                    condition: () => hasAccess(user, ["delete_school"]),
                         className: "btn-outline-secondary text-danger",
                     },
                 ]}
-                user={user}
-                fixedActions={true}
                 buttons={[
                     {
                         label: "Bulk Import",
