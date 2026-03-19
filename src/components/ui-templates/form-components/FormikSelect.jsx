@@ -74,12 +74,12 @@ const FormikSelect = ({
       t = setTimeout(() => doFetch(q), debounceMs);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, debounceMs, JSON.stringify(filters), isFullPath]);
+  }, [url, debounceMs, isFullPath]);
 
   useEffect(() => {
     if (url) doFetch("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, JSON.stringify(filters), isFullPath]);
+  }, [url, isFullPath]);
 
   useEffect(() => {
     const initValue = field.value;
@@ -104,7 +104,8 @@ const FormikSelect = ({
         console.error("Failed to load initial option:", err);
       }
     })();
-  }, [field.value, options, url, isFullPath, mapOption]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field.value, options, url, isFullPath]);
 
   // Formik only stores uid(s)
   const currentValue = useMemo(() => {

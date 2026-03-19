@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { createPortal } from "react-dom";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { BulkImportAPI } from "./Queries";
 import showToast from "../../../../helpers/ToastHelper";
+import GlobalModal from "../../../../components/modal/GlobalModal";
 
-export const BulkImportModal = ({ onSuccess, onClose }) => {
+export const BulkImportModal = ({ show, onSuccess, onClose }) => {
     const [step, setStep] = useState(1); // 1: Upload, 2: Processing, 3: Results
     const [file, setFile] = useState(null);
     const [options, setOptions] = useState({
@@ -16,43 +16,14 @@ export const BulkImportModal = ({ onSuccess, onClose }) => {
     const [progress, setProgress] = useState(null);
     const [errors, setErrors] = useState([]);
     
-    const modalRef = useRef(null);
-    const [modalInstance, setModalInstance] = useState(null);
     const pollIntervalRef = useRef(null);
     const fileInputRef = useRef(null);
 
-    // Initialize modal
     useEffect(() => {
-        let modal = null;
-        if (modalRef.current && window.bootstrap) {
-            modal = new window.bootstrap.Modal(modalRef.current, {
-                backdrop: 'static',
-                keyboard: false
-            });
-            setModalInstance(modal);
-            modal.show();
-        }
         return () => {
-            if (modal) modal.hide();
             if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
         };
     }, []);
-
-    // Handle modal close
-    useEffect(() => {
-        const handleHidden = () => {
-            if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-            if (onClose) onClose();
-        };
-        if (modalRef.current) {
-            modalRef.current.addEventListener('hidden.bs.modal', handleHidden);
-        }
-        return () => {
-            if (modalRef.current) {
-                modalRef.current.removeEventListener('hidden.bs.modal', handleHidden);
-            }
-        };
-    }, [onClose]);
 
     // Poll for progress
     const pollProgress = useCallback(async (jobId) => {
@@ -172,10 +143,10 @@ export const BulkImportModal = ({ onSuccess, onClose }) => {
     // Close modal
     const handleClose = () => {
         if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-        if (modalInstance) modalInstance.hide();
         if (step === 3 && currentJob?.successful_rows > 0 && onSuccess) {
             onSuccess();
         }
+        onClose();
     };
 
     // Render upload step
@@ -455,106 +426,68 @@ export const BulkImportModal = ({ onSuccess, onClose }) => {
         );
     };
 
-    return createPortal(
-        <div
-            ref={modalRef}
-            className="modal fade"
-            tabIndex="-1"
-            aria-hidden="true"
-        >
-            <div className="modal-dialog modal-lg">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">
-                            <i className="bx bx-upload me-2"></i>
-                            Bulk Student Import
-                        </h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={handleClose}
-                            aria-label="Close"
-                        ></button>
-                    </div>
-
-                    {/* Progress Steps */}
-                    <div className="modal-body border-bottom py-3">
-                        <div className="d-flex justify-content-center">
-                            <div className={`step-indicator ${step >= 1 ? 'active' : ''}`}>
-                                <span className="step-number">1</span>
-                                <span className="step-label">Upload</span>
-                            </div>
-                            <div className="step-connector"></div>
-                            <div className={`step-indicator ${step >= 2 ? 'active' : ''}`}>
-                                <span className="step-number">2</span>
-                                <span className="step-label">Processing</span>
-                            </div>
-                            <div className="step-connector"></div>
-                            <div className={`step-indicator ${step >= 3 ? 'active' : ''}`}>
-                                <span className="step-number">3</span>
-                                <span className="step-label">Results</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="modal-body p-0">
-                        {step === 1 && renderUploadStep()}
-                        {step === 2 && renderProcessingStep()}
-                        {step === 3 && renderResultsStep()}
-                    </div>
-
-                    <div className="modal-footer">
-                        {step === 1 && (
+    const renderFooter = () => (
+        <div className="d-flex justify-content-end gap-2">
+            {step === 1 && (
+                <>
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={handleClose}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleUpload}
+                        disabled={!file || uploading}
+                    >
+                        {uploading ? (
                             <>
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={handleClose}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={handleUpload}
-                                    disabled={!file || uploading}
-                                >
-                                    {uploading ? (
-                                        <>
-                                            <span className="spinner-border spinner-border-sm me-1"></span>
-                                            Uploading...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <i className="bx bx-upload me-1"></i>
-                                            Start Import
-                                        </>
-                                    )}
-                                </button>
+                                <span className="spinner-border spinner-border-sm me-1"></span>
+                                Uploading...
+                            </>
+                        ) : (
+                            <>
+                                <i className="bx bx-upload me-1"></i>
+                                Start Import
                             </>
                         )}
-                        {step === 2 && (
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={handleClose}
-                            >
-                                Close (Continue in Background)
-                            </button>
-                        )}
-                        {step === 3 && (
-                            <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={handleClose}
-                            >
-                                Done
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </div>
+                    </button>
+                </>
+            )}
+            {step === 2 && (
+                <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleClose}
+                >
+                    Close (Continue in Background)
+                </button>
+            )}
+            {step === 3 && (
+                <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleClose}
+                >
+                    <i className="bx bx-check me-1"></i>
+                    Done
+                </button>
+            )}
+        </div>
+    );
 
+    return (
+        <GlobalModal
+            show={show}
+            onClose={handleClose}
+            title={<><i className="bx bx-upload me-2"></i>Bulk Student Import</>}
+            size="lg"
+            showFooter={true}
+            footerContent={renderFooter()}
+        >
             <style>{`
                 .step-indicator {
                     display: flex;
@@ -591,8 +524,33 @@ export const BulkImportModal = ({ onSuccess, onClose }) => {
                     margin: 16px 8px 0;
                 }
             `}</style>
-        </div>,
-        document.body
+
+            {/* Progress Steps */}
+            <div className="border-bottom py-3">
+                <div className="d-flex justify-content-center">
+                    <div className={`step-indicator ${step >= 1 ? 'active' : ''}`}>
+                        <span className="step-number">1</span>
+                        <span className="step-label">Upload</span>
+                    </div>
+                    <div className="step-connector"></div>
+                    <div className={`step-indicator ${step >= 2 ? 'active' : ''}`}>
+                        <span className="step-number">2</span>
+                        <span className="step-label">Processing</span>
+                    </div>
+                    <div className="step-connector"></div>
+                    <div className={`step-indicator ${step >= 3 ? 'active' : ''}`}>
+                        <span className="step-number">3</span>
+                        <span className="step-label">Results</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="p-0">
+                {step === 1 && renderUploadStep()}
+                {step === 2 && renderProcessingStep()}
+                {step === 3 && renderResultsStep()}
+            </div>
+        </GlobalModal>
     );
 };
 

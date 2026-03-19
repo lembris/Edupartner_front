@@ -203,6 +203,7 @@ export const DocumentRequirementListPage = () => {
 
             {showModal && (
                 <DocumentRequirementModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

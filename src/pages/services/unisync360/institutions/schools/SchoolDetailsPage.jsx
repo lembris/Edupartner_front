@@ -447,6 +447,7 @@ const getBestCombination = (results) => {
 export const SchoolDetailsPage = () => {
     const [schoolData, setSchoolData] = useState(null);
     const [selectedObj, setSelectedObj] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const [tableRefresh, setTableRefresh] = useState(0);
     const [activeTab, setActiveTab] = useState("overview");
     const navigate = useNavigate();
@@ -753,9 +754,7 @@ export const SchoolDetailsPage = () => {
                             {hasAccess(user, [["change_school"]]) && (
                                 <button
                                     className="btn btn-primary btn-sm me-2"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#schoolModal"
-                                    onClick={() => setSelectedObj(schoolData)}
+                                    onClick={() => { setSelectedObj(schoolData); setShowModal(true); }}
                                 >
                                     <i className="bx bx-edit-alt me-1"></i> Edit
                                 </button>
@@ -1291,12 +1290,14 @@ export const SchoolDetailsPage = () => {
 
             {/* Modals */}
             <SchoolModal
+                show={showModal}
                 selectedObj={selectedObj}
                 onSuccess={() => {
                     setTableRefresh(prev => prev + 1);
                     setSelectedObj(null);
+                    setShowModal(false);
                 }}
-                onClose={() => setSelectedObj(null)}
+                onClose={() => { setSelectedObj(null); setShowModal(false); }}
             />
         </>
     );

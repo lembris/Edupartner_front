@@ -1458,7 +1458,6 @@ const ApprovalRequestModal = () => {
                   </FormWizard>
                   {/* add style */}
                   <style>{`
-                        @import url("https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css");
                         .form-control {
                             height: 36px;
                             padding: 0.375rem 0.75rem;

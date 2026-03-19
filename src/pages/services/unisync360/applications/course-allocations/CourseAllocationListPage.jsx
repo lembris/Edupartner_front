@@ -380,6 +380,7 @@ export const CourseAllocationListPage = () => {
 
             {showModal && (
                 <CourseAllocationModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

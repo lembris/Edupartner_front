@@ -8,8 +8,8 @@ import { AssetContext } from "../../../../utils/context";
 import FormikSelect from "../../../../components/ui-templates/form-components/FormikSelect";
 import ModalStepsWizard from "../../../../components/modal/ModalStepsWizard.jsx";
 
-export const ComputerAssetModal = ({ loadOnlyModal = false }) => {
-  const { selectedObj, setSelectedObj, tableRefresh, setTableRefresh } = useContext(AssetContext);
+export const ComputerAssetModal = ({ show = false, onSuccess, onClose }) => {
+  const { selectedObj, setSelectedObj } = useContext(AssetContext);
 
   const initialValues = {
     asset_tag: selectedObj?.asset_tag || "",
@@ -442,7 +442,7 @@ export const ComputerAssetModal = ({ loadOnlyModal = false }) => {
 
   return (
     <ModalStepsWizard
-      modalId="computerAssetModal"
+      show={show}
       modalTitle={
         <>
           <i className="bx bx-desktop me-2"></i>
@@ -454,11 +454,15 @@ export const ComputerAssetModal = ({ loadOnlyModal = false }) => {
       onSubmit={handleSubmit}
       tabs={tabs}
       selectedObj={selectedObj}
-      context={AssetContext}
-      setSelectedObj={setSelectedObj}
-      tableRefresh={tableRefresh}
-      setTableRefresh={setTableRefresh}
+      onClose={() => {
+        setSelectedObj(null);
+        if (onClose) onClose();
+      }}
+      onSuccess={() => {
+        if (onSuccess) onSuccess();
+      }}
       headerIcon="bx bx-desktop"
+      size="xl"
     />
   );
 };

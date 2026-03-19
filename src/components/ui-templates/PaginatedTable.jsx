@@ -412,18 +412,18 @@ const PaginatedTable = ({
                 </tr>
               ) : (
                 rowRecords.map((row, rowIndex) => (
-                  <tr key={row.id || rowIndex} onClick={() => onSelect && onSelect(row)}>
-                    {columns.map((col) => (
-                      <td key={col.key} className={col.className} style={{ 
-                        ...col.style, 
-                        padding: '0.75rem',
-                        backgroundColor: 'white',
-                        position: 'relative',
-                        zIndex: 1
-                      }}>
-                        {getCellContent(col, row, rowIndex, currentPage, pageSize)}
-                      </td>
-                    ))}
+                   <tr key={row.id || rowIndex} onClick={() => onSelect && onSelect(row)}>
+                     {columns.map((col, colIdx) => (
+                       <td key={`${col.key || colIdx}-${rowIndex}`} className={col.className} style={{ 
+                         ...col.style, 
+                         padding: '0.75rem',
+                         backgroundColor: 'white',
+                         position: 'relative',
+                         zIndex: 1
+                       }}>
+                         {getCellContent(col, row, rowIndex, currentPage, pageSize)}
+                       </td>
+                     ))}
                     {actions && actions.length > 0 && (
                       <td 
                         className="text-center" 

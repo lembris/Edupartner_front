@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import {
@@ -10,14 +9,13 @@ import {
 } from "./Queries";
 import showToast from "../../../../helpers/ToastHelper";
 import FormikSelect from "../../../../components/ui-templates/form-components/FormikSelect";
+import GlobalModal from "../../../../components/modal/GlobalModal";
 
-const StudentSupportModal = ({ type, studentId, selectedObj, onSuccess, onClose }) => {
+const StudentSupportModal = ({ show, type, studentId, selectedObj, onSuccess, onClose }) => {
     let initialValues = {};
     let validationSchema = {};
     let api = null;
     let title = "";
-    const modalRef = useRef(null);
-    const [modalInstance, setModalInstance] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
 
     // State for Facilitation Timeline
@@ -37,31 +35,14 @@ const StudentSupportModal = ({ type, studentId, selectedObj, onSuccess, onClose 
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    // Initialize modal when component mounts
     useEffect(() => {
         setLocalFacilitation(selectedObj);
-
-        let modal = null;
-        if (modalRef.current && window.bootstrap) {
-            modal = new window.bootstrap.Modal(modalRef.current, {
-                backdrop: 'static',
-                keyboard: false
-            });
-            setModalInstance(modal);
-            modal.show();
-        }
 
         // Fetch details if facilitation editing
         if (type === 'facilitation' && selectedObj?.uid) {
             fetchFacilitationDetails();
         }
-
-        return () => {
-            if (modal) {
-                modal.hide();
-            }
-        };
-    }, []); // Run once on mount. If selectedObj changes, we might need to react, but usually modal is recreated.
+    }, [selectedObj, type]);
 
     const fetchFacilitationDetails = async () => {
         if (!selectedObj?.uid) return;
@@ -158,23 +139,6 @@ const StudentSupportModal = ({ type, studentId, selectedObj, onSuccess, onClose 
             showToast("error", "Failed to add step");
         }
     };
-
-    // Handle modal hidden event
-    useEffect(() => {
-        const handleHidden = () => {
-            if (onClose) onClose();
-        };
-
-        if (modalRef.current) {
-            modalRef.current.addEventListener('hidden.bs.modal', handleHidden);
-        }
-
-        return () => {
-            if (modalRef.current) {
-                modalRef.current.removeEventListener('hidden.bs.modal', handleHidden);
-            }
-        };
-    }, [onClose]);
 
     // Helper for datetime-local input (YYYY-MM-DDTHH:mm)
     const toDateTimeInput = (isoString) => {
@@ -451,572 +415,541 @@ const StudentSupportModal = ({ type, studentId, selectedObj, onSuccess, onClose 
     };
 
     const handleClose = () => {
-        if (modalInstance) {
-            modalInstance.hide();
-        }
-        if (onClose) onClose();
+        onClose();
     };
 
-    return createPortal(
-        <div
-            ref={modalRef}
-            className="modal fade"
-            id="studentSupportModal"
-            tabIndex="-1"
-            aria-hidden="true"
+    return (
+        <GlobalModal
+            show={show}
+            onClose={onClose}
+            title={title}
+            onSubmit={handleSubmit}
+            loading={false}
+            submitText="Save Changes"
+            size="lg"
         >
-            <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                    <div className="modal-header bg-light">
-                        <h5 className="modal-title">{title}</h5>
-                        <button type="button" className="btn-close" onClick={handleClose} data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <Formik
-                        enableReinitialize
-                        initialValues={initialValues}
-                        validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
-                    >
-                        {({ isSubmitting, values }) => (
-                            <Form>
-                                <div className="modal-body">
-                                    {/* --- Communication Fields --- */}
-                                    {type === 'communication' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <label className="form-label">Type</label>
-                                                <Field as="select" name="communication_type" className="form-select">
-                                                    <option value="phone">Phone Call</option>
-                                                    <option value="email">Email</option>
-                                                    <option value="sms">SMS</option>
-                                                    <option value="whatsapp">WhatsApp</option>
-                                                    <option value="meeting">Meeting</option>
-                                                    <option value="video_call">Video Call</option>
-                                                </Field>
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Subject</label>
-                                                <Field name="subject" className="form-control" />
-                                                <ErrorMessage name="subject" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Message/Notes</label>
-                                                <Field as="textarea" name="message" className="form-control" rows="3" />
-                                                <ErrorMessage name="message" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <div className="form-check">
-                                                    <Field type="checkbox" name="is_completed" className="form-check-input" id="commCompleted" />
-                                                    <label className="form-check-label" htmlFor="commCompleted">Completed</label>
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
+            <Formik
+                enableReinitialize
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ isSubmitting, values }) => (
+                    <Form>
+                        {/* --- Communication Fields --- */}
+                        {type === 'communication' && (
+                            <>
+                                <div className="mb-3">
+                                    <label className="form-label">Type</label>
+                                    <Field as="select" name="communication_type" className="form-select">
+                                        <option value="phone">Phone Call</option>
+                                        <option value="email">Email</option>
+                                        <option value="sms">SMS</option>
+                                        <option value="whatsapp">WhatsApp</option>
+                                        <option value="meeting">Meeting</option>
+                                        <option value="video_call">Video Call</option>
+                                    </Field>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Subject</label>
+                                    <Field name="subject" className="form-control" />
+                                    <ErrorMessage name="subject" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Message/Notes</label>
+                                    <Field as="textarea" name="message" className="form-control" rows="3" />
+                                    <ErrorMessage name="message" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <div className="form-check">
+                                        <Field type="checkbox" name="is_completed" className="form-check-input" id="commCompleted" />
+                                        <label className="form-check-label" htmlFor="commCompleted">Completed</label>
+                                    </div>
+                                </div>
+                            </>
+                        )}
 
-                                    {/* --- Appointment Fields --- */}
-                                    {type === 'appointment' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <label className="form-label">Title</label>
-                                                <Field name="title" className="form-control" />
-                                                <ErrorMessage name="title" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Date & Time</label>
-                                                <Field type="datetime-local" name="appointment_date" className="form-control" />
-                                                <ErrorMessage name="appointment_date" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Location/Link</label>
-                                                <Field name="location" className="form-control" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Description</label>
-                                                <Field as="textarea" name="description" className="form-control" rows="2" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <FormikSelect
-                                                    name="attendees"
-                                                    label="Attendees"
-                                                    url="/users-list/"
-                                                    isMulti={true}
-                                                    containerClass="mb-0"
-                                                    filters={{ page: 1, page_size: 100, paginated: true }}
-                                                    mapOption={(item) => ({ value: item.guid, label: `${item.first_name} ${item.last_name}` })}
-                                                    placeholder="Select Attendees"
-                                                />
-                                            </div>
-                                        </>
-                                    )}
+                        {/* --- Appointment Fields --- */}
+                        {type === 'appointment' && (
+                            <>
+                                <div className="mb-3">
+                                    <label className="form-label">Title</label>
+                                    <Field name="title" className="form-control" />
+                                    <ErrorMessage name="title" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Date & Time</label>
+                                    <Field type="datetime-local" name="appointment_date" className="form-control" />
+                                    <ErrorMessage name="appointment_date" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Location/Link</label>
+                                    <Field name="location" className="form-control" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Description</label>
+                                    <Field as="textarea" name="description" className="form-control" rows="2" />
+                                </div>
+                                <div className="mb-3">
+                                    <FormikSelect
+                                        name="attendees"
+                                        label="Attendees"
+                                        url="/users-list/"
+                                        isMulti={true}
+                                        containerClass="mb-0"
+                                        filters={{ page: 1, page_size: 100, paginated: true }}
+                                        mapOption={(item) => ({ value: item.guid, label: `${item.first_name} ${item.last_name}` })}
+                                        placeholder="Select Attendees"
+                                    />
+                                </div>
+                            </>
+                        )}
 
-                                    {/* --- Reminder Fields --- */}
-                                    {type === 'reminder' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <label className="form-label">Title</label>
-                                                <Field name="title" className="form-control" />
-                                                <ErrorMessage name="title" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Date & Time</label>
-                                                <Field type="datetime-local" name="reminder_date" className="form-control" />
-                                                <ErrorMessage name="reminder_date" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Message</label>
-                                                <Field as="textarea" name="message" className="form-control" rows="2" />
-                                            </div>
-                                        </>
-                                    )}
+                        {/* --- Reminder Fields --- */}
+                        {type === 'reminder' && (
+                            <>
+                                <div className="mb-3">
+                                    <label className="form-label">Title</label>
+                                    <Field name="title" className="form-control" />
+                                    <ErrorMessage name="title" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Date & Time</label>
+                                    <Field type="datetime-local" name="reminder_date" className="form-control" />
+                                    <ErrorMessage name="reminder_date" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Message</label>
+                                    <Field as="textarea" name="message" className="form-control" rows="2" />
+                                </div>
+                            </>
+                        )}
 
-                                    {/* --- Contact Fields --- */}
-                                    {type === 'contact' && (
-                                        <>
-                                            <div className="row">
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Name</label>
-                                                    <Field name="name" className="form-control" />
-                                                    <ErrorMessage name="name" component="div" className="text-danger small" />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Relationship</label>
-                                                    <Field as="select" name="relationship" className="form-select">
-                                                        <option value="father">Father</option>
-                                                        <option value="mother">Mother</option>
-                                                        <option value="guardian">Guardian</option>
-                                                        <option value="sponsor">Sponsor</option>
-                                                        <option value="self">Self</option>
-                                                        <option value="other">Other</option>
-                                                    </Field>
-                                                </div>
+                        {/* --- Contact Fields --- */}
+                        {type === 'contact' && (
+                            <>
+                                <div className="row">
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Name</label>
+                                        <Field name="name" className="form-control" />
+                                        <ErrorMessage name="name" component="div" className="text-danger small" />
+                                    </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Relationship</label>
+                                        <Field as="select" name="relationship" className="form-select">
+                                            <option value="father">Father</option>
+                                            <option value="mother">Mother</option>
+                                            <option value="guardian">Guardian</option>
+                                            <option value="sponsor">Sponsor</option>
+                                            <option value="self">Self</option>
+                                            <option value="other">Other</option>
+                                        </Field>
+                                    </div>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Phone</label>
+                                    <Field name="phone" className="form-control" />
+                                    <ErrorMessage name="phone" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Email</label>
+                                    <Field type="email" name="email" className="form-control" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Portal Access</label>
+                                    <Field as="select" name="portal_access" className="form-select">
+                                        <option value="none">No Access</option>
+                                        <option value="view">View Only</option>
+                                        <option value="full">Full Access</option>
+                                    </Field>
+                                </div>
+                                {values.portal_access !== 'none' && (
+                                    <div className="mb-3">
+                                        <label className="form-label">
+                                            Password {(!selectedObj || !selectedObj.user) ? <span className="text-danger">*</span> : <small className="text-muted fw-normal">(Leave blank to keep unchanged)</small>}
+                                        </label>
+                                        <div className="input-group">
+                                            <Field
+                                                type={showPassword ? "text" : "password"}
+                                                name="password"
+                                                className="form-control"
+                                                placeholder="Set login password"
+                                            />
+                                            <button
+                                                className="btn btn-outline-secondary"
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            >
+                                                <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`}></i>
+                                            </button>
+                                        </div>
+                                        <ErrorMessage name="password" component="div" className="text-danger small" />
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {/* --- Task Fields --- */}
+                        {type === 'task' && (
+                            <>
+                                <div className="mb-3">
+                                    <label className="form-label">Title</label>
+                                    <Field name="title" className="form-control" />
+                                    <ErrorMessage name="title" component="div" className="text-danger small" />
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Due Date</label>
+                                        <Field type="datetime-local" name="due_date" className="form-control" />
+                                        <ErrorMessage name="due_date" component="div" className="text-danger small" />
+                                    </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Priority</label>
+                                        <Field as="select" name="priority" className="form-select">
+                                            <option value="low">Low</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="high">High</option>
+                                            <option value="urgent">Urgent</option>
+                                        </Field>
+                                    </div>
+                                </div>
+                                <div className="mb-3">
+                                    <FormikSelect
+                                        name="assigned_to"
+                                        label="Assign To"
+                                        url="/users-list/"
+                                        containerClass="mb-0"
+                                        filters={{ page: 1, page_size: 100, paginated: true }}
+                                        mapOption={(item) => ({ value: item.guid, label: `${item.first_name} ${item.last_name}` })}
+                                        placeholder="Select User"
+                                    />
+                                    <ErrorMessage name="assigned_to" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Description</label>
+                                    <Field as="textarea" name="description" className="form-control" rows="2" />
+                                </div>
+                            </>
+                        )}
+
+                        {/* --- Alert Fields --- */}
+                        {type === 'alert' && (
+                            <>
+                                <div className="mb-3">
+                                    <label className="form-label">Title</label>
+                                    <Field name="title" className="form-control" />
+                                    <ErrorMessage name="title" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Severity</label>
+                                    <Field as="select" name="severity" className="form-select">
+                                        <option value="info">Info</option>
+                                        <option value="warning">Warning</option>
+                                        <option value="critical">Critical</option>
+                                    </Field>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Message</label>
+                                    <Field as="textarea" name="message" className="form-control" rows="3" />
+                                    <ErrorMessage name="message" component="div" className="text-danger small" />
+                                </div>
+                            </>
+                        )}
+
+                        {/* --- Facilitation Fields --- */}
+                        {type === 'facilitation' && (
+                            <>
+                                <div className="mb-3">
+                                    <FormikSelect
+                                        name="service"
+                                        label="Service"
+                                        url="/unisync360-facilitation/services/"
+                                        containerClass="mb-0"
+                                        filters={{ page: 1, page_size: 100, paginated: true }}
+                                        mapOption={(item) => ({ value: item.uid, label: item.name })}
+                                        placeholder="Select Service"
+                                        isDisabled={!!selectedObj}
+                                    />
+                                    <ErrorMessage name="service" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Status</label>
+                                    <Field as="select" name="status" className="form-select">
+                                        <option value="pending">Pending</option>
+                                        <option value="in_progress">In Progress</option>
+                                        <option value="on_hold">On Hold</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </Field>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Notes</label>
+                                    <Field as="textarea" name="notes" className="form-control" rows="3" placeholder="Any specific details..." />
+                                </div>
+
+                                {selectedObj && (
+                                    <div className="mt-4 pt-3 border-top">
+                                        <div className="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 className="fw-bold mb-0">Processing Timeline</h6>
+                                            <div>
+                                                <button type="button" className="btn btn-xs btn-icon text-primary me-1" onClick={fetchFacilitationDetails} title="Refresh Timeline">
+                                                    <i className="bx bx-refresh fs-4"></i>
+                                                </button>
+                                                {!showAddStep && (
+                                                    <button type="button" className="btn btn-xs btn-outline-primary" onClick={() => setShowAddStep(true)} title="Add New Step">
+                                                        <i className="bx bx-plus"></i> Add Step
+                                                    </button>
+                                                )}
                                             </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Phone</label>
-                                                <Field name="phone" className="form-control" />
-                                                <ErrorMessage name="phone" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Email</label>
-                                                <Field type="email" name="email" className="form-control" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Portal Access</label>
-                                                <Field as="select" name="portal_access" className="form-select">
-                                                    <option value="none">No Access</option>
-                                                    <option value="view">View Only</option>
-                                                    <option value="full">Full Access</option>
-                                                </Field>
-                                            </div>
-                                            {values.portal_access !== 'none' && (
-                                                <div className="mb-3">
-                                                    <label className="form-label">
-                                                        Password {(!selectedObj || !selectedObj.user) ? <span className="text-danger">*</span> : <small className="text-muted fw-normal">(Leave blank to keep unchanged)</small>}
-                                                    </label>
-                                                    <div className="input-group">
-                                                        <Field
-                                                            type={showPassword ? "text" : "password"}
-                                                            name="password"
-                                                            className="form-control"
-                                                            placeholder="Set login password"
+                                        </div>
+
+                                        {showAddStep && (
+                                            <div className="card mb-3 bg-light border-0">
+                                                <div className="card-body p-3">
+                                                    <h6 className="card-title mb-2 text-primary">New Process Step</h6>
+                                                    <div className="mb-2">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control form-control-sm"
+                                                            placeholder="Step Name (e.g. Document Verification)"
+                                                            value={newStepName}
+                                                            onChange={(e) => setNewStepName(e.target.value)}
                                                         />
-                                                        <button
-                                                            className="btn btn-outline-secondary"
-                                                            type="button"
-                                                            onClick={() => setShowPassword(!showPassword)}
-                                                        >
-                                                            <i className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`}></i>
-                                                        </button>
                                                     </div>
-                                                    <ErrorMessage name="password" component="div" className="text-danger small" />
-                                                </div>
-                                            )}
-                                        </>
-                                    )}
-
-                                    {/* --- Task Fields --- */}
-                                    {type === 'task' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <label className="form-label">Title</label>
-                                                <Field name="title" className="form-control" />
-                                                <ErrorMessage name="title" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Due Date</label>
-                                                    <Field type="datetime-local" name="due_date" className="form-control" />
-                                                    <ErrorMessage name="due_date" component="div" className="text-danger small" />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Priority</label>
-                                                    <Field as="select" name="priority" className="form-select">
-                                                        <option value="low">Low</option>
-                                                        <option value="medium">Medium</option>
-                                                        <option value="high">High</option>
-                                                        <option value="urgent">Urgent</option>
-                                                    </Field>
-                                                </div>
-                                            </div>
-                                            <div className="mb-3">
-                                                <FormikSelect
-                                                    name="assigned_to"
-                                                    label="Assign To"
-                                                    url="/users-list/"
-                                                    containerClass="mb-0"
-                                                    filters={{ page: 1, page_size: 100, paginated: true }}
-                                                    mapOption={(item) => ({ value: item.guid, label: `${item.first_name} ${item.last_name}` })}
-                                                    placeholder="Select User"
-                                                />
-                                                <ErrorMessage name="assigned_to" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Description</label>
-                                                <Field as="textarea" name="description" className="form-control" rows="2" />
-                                            </div>
-                                        </>
-                                    )}
-
-                                    {/* --- Alert Fields --- */}
-                                    {type === 'alert' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <label className="form-label">Title</label>
-                                                <Field name="title" className="form-control" />
-                                                <ErrorMessage name="title" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Severity</label>
-                                                <Field as="select" name="severity" className="form-select">
-                                                    <option value="info">Info</option>
-                                                    <option value="warning">Warning</option>
-                                                    <option value="critical">Critical</option>
-                                                </Field>
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Message</label>
-                                                <Field as="textarea" name="message" className="form-control" rows="3" />
-                                                <ErrorMessage name="message" component="div" className="text-danger small" />
-                                            </div>
-                                        </>
-                                    )}
-
-                                    {/* --- Facilitation Fields --- */}
-                                    {type === 'facilitation' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <FormikSelect
-                                                    name="service"
-                                                    label="Service"
-                                                    url="/unisync360-facilitation/services/"
-                                                    containerClass="mb-0"
-                                                    filters={{ page: 1, page_size: 100, paginated: true }}
-                                                    mapOption={(item) => ({ value: item.uid, label: item.name })}
-                                                    placeholder="Select Service"
-                                                    isDisabled={!!selectedObj} // Disable service selection when editing
-                                                />
-                                                <ErrorMessage name="service" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Status</label>
-                                                <Field as="select" name="status" className="form-select">
-                                                    <option value="pending">Pending</option>
-                                                    <option value="in_progress">In Progress</option>
-                                                    <option value="on_hold">On Hold</option>
-                                                    <option value="completed">Completed</option>
-                                                    <option value="cancelled">Cancelled</option>
-                                                </Field>
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Notes</label>
-                                                <Field as="textarea" name="notes" className="form-control" rows="3" placeholder="Any specific details..." />
-                                            </div>
-
-                                            {selectedObj && (
-                                                <div className="mt-4 pt-3 border-top">
-                                                    <div className="d-flex justify-content-between align-items-center mb-3">
-                                                        <h6 className="fw-bold mb-0">Processing Timeline</h6>
-                                                        <div>
-                                                            <button type="button" className="btn btn-xs btn-icon text-primary me-1" onClick={fetchFacilitationDetails} title="Refresh Timeline">
-                                                                <i className="bx bx-refresh fs-4"></i>
-                                                            </button>
-                                                            {!showAddStep && (
-                                                                <button type="button" className="btn btn-xs btn-outline-primary" onClick={() => setShowAddStep(true)} title="Add New Step">
-                                                                    <i className="bx bx-plus"></i> Add Step
-                                                                </button>
-                                                            )}
-                                                        </div>
+                                                    <div className="mb-2">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control form-control-sm"
+                                                            placeholder="Description (Optional)"
+                                                            value={newStepDesc}
+                                                            onChange={(e) => setNewStepDesc(e.target.value)}
+                                                        />
                                                     </div>
-
-                                                    {showAddStep && (
-                                                        <div className="card mb-3 bg-light border-0">
-                                                            <div className="card-body p-3">
-                                                                <h6 className="card-title mb-2 text-primary">New Process Step</h6>
-                                                                <div className="mb-2">
-                                                                    <input
-                                                                        type="text"
-                                                                        className="form-control form-control-sm"
-                                                                        placeholder="Step Name (e.g. Document Verification)"
-                                                                        value={newStepName}
-                                                                        onChange={(e) => setNewStepName(e.target.value)}
-                                                                    />
-                                                                </div>
-                                                                <div className="mb-2">
-                                                                    <input
-                                                                        type="text"
-                                                                        className="form-control form-control-sm"
-                                                                        placeholder="Description (Optional)"
-                                                                        value={newStepDesc}
-                                                                        onChange={(e) => setNewStepDesc(e.target.value)}
-                                                                    />
-                                                                </div>
-                                                                <div className="d-flex justify-content-end gap-2">
-                                                                    <button type="button" className="btn btn-xs btn-secondary" onClick={() => {
-                                                                        setShowAddStep(false);
-                                                                        setNewStepName("");
-                                                                        setNewStepDesc("");
-                                                                    }}>Cancel</button>
-                                                                    <button type="button" className="btn btn-xs btn-primary" onClick={handleAddStep}>Save Step</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-
-                                                    {loadingSteps ? (
-                                                        <div className="text-center py-2"><span className="spinner-border spinner-border-sm text-primary"></span> Loading timeline...</div>
-                                                    ) : (
-                                                        <div className="timeline-wrapper">
-                                                            {steps.length === 0 ? (
-                                                                <div className="alert alert-light text-center small">
-                                                                    No processing steps defined for this service.
-                                                                </div>
-                                                            ) : (
-                                                                <div className="timeline-xs ms-2">
-                                                                    {steps.map((step, index) => {
-                                                                        const stepProgress = progress.find(p => p.step === step.uid);
-                                                                        const isCompleted = !!stepProgress;
-
-                                                                        return (
-                                                                            <div key={step.uid} className="timeline-item pb-4 border-start ps-3 position-relative ms-2">
-                                                                                <span className={`position-absolute top-0 start-0 translate-middle border border-white rounded-circle p-2 d-flex align-items-center justify-content-center text-white shadow-sm ${isCompleted ? 'bg-success' : 'bg-secondary'}`} style={{ width: '24px', height: '24px' }}>
-                                                                                    {isCompleted ? <i className="bx bx-check"></i> : <span style={{ fontSize: '10px' }}>{index + 1}</span>}
-                                                                                </span>
-
-                                                                                <div className="d-flex justify-content-between align-items-start">
-                                                                                    <div>
-                                                                                        <h6 className={`mb-1 ${isCompleted ? 'text-success' : ''}`}>{step.name}</h6>
-                                                                                        {step.description && <p className="mb-1 text-muted small">{step.description}</p>}
-
-                                                                                        {isCompleted && stepProgress && (
-                                                                                            <small className="text-muted d-block bg-light p-1 rounded px-2 mt-1">
-                                                                                                <i className="bx bx-check-double me-1 text-success"></i>
-                                                                                                {new Date(stepProgress.completed_date).toLocaleDateString()}
-                                                                                                {stepProgress.completed_by_details && ` by ${stepProgress.completed_by_details.first_name}`}
-                                                                                            </small>
-                                                                                        )}
-                                                                                    </div>
-
-                                                                                    {!isCompleted && (
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="btn btn-xs btn-outline-primary ms-2 text-nowrap"
-                                                                                            onClick={() => handleMarkComplete(step.uid)}
-                                                                                        >
-                                                                                            Mark Done
-                                                                                        </button>
-                                                                                    )}
-                                                                                </div>
-                                                                            </div>
-                                                                        );
-                                                                    })}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
+                                                    <div className="d-flex justify-content-end gap-2">
+                                                        <button type="button" className="btn btn-xs btn-secondary" onClick={() => {
+                                                            setShowAddStep(false);
+                                                            setNewStepName("");
+                                                            setNewStepDesc("");
+                                                        }}>Cancel</button>
+                                                        <button type="button" className="btn btn-xs btn-primary" onClick={handleAddStep}>Save Step</button>
+                                                    </div>
                                                 </div>
-                                            )}
-                                        </>
-                                    )}
-
-                                    {/* --- Document Fields --- */}
-                                    {type === 'document' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <FormikSelect
-                                                    name="requirement"
-                                                    label="Document Requirement"
-                                                    url="/unisync360-applications/document-requirements/"
-                                                    containerClass="mb-0"
-                                                    filters={{ page: 1, page_size: 100, paginated: true }}
-                                                    mapOption={(item) => ({ value: item.uid, label: `${item.name} (${item.document_type})` })}
-                                                    placeholder="Select Requirement"
-                                                />
-                                                <ErrorMessage name="requirement" component="div" className="text-danger small" />
                                             </div>
+                                        )}
 
-                                            <div className="mb-3">
-                                                <label className="form-label">Status</label>
-                                                <Field as="select" name="status" className="form-select">
-                                                    <option value="pending">Pending</option>
-                                                    <option value="submitted">Submitted</option>
-                                                    <option value="verified">Verified</option>
-                                                    <option value="rejected">Rejected</option>
-                                                </Field>
-                                            </div>
+                                        {loadingSteps ? (
+                                            <div className="text-center py-2"><span className="spinner-border spinner-border-sm text-primary"></span> Loading timeline...</div>
+                                        ) : (
+                                            <div className="timeline-wrapper">
+                                                {steps.length === 0 ? (
+                                                    <div className="alert alert-light text-center small">
+                                                        No processing steps defined for this service.
+                                                    </div>
+                                                ) : (
+                                                    <div className="timeline-xs ms-2">
+                                                        {steps.map((step, index) => {
+                                                            const stepProgress = progress.find(p => p.step === step.uid);
+                                                            const isCompleted = !!stepProgress;
 
-                                            <div className="mb-3">
-                                                <label className="form-label">File {selectedObj && "(Leave empty to keep existing)"}</label>
-                                                <input
-                                                    type="file"
-                                                    className="form-control"
-                                                    onChange={(event) => {
-                                                        values.document_file = event.currentTarget.files[0];
-                                                    }}
-                                                />
-                                                {selectedObj && selectedObj.document_file && (
-                                                    <div className="form-text">
-                                                        Current file: <a href={selectedObj.document_file} target="_blank" rel="noopener noreferrer">View</a>
+                                                            return (
+                                                                <div key={step.uid} className="timeline-item pb-4 border-start ps-3 position-relative ms-2">
+                                                                    <span className={`position-absolute top-0 start-0 translate-middle border border-white rounded-circle p-2 d-flex align-items-center justify-content-center text-white shadow-sm ${isCompleted ? 'bg-success' : 'bg-secondary'}`} style={{ width: '24px', height: '24px' }}>
+                                                                        {isCompleted ? <i className="bx bx-check"></i> : <span style={{ fontSize: '10px' }}>{index + 1}</span>}
+                                                                    </span>
+
+                                                                    <div className="d-flex justify-content-between align-items-start">
+                                                                        <div>
+                                                                            <h6 className={`mb-1 ${isCompleted ? 'text-success' : ''}`}>{step.name}</h6>
+                                                                            {step.description && <p className="mb-1 text-muted small">{step.description}</p>}
+
+                                                                            {isCompleted && stepProgress && (
+                                                                                <small className="text-muted d-block bg-light p-1 rounded px-2 mt-1">
+                                                                                    <i className="bx bx-check-double me-1 text-success"></i>
+                                                                                    {new Date(stepProgress.completed_date).toLocaleDateString()}
+                                                                                    {stepProgress.completed_by_details && ` by ${stepProgress.completed_by_details.first_name}`}
+                                                                                </small>
+                                                                            )}
+                                                                        </div>
+
+                                                                        {!isCompleted && (
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-xs btn-outline-primary ms-2 text-nowrap"
+                                                                                onClick={() => handleMarkComplete(step.uid)}
+                                                                            >
+                                                                                Mark Done
+                                                                            </button>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
                                                     </div>
                                                 )}
                                             </div>
-                                        </>
-                                    )}
-
-                                    {/* --- Academic Fields --- */}
-                                    {type === 'academic' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <label className="form-label">Qualification</label>
-                                                <Field as="select" name="qualification" className="form-select">
-                                                    <option value="">Select Qualification</option>
-                                                    <option value="o_level">O Level</option>
-                                                    <option value="a_level">A Level</option>
-                                                    <option value="certificate">Certificate</option>
-                                                    <option value="diploma">Diploma</option>
-                                                    <option value="bachelor">Bachelor</option>
-                                                    <option value="master">Masters</option>
-                                                    <option value="phd">PhD</option>
-                                                    <option value="other">Other</option>
-                                                </Field>
-                                                <ErrorMessage name="qualification" component="div" className="text-danger small" />
-                                            </div>
-
-                                            {['o_level', 'a_level'].includes(values.qualification) ? (
-                                                <>
-                                                    <div className="mb-3">
-                                                        <FormikSelect
-                                                            name="school"
-                                                            label="School"
-                                                            url="/unisync360-institutions/schools/"
-                                                            containerClass="mb-0"
-                                                            filters={{ page: 1, page_size: 100, paginated: true }}
-                                                            mapOption={(item) => ({ value: item.uid, label: item.name })}
-                                                            placeholder="Select School"
-                                                        />
-                                                        <ErrorMessage name="school" component="div" className="text-danger small" />
-                                                    </div>
-                                                    <div className="mb-3">
-                                                        <label className="form-label">NECTA Index Number</label>
-                                                        <Field name="index_number" className="form-control" placeholder="e.g. S0101/0001" />
-                                                        <ErrorMessage name="index_number" component="div" className="text-danger small" />
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <div className="mb-3">
-                                                    <label className="form-label">Institution Name</label>
-                                                    <Field name="institution_name" className="form-control" />
-                                                    <ErrorMessage name="institution_name" component="div" className="text-danger small" />
-                                                </div>
-                                            )}
-
-                                            <div className="row">
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Start Year</label>
-                                                    <Field type="number" name="start_year" className="form-control" placeholder="YYYY" />
-                                                    <ErrorMessage name="start_year" component="div" className="text-danger small" />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Graduation Year</label>
-                                                    <Field type="number" name="end_year" className="form-control" placeholder="YYYY" />
-                                                    <ErrorMessage name="end_year" component="div" className="text-danger small" />
-                                                </div>
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Grade/GPA/DIV</label>
-                                                <Field name="grade" className="form-control" placeholder="e.g. 3.5/4.0 or A ot 3.13" />
-                                            </div>
-                                        </>
-                                    )}
-
-                                    {/* --- Course Allocation Fields --- */}
-                                    {type === 'course_allocation' && (
-                                        <>
-                                            <div className="mb-3">
-                                                <FormikSelect
-                                                    name="university_course"
-                                                    label="University Course"
-                                                    url="/unisync360-academic/university-courses/"
-                                                    containerClass="mb-0"
-                                                    filters={{ page: 1, page_size: 100, paginated: true, is_active: true }}
-                                                    mapOption={(item) => ({
-                                                        value: item.uid,
-                                                        label: `${item.course_name} - ${item.university_name} (${item.country_name})`
-                                                    })}
-                                                    placeholder="Select Course"
-                                                />
-                                                <ErrorMessage name="university_course" component="div" className="text-danger small" />
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Priority</label>
-                                                    <Field type="number" name="priority" className="form-control" min="1" />
-                                                    <ErrorMessage name="priority" component="div" className="text-danger small" />
-                                                    <small className="text-muted">1 = 1st choice, 2 = 2nd choice, etc.</small>
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Status</label>
-                                                    <Field as="select" name="status" className="form-select">
-                                                        <option value="pending">Pending</option>
-                                                        <option value="approved">Approved</option>
-                                                        <option value="rejected">Rejected</option>
-                                                        <option value="waiting_list">Waiting List</option>
-                                                        <option value="offer_received">Offer Received</option>
-                                                    </Field>
-                                                    <ErrorMessage name="status" component="div" className="text-danger small" />
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Application Date</label>
-                                                    <Field type="date" name="application_date" className="form-control" />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Intake Period</label>
-                                                    <Field as="select" name="intake_period" className="form-select">
-                                                        <option value="">Select Intake Month</option>
-                                                        {intakeMonths.map((month) => (
-                                                            <option key={month} value={month}>{month}</option>
-                                                        ))}
-                                                    </Field>
-                                                    <ErrorMessage name="intake_period" component="div" className="text-danger small" />
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
-
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-light" onClick={handleClose} data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                                        {isSubmitting ? 'Saving...' : 'Save Changes'}
-                                    </button>
-                                </div>
-                            </Form>
+                                        )}
+                                    </div>
+                                )}
+                            </>
                         )}
-                    </Formik>
-                </div>
-            </div>
-        </div>,
-        document.body
+
+                        {/* --- Document Fields --- */}
+                        {type === 'document' && (
+                            <>
+                                <div className="mb-3">
+                                    <FormikSelect
+                                        name="requirement"
+                                        label="Document Requirement"
+                                        url="/unisync360-applications/document-requirements/"
+                                        containerClass="mb-0"
+                                        filters={{ page: 1, page_size: 100, paginated: true, is_active: true }}
+                                        mapOption={(item) => ({ value: item.uid, label: `${item.name} (${item.document_type})` })}
+                                        placeholder="Select Requirement"
+                                    />
+                                    <ErrorMessage name="requirement" component="div" className="text-danger small" />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Status</label>
+                                    <Field as="select" name="status" className="form-select">
+                                        <option value="pending">Pending</option>
+                                        <option value="submitted">Submitted</option>
+                                        <option value="verified">Verified</option>
+                                        <option value="rejected">Rejected</option>
+                                    </Field>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Upload Document</label>
+                                    <input
+                                        type="file"
+                                        className="form-control"
+                                        onChange={(event) => {
+                                            const file = event.target.files[0];
+                                            if (file) {
+                                                values.document_file = file;
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </>
+                        )}
+
+                        {/* --- Academic History Fields --- */}
+                        {type === 'academic' && (
+                            <>
+                                <div className="mb-3">
+                                    <label className="form-label">Qualification</label>
+                                    <Field as="select" name="qualification" className="form-select">
+                                        <option value="">Select Qualification</option>
+                                        <option value="o_level">O Level</option>
+                                        <option value="a_level">A Level</option>
+                                        <option value="diploma">Diploma</option>
+                                        <option value="bachelors">Bachelor's Degree</option>
+                                        <option value="masters">Master's Degree</option>
+                                        <option value="phd">PhD</option>
+                                        <option value="other">Other</option>
+                                    </Field>
+                                    <ErrorMessage name="qualification" component="div" className="text-danger small" />
+                                </div>
+
+                                {['o_level', 'a_level'].includes(values.qualification) ? (
+                                    <>
+                                        <div className="mb-3">
+                                            <label className="form-label">School</label>
+                                            <Field name="school" className="form-control" placeholder="School Name" />
+                                            <ErrorMessage name="school" component="div" className="text-danger small" />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Index Number</label>
+                                            <Field name="index_number" className="form-control" placeholder="Index Number" />
+                                            <ErrorMessage name="index_number" component="div" className="text-danger small" />
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="mb-3">
+                                        <label className="form-label">Institution Name</label>
+                                        <Field name="institution_name" className="form-control" />
+                                        <ErrorMessage name="institution_name" component="div" className="text-danger small" />
+                                    </div>
+                                )}
+
+                                <div className="row">
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Start Year</label>
+                                        <Field type="number" name="start_year" className="form-control" placeholder="YYYY" />
+                                        <ErrorMessage name="start_year" component="div" className="text-danger small" />
+                                    </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Graduation Year</label>
+                                        <Field type="number" name="end_year" className="form-control" placeholder="YYYY" />
+                                        <ErrorMessage name="end_year" component="div" className="text-danger small" />
+                                    </div>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Grade/GPA/DIV</label>
+                                    <Field name="grade" className="form-control" placeholder="e.g. 3.5/4.0 or A ot 3.13" />
+                                </div>
+                            </>
+                        )}
+
+                        {/* --- Course Allocation Fields --- */}
+                        {type === 'course_allocation' && (
+                            <>
+                                <div className="mb-3">
+                                    <FormikSelect
+                                        name="university_course"
+                                        label="University Course"
+                                        url="/unisync360-academic/university-courses/"
+                                        containerClass="mb-0"
+                                        filters={{ page: 1, page_size: 100, paginated: true, is_active: true }}
+                                        mapOption={(item) => ({
+                                            value: item.uid,
+                                            label: `${item.course_name} - ${item.university_name} (${item.country_name})`
+                                        })}
+                                        placeholder="Select Course"
+                                    />
+                                    <ErrorMessage name="university_course" component="div" className="text-danger small" />
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Priority</label>
+                                        <Field type="number" name="priority" className="form-control" min="1" />
+                                        <ErrorMessage name="priority" component="div" className="text-danger small" />
+                                        <small className="text-muted">1 = 1st choice, 2 = 2nd choice, etc.</small>
+                                    </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Status</label>
+                                        <Field as="select" name="status" className="form-select">
+                                            <option value="pending">Pending</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="rejected">Rejected</option>
+                                            <option value="waiting_list">Waiting List</option>
+                                            <option value="offer_received">Offer Received</option>
+                                        </Field>
+                                        <ErrorMessage name="status" component="div" className="text-danger small" />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Application Date</label>
+                                        <Field type="date" name="application_date" className="form-control" />
+                                    </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Intake Period</label>
+                                        <Field as="select" name="intake_period" className="form-select">
+                                            <option value="">Select Intake Month</option>
+                                            {intakeMonths.map((month) => (
+                                                <option key={month} value={month}>{month}</option>
+                                            ))}
+                                        </Field>
+                                        <ErrorMessage name="intake_period" component="div" className="text-danger small" />
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </Form>
+                )}
+            </Formik>
+        </GlobalModal>
     );
 };
 

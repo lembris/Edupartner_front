@@ -9,10 +9,11 @@ import { UniversityModal } from "./UniversityModal";
 import { deleteUniversity } from "./Queries";
 import { hasAccess } from "../../../../../hooks/AccessHandler";
 import { useSelector } from "react-redux";
-import { EntityBulkImportModal } from "../../../../../components/EntityBulkImportModal";
+import { GlobalImportModal } from "../../../../../components/GlobalImportModal";
 
 export const UniversityListPage = () => {
     const [selectedObj, setSelectedObj] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const [tableRefresh, setTableRefresh] = useState(0);
     const [tableData, setTableData] = useState([]);
     const [showBulkImportModal, setShowBulkImportModal] = useState(false);
@@ -192,7 +193,7 @@ export const UniversityListPage = () => {
                     {
                         label: "Edit",
                         icon: "bx bx-edit",
-                        onClick: (row) => setSelectedObj(row),
+                        onClick: (row) => { setSelectedObj(row); setShowModal(true); },
                         condition: () => hasAccess(user, ["change_university"]),
                         className: "btn-outline-primary text-primary",
                     },
@@ -229,9 +230,7 @@ export const UniversityListPage = () => {
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"
-                                    onClick={() => setSelectedObj(null)}
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#universityModal"
+                                    onClick={() => { setSelectedObj(null); setShowModal(true); }}
                                     title="Add new University"
                                 >
                                     <i className="bx bx-plus me-1"></i> Add University
@@ -248,16 +247,19 @@ export const UniversityListPage = () => {
             />
 
             <UniversityModal
+                show={showModal}
                 selectedObj={selectedObj}
                 onSuccess={() => {
                     setTableRefresh(prev => prev + 1);
                     setSelectedObj(null);
+                    setShowModal(false);
                 }}
-                onClose={() => setSelectedObj(null)}
+                onClose={() => { setSelectedObj(null); setShowModal(false); }}
             />
 
             {showBulkImportModal && (
-                <EntityBulkImportModal
+                <GlobalImportModal
+                    show={showBulkImportModal}
                     importType="university"
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

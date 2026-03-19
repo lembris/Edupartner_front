@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 
 export const CourseListPage = () => {
     const [selectedObj, setSelectedObj] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const [tableRefresh, setTableRefresh] = useState(0);
     const [tableData, setTableData] = useState([]);
     const navigate = useNavigate();
@@ -115,7 +116,7 @@ export const CourseListPage = () => {
                     {
                         label: "Edit",
                         icon: "bx bx-edit",
-                        onClick: (row) => setSelectedObj(row),
+                        onClick: (row) => { setSelectedObj(row); setShowModal(true); },
                         condition: () => hasAccess(user, ["change_course"]),
                         className: "btn-outline-primary text-primary",
                     },
@@ -137,9 +138,7 @@ export const CourseListPage = () => {
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"
-                                    onClick={() => setSelectedObj(null)}
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#courseModal"
+                                    onClick={() => { setSelectedObj(null); setShowModal(true); }}
                                     title="Add new Course"
                                 >
                                     <i className="bx bx-plus me-1"></i> Add Course
@@ -155,12 +154,14 @@ export const CourseListPage = () => {
             />
 
             <CourseModal
+                show={showModal}
                 selectedObj={selectedObj}
                 onSuccess={() => {
                     setTableRefresh(prev => prev + 1);
                     setSelectedObj(null);
+                    setShowModal(false);
                 }}
-                onClose={() => setSelectedObj(null)}
+                onClose={() => { setSelectedObj(null); setShowModal(false); }}
             />
         </>
     );

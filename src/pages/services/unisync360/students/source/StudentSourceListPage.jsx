@@ -137,6 +137,7 @@ export const StudentSourceListPage = () => {
 
             {showModal && (
                 <StudentSourceModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

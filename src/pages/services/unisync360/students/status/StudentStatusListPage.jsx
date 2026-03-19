@@ -140,6 +140,7 @@ export const StudentStatusListPage = () => {
 
             {showModal && (
                 <StudentStatusModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

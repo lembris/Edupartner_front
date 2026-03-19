@@ -121,3 +121,41 @@ export const deleteNectaHistory = async (nectaUid) => {
         throw error;
     }
 };
+
+// Get Regions
+export const getRegions = async (pagination = {}) => {
+    try {
+        let url = `${API_URL}/unisync360-core/regions/`;
+        const params = new URLSearchParams();
+        Object.keys(pagination).forEach(key => params.append(key, pagination[key]));
+
+        if (params.toString()) {
+            url += `?${params.toString()}`;
+        }
+
+        const response = await api.get(url);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching regions:", error);
+        throw error;
+    }
+};
+
+// Get Districts
+export const getDistricts = async (pagination = {}) => {
+    try {
+        let url = `${API_URL}/unisync360-core/districts/`;
+        const params = new URLSearchParams();
+        Object.keys(pagination).forEach(key => params.append(key, pagination[key]));
+
+        if (params.toString()) {
+            url += `?${params.toString()}`;
+        }
+
+        const response = await api.get(url);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching districts:", error);
+        throw error;
+    }
+};

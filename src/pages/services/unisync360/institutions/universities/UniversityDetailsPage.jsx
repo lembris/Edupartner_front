@@ -24,6 +24,7 @@ import { UniversityExpenseModal } from "./UniversityExpenseModal";
 export const UniversityDetailsPage = () => {
     const [universityData, setUniversityData] = useState(null);
     const [selectedObj, setSelectedObj] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const [tableRefresh, setTableRefresh] = useState(0);
     const [activeTab, setActiveTab] = useState("overview");
     const navigate = useNavigate();
@@ -45,6 +46,7 @@ export const UniversityDetailsPage = () => {
     const [expenses, setExpenses] = useState([]);
     const [loadingExpenses, setLoadingExpenses] = useState(false);
     const [selectedExpense, setSelectedExpense] = useState(null);
+    const [showExpenseModal, setShowExpenseModal] = useState(false);
 
     const tabsRef = useRef(null);
     const [showScrollArrows, setShowScrollArrows] = useState(false);
@@ -389,9 +391,7 @@ export const UniversityDetailsPage = () => {
                                 {hasAccess(user, [["change_university"]]) && (
                                     <button
                                         className="btn btn-primary btn-sm me-2"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#universityModal"
-                                        onClick={() => setSelectedObj(universityData)}
+                                        onClick={() => { setSelectedObj(universityData); setShowModal(true); }}
                                     >
                                         <i className="bx bx-edit-alt me-1"></i> Edit
                                     </button>
@@ -1342,9 +1342,7 @@ export const UniversityDetailsPage = () => {
                                 {hasAccess(user, [["add_universityexpense"]]) && (
                                     <button
                                         className="btn btn-primary btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#universityExpenseModal"
-                                        onClick={() => setSelectedExpense(null)}
+                                        onClick={() => { setSelectedExpense(null); setShowExpenseModal(true); }}
                                     >
                                         <i className="bx bx-plus me-1"></i> Add Expense
                                     </button>
@@ -1368,9 +1366,7 @@ export const UniversityDetailsPage = () => {
                                         {hasAccess(user, [["add_universityexpense"]]) && (
                                             <button
                                                 className="btn btn-primary btn-sm mt-2"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#universityExpenseModal"
-                                                onClick={() => setSelectedExpense(null)}
+                                                onClick={() => { setSelectedExpense(null); setShowExpenseModal(true); }}
                                             >
                                                 <i className="bx bx-plus me-1"></i> Add First Expense
                                             </button>
@@ -1443,9 +1439,7 @@ export const UniversityDetailsPage = () => {
                                                                 {hasAccess(user, [["change_universityexpense"]]) && (
                                                                     <button
                                                                         className="btn btn-icon btn-outline-primary"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#universityExpenseModal"
-                                                                        onClick={() => setSelectedExpense(expense)}
+                                                                        onClick={() => { setSelectedExpense(expense); setShowExpenseModal(true); }}
                                                                         title="Edit"
                                                                     >
                                                                         <i className="bx bx-edit"></i>
@@ -1476,23 +1470,27 @@ export const UniversityDetailsPage = () => {
 
             {/* Modals */}
             <UniversityModal 
+                show={showModal}
                 selectedObj={selectedObj} 
                 onSuccess={() => {
                     setTableRefresh(prev => prev + 1);
                     setSelectedObj(null);
+                    setShowModal(false);
                 }}
-                onClose={() => setSelectedObj(null)}
+                onClose={() => { setSelectedObj(null); setShowModal(false); }}
             />
 
             <UniversityExpenseModal
+                show={showExpenseModal}
                 selectedObj={selectedExpense}
                 universityUid={id}
                 universityId={universityData?.id}
                 onSuccess={() => {
                     fetchExpenses();
                     setSelectedExpense(null);
+                    setShowExpenseModal(false);
                 }}
-                onClose={() => setSelectedExpense(null)}
+                onClose={() => { setSelectedExpense(null); setShowExpenseModal(false); }}
             />
         </>
     );

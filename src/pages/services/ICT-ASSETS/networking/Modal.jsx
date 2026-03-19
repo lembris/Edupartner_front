@@ -695,7 +695,6 @@ export const AssetNetworkModal = ({ loadOnlyModal = false }) => {
                 )}
 
                 <style>{`
-                  @import url("https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css");
                   .form-control, .form-select {
                     height: 36px;
                     padding: 0.375rem 0.75rem;

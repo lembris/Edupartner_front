@@ -181,6 +181,7 @@ export const PaymentsListPage = () => {
 
             {showModal && (
                 <PaymentModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

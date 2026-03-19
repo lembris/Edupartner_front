@@ -1,49 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
-import { createPortal } from "react-dom";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useState, useMemo } from "react";
+import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { createUser, updateUser, UNISYNC360_ROLES, ROLE_DISPLAY_NAMES } from "./Queries";
 import showToast from "../../../../helpers/ToastHelper";
+import GlobalModal from "../../../../components/modal/GlobalModal";
 
-export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
-    const [modalInstance, setModalInstance] = useState(null);
-    const modalRef = useRef(null);
+export const UserModal = ({ show, selectedObj, onSuccess, onClose }) => {
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        let modal = null;
-        if (modalRef.current && window.bootstrap) {
-            modal = new window.bootstrap.Modal(modalRef.current, {
-                backdrop: 'static',
-                keyboard: false
-            });
-            setModalInstance(modal);
-            modal.show();
-        }
-
-        return () => {
-            if (modal) {
-                modal.hide();
-            }
-        };
-    }, []);
-
-    useEffect(() => {
-        const handleHidden = () => {
-            if (onClose) onClose();
-        };
-
-        if (modalRef.current) {
-            modalRef.current.addEventListener('hidden.bs.modal', handleHidden);
-        }
-
-        return () => {
-            if (modalRef.current) {
-                modalRef.current.removeEventListener('hidden.bs.modal', handleHidden);
-            }
-        };
-    }, [onClose]);
-
-    const initialValues = {
+    const initialValues = useMemo(() => ({
         email: selectedObj?.email || "",
         pf_number: selectedObj?.pf_number || "",
         username: selectedObj?.username || "",
@@ -59,7 +24,7 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
         password: "",
         password_confirm: "",
         roles: selectedObj?.roles?.map(r => r.name) || [],
-    };
+    }), [selectedObj]);
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().email("Invalid email").required("Email is required"),
@@ -100,19 +65,17 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
         label: ROLE_DISPLAY_NAMES[value] || key,
     }));
 
-    const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
+    const handleSubmit = async (values, { setErrors }) => {
         try {
-            setSubmitting(true);
+            setLoading(true);
             
             const submitData = {};
 
-            // Always include these fields
             submitData.email = values.email;
             submitData.first_name = values.first_name;
             submitData.last_name = values.last_name;
             submitData.status = values.status;
 
-            // Include these if provided/changed
             if (values.middle_name) submitData.middle_name = values.middle_name;
             if (values.dob) submitData.dob = values.dob;
             if (values.sex) submitData.sex = values.sex;
@@ -120,7 +83,6 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
             if (values.alternative_contact) submitData.alternative_contact = values.alternative_contact;
             if (values.office_location) submitData.office_location = values.office_location;
 
-            // For create (new user)
             if (!selectedObj) {
                 submitData.username = values.username;
                 submitData.pf_number = values.pf_number;
@@ -128,9 +90,6 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
                 submitData.password_confirm = values.password_confirm;
                 submitData.roles = values.roles;
             } else {
-                // For update (edit user) - only include fields that might have changed
-                // Don't send password, username, pf_number (read-only)
-                // But allow roles to be sent if needed
                 if (values.roles && values.roles.length > 0) {
                     submitData.roles = values.roles;
                 }
@@ -144,9 +103,8 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
             }
 
             if (result) {
-                showToast("success", `User ${selectedObj ? 'Updated' : 'Created'} Successfully`);
-                handleCloseModal();
-                resetForm();
+                showToast("success", `User ${selectedObj?.guid ? 'Updated' : 'Created'} Successfully`);
+                if (onClose) onClose();
                 if (onSuccess) onSuccess();
             }
         } catch (error) {
@@ -159,244 +117,196 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
                 showToast("error", "Something went wrong while saving user");
             }
         } finally {
-            setSubmitting(false);
+            setLoading(false);
         }
     };
 
-    const handleCloseModal = () => {
-        if (modalInstance) {
-            modalInstance.hide();
-        }
-        if (onClose) onClose();
-    };
+    if (!show) return null;
 
-    return createPortal(
-        <div
-            ref={modalRef}
-            className="modal fade"
-            id="userModal"
-            tabIndex="-1"
-            aria-labelledby="userModalLabel"
-            aria-hidden="true"
+    return (
+        <GlobalModal
+            show={show}
+            onClose={onClose}
+            title={<><i className="bx bx-user-plus me-2"></i>{selectedObj?.guid ? "Update User" : "Create New User"}</>}
+            size="lg"
+            onSubmit={handleSubmit}
+            submitText={selectedObj?.guid ? "Update" : "Create"}
+            loading={loading}
         >
-            <div className="modal-dialog modal-lg">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id="userModalLabel">
-                            <i className="bx bx-user-plus me-2"></i>
-                            {selectedObj ? "Update User" : "Create New User"}
-                        </h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={handleCloseModal}
-                            aria-label="Close"
-                        ></button>
-                    </div>
-                    <div className="modal-body">
-                        <Formik
-                            enableReinitialize
-                            initialValues={initialValues}
-                            validationSchema={validationSchema}
-                            onSubmit={handleSubmit}
-                        >
-                            {({ isSubmitting, values, setFieldValue }) => (
-                                <Form>
-                                    <h6 className="text-primary mb-3">
-                                        <i className="bx bx-id-card me-1"></i> Account Information
-                                    </h6>
-                                    <div className="row">
-                                        <div className="col-md-6 mb-3">
-                                            <label className="form-label">Email *</label>
-                                            <Field 
-                                                type="email" 
-                                                name="email" 
-                                                className="form-control" 
-                                                placeholder="user@example.com" 
-                                            />
-                                            <ErrorMessage name="email" component="div" className="text-danger small" />
-                                        </div>
-                                        {!selectedObj && (
-                                            <>
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Username *</label>
-                                                    <Field 
-                                                        name="username" 
-                                                        className="form-control" 
-                                                        placeholder="username" 
-                                                    />
-                                                    <ErrorMessage name="username" component="div" className="text-danger small" />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">STAFF Number *</label>
-                                                    <Field 
-                                                        name="pf_number" 
-                                                        className="form-control" 
-                                                        placeholder="PF-001" 
-                                                    />
-                                                    <ErrorMessage name="pf_number" component="div" className="text-danger small" />
-                                                </div>
-                                            </>
-                                        )}
-                                        <div className="col-md-6 mb-3">
-                                            <label className="form-label">Status</label>
-                                            <Field as="select" name="status" className="form-select">
-                                                {statusOptions.map(opt => (
-                                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                ))}
-                                            </Field>
-                                            <ErrorMessage name="status" component="div" className="text-danger small" />
-                                        </div>
+            <Formik
+                key={selectedObj?.guid || 'new'}
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ values, setFieldValue, errors }) => (
+                    <>
+                        <h6 className="text-primary mb-3">
+                            <i className="bx bx-id-card me-1"></i> Account Information
+                        </h6>
+                        <div className="row">
+                            <div className="col-md-6 mb-3">
+                                <label className="form-label">Email *</label>
+                                <Field 
+                                    type="email" 
+                                    name="email" 
+                                    className="form-control" 
+                                    placeholder="user@example.com" 
+                                />
+                                <ErrorMessage name="email" component="div" className="text-danger small" />
+                            </div>
+                            {!selectedObj && (
+                                <>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Username *</label>
+                                        <Field 
+                                            name="username" 
+                                            className="form-control" 
+                                            placeholder="username" 
+                                        />
+                                        <ErrorMessage name="username" component="div" className="text-danger small" />
                                     </div>
-
-                                    <hr />
-                                    <h6 className="text-primary mb-3">
-                                        <i className="bx bx-user me-1"></i> Personal Information
-                                    </h6>
-                                    <div className="row">
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">First Name *</label>
-                                            <Field name="first_name" className="form-control" placeholder="John" />
-                                            <ErrorMessage name="first_name" component="div" className="text-danger small" />
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Middle Name</label>
-                                            <Field name="middle_name" className="form-control" placeholder="Doe" />
-                                            <ErrorMessage name="middle_name" component="div" className="text-danger small" />
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Last Name *</label>
-                                            <Field name="last_name" className="form-control" placeholder="Smith" />
-                                            <ErrorMessage name="last_name" component="div" className="text-danger small" />
-                                        </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">STAFF Number *</label>
+                                        <Field 
+                                            name="pf_number" 
+                                            className="form-control" 
+                                            placeholder="PF-001" 
+                                        />
+                                        <ErrorMessage name="pf_number" component="div" className="text-danger small" />
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Date of Birth</label>
-                                            <Field type="date" name="dob" className="form-control" />
-                                            <ErrorMessage name="dob" component="div" className="text-danger small" />
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Sex</label>
-                                            <Field as="select" name="sex" className="form-select">
-                                                <option value="">Select</option>
-                                                {sexOptions.map(opt => (
-                                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                ))}
-                                            </Field>
-                                            <ErrorMessage name="sex" component="div" className="text-danger small" />
-                                        </div>
-                                        <div className="col-md-4 mb-3">
-                                            <label className="form-label">Office Location</label>
-                                            <Field name="office_location" className="form-control" placeholder="Building A" />
-                                            <ErrorMessage name="office_location" component="div" className="text-danger small" />
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6 mb-3">
-                                            <label className="form-label">Phone Number</label>
-                                            <Field name="phone_number" className="form-control" placeholder="+255..." />
-                                            <ErrorMessage name="phone_number" component="div" className="text-danger small" />
-                                        </div>
-                                        <div className="col-md-6 mb-3">
-                                            <label className="form-label">Alternative Contact</label>
-                                            <Field name="alternative_contact" className="form-control" placeholder="+255..." />
-                                            <ErrorMessage name="alternative_contact" component="div" className="text-danger small" />
-                                        </div>
-                                    </div>
-
-                                    {!selectedObj && (
-                                        <>
-                                            <hr />
-                                            <h6 className="text-primary mb-3">
-                                                <i className="bx bx-lock me-1"></i> Password
-                                            </h6>
-                                            <div className="row">
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Password *</label>
-                                                    <Field 
-                                                        type="password" 
-                                                        name="password" 
-                                                        className="form-control" 
-                                                        placeholder="••••••••" 
-                                                    />
-                                                    <ErrorMessage name="password" component="div" className="text-danger small" />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <label className="form-label">Confirm Password *</label>
-                                                    <Field 
-                                                        type="password" 
-                                                        name="password_confirm" 
-                                                        className="form-control" 
-                                                        placeholder="••••••••" 
-                                                    />
-                                                    <ErrorMessage name="password_confirm" component="div" className="text-danger small" />
-                                                </div>
-                                            </div>
-
-                                            <hr />
-                                            <h6 className="text-primary mb-3">
-                                                <i className="bx bx-shield me-1"></i> Roles *
-                                            </h6>
-                                            <div className="row">
-                                                {roleOptions.map(role => (
-                                                    <div className="col-md-6 mb-2" key={role.value}>
-                                                        <div className="form-check">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="form-check-input"
-                                                                id={`role-${role.value}`}
-                                                                checked={values.roles.includes(role.value)}
-                                                                onChange={(e) => {
-                                                                    if (e.target.checked) {
-                                                                        setFieldValue('roles', [...values.roles, role.value]);
-                                                                    } else {
-                                                                        setFieldValue('roles', values.roles.filter(r => r !== role.value));
-                                                                    }
-                                                                }}
-                                                            />
-                                                            <label className="form-check-label" htmlFor={`role-${role.value}`}>
-                                                                {role.label}
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <ErrorMessage name="roles" component="div" className="text-danger small" />
-                                        </>
-                                    )}
-
-                                    <div className="modal-footer px-0 pb-0">
-                                        <button
-                                            type="button"
-                                            className="btn btn-secondary"
-                                            onClick={handleCloseModal}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="btn btn-primary"
-                                            disabled={isSubmitting}
-                                        >
-                                            {isSubmitting ? (
-                                                <>
-                                                    <i className="bx bx-loader-alt bx-spin me-1"></i> Saving...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <i className="bx bx-save me-1"></i> {selectedObj ? "Update" : "Create"}
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                </Form>
+                                </>
                             )}
-                        </Formik>
-                    </div>
-                </div>
-            </div>
-        </div>,
-        document.body
+                            <div className="col-md-6 mb-3">
+                                <label className="form-label">Status</label>
+                                <Field as="select" name="status" className="form-select">
+                                    {statusOptions.map(opt => (
+                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                    ))}
+                                </Field>
+                                <ErrorMessage name="status" component="div" className="text-danger small" />
+                            </div>
+                        </div>
+
+                        <hr />
+                        <h6 className="text-primary mb-3">
+                            <i className="bx bx-user me-1"></i> Personal Information
+                        </h6>
+                        <div className="row">
+                            <div className="col-md-4 mb-3">
+                                <label className="form-label">First Name *</label>
+                                <Field name="first_name" className="form-control" placeholder="John" />
+                                <ErrorMessage name="first_name" component="div" className="text-danger small" />
+                            </div>
+                            <div className="col-md-4 mb-3">
+                                <label className="form-label">Middle Name</label>
+                                <Field name="middle_name" className="form-control" placeholder="Doe" />
+                                <ErrorMessage name="middle_name" component="div" className="text-danger small" />
+                            </div>
+                            <div className="col-md-4 mb-3">
+                                <label className="form-label">Last Name *</label>
+                                <Field name="last_name" className="form-control" placeholder="Smith" />
+                                <ErrorMessage name="last_name" component="div" className="text-danger small" />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-4 mb-3">
+                                <label className="form-label">Date of Birth</label>
+                                <Field type="date" name="dob" className="form-control" />
+                                <ErrorMessage name="dob" component="div" className="text-danger small" />
+                            </div>
+                            <div className="col-md-4 mb-3">
+                                <label className="form-label">Sex</label>
+                                <Field as="select" name="sex" className="form-select">
+                                    <option value="">Select</option>
+                                    {sexOptions.map(opt => (
+                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                    ))}
+                                </Field>
+                                <ErrorMessage name="sex" component="div" className="text-danger small" />
+                            </div>
+                            <div className="col-md-4 mb-3">
+                                <label className="form-label">Office Location</label>
+                                <Field name="office_location" className="form-control" placeholder="Building A" />
+                                <ErrorMessage name="office_location" component="div" className="text-danger small" />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-6 mb-3">
+                                <label className="form-label">Phone Number</label>
+                                <Field name="phone_number" className="form-control" placeholder="+255..." />
+                                <ErrorMessage name="phone_number" component="div" className="text-danger small" />
+                            </div>
+                            <div className="col-md-6 mb-3">
+                                <label className="form-label">Alternative Contact</label>
+                                <Field name="alternative_contact" className="form-control" placeholder="+255..." />
+                                <ErrorMessage name="alternative_contact" component="div" className="text-danger small" />
+                            </div>
+                        </div>
+
+                        {!selectedObj && (
+                            <>
+                                <hr />
+                                <h6 className="text-primary mb-3">
+                                    <i className="bx bx-lock me-1"></i> Password
+                                </h6>
+                                <div className="row">
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Password *</label>
+                                        <Field 
+                                            type="password" 
+                                            name="password" 
+                                            className="form-control" 
+                                            placeholder="Min 8 characters" 
+                                        />
+                                        <ErrorMessage name="password" component="div" className="text-danger small" />
+                                    </div>
+                                    <div className="col-md-6 mb-3">
+                                        <label className="form-label">Confirm Password *</label>
+                                        <Field 
+                                            type="password" 
+                                            name="password_confirm" 
+                                            className="form-control" 
+                                            placeholder="Repeat password" 
+                                        />
+                                        <ErrorMessage name="password_confirm" component="div" className="text-danger small" />
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <h6 className="text-primary mb-3">
+                                    <i className="bx bx-shield me-1"></i> Roles *
+                                </h6>
+                                <div className="row">
+                                    {roleOptions.map(role => (
+                                        <div className="col-md-6 mb-2" key={role.value}>
+                                            <div className="form-check">
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-check-input"
+                                                    id={`role-${role.value}`}
+                                                    checked={values.roles.includes(role.value)}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setFieldValue('roles', [...values.roles, role.value]);
+                                                        } else {
+                                                            setFieldValue('roles', values.roles.filter(r => r !== role.value));
+                                                        }
+                                                    }}
+                                                />
+                                                <label className="form-check-label" htmlFor={`role-${role.value}`}>
+                                                    {role.label}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <ErrorMessage name="roles" component="div" className="text-danger small" />
+                            </>
+                        )}
+                    </>
+                )}
+            </Formik>
+        </GlobalModal>
     );
 };

@@ -184,6 +184,7 @@ export const WeightConfigListPage = () => {
 
             {showModal && (
                 <WeightConfigModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

@@ -346,6 +346,7 @@ export const UserListPage = () => {
 
             {showModal && (
                 <UserModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);
@@ -361,6 +362,7 @@ export const UserListPage = () => {
 
             {showPasswordModal && selectedObj && (
                 <PasswordChangeModal
+                    show={showPasswordModal}
                     user={selectedObj}
                     onSuccess={() => {
                         setSelectedObj(null);
@@ -375,6 +377,7 @@ export const UserListPage = () => {
 
             {showRoleModal && selectedObj && (
                 <RoleAssignmentModal
+                    show={showRoleModal}
                     user={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

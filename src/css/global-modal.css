@@ -1,0 +1,102 @@
+/* GlobalModal styles - Single source of truth */
+
+/* Modal display fix */
+.modal.fade.show {
+  display: flex !important;
+}
+
+/* Center modal dialog */
+.modal.fade.show .modal-dialog {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.modal.fade.show .modal-dialog.modal-dialog-centered {
+  margin: auto !important;
+}
+
+/* Modal content */
+.modal-content {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Modal sizes */
+.modal-fullscreen {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+}
+
+.modal-xxl {
+  max-width: 1400px;
+}
+
+.modal-fullscreen .modal-content {
+  height: 100%;
+  max-height: 100%;
+  border-radius: 0;
+}
+
+.modal-fullscreen .modal-body {
+  max-height: calc(100vh - 180px);
+}
+
+/* Form labels in modals */
+.modal-content .form-label,
+.modal-content label {
+  text-align: left !important;
+}
+
+.modal-content .form-check-label {
+  text-align: left !important;
+}
+
+/* FormWizard styles */
+.shapla-wizard-card {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.shapla-wizard-card .wizard-card-body {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Form controls in wizard */
+.form-control, .form-select {
+  height: 36px;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+}
+
+/* Hide wizard default buttons */
+.shapla-wizard-card .wizard-footer,
+.shapla-wizard-card .wizard-card-footer,
+.wizard-card-footer button,
+.wizard-footer button,
+.wizard-btn-back,
+.wizard-btn-next,
+.wizard-btn-finish,
+.wizard-button-back,
+.wizard-button-next,
+.wizard-button-finish,
+.wizard-steps .wizard-step .wizard-btn,
+.wizard-nav .wizard-btn,
+div.wizard button,
+.wizard button,
+[class*="wizard"] button,
+.wizard-footer,
+.wizard-card-footer,
+.wizard-nav-container {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}

@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 
 export const CourseLevelListPage = () => {
     const [selectedObj, setSelectedObj] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const [tableRefresh, setTableRefresh] = useState(0);
     const [tableData, setTableData] = useState([]);
     const user = useSelector((state) => state.userReducer?.data);
@@ -89,7 +90,7 @@ export const CourseLevelListPage = () => {
                     {
                         label: "Edit",
                         icon: "bx bx-edit",
-                        onClick: (row) => setSelectedObj(row),
+                        onClick: (row) => { setSelectedObj(row); setShowModal(true); },
                         condition: () => hasAccess(user, ["change_courselevel"]),
                         className: "btn-outline-primary text-primary",
                     },
@@ -111,9 +112,7 @@ export const CourseLevelListPage = () => {
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"
-                                    onClick={() => setSelectedObj(null)}
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#courseLevelModal"
+                                    onClick={() => { setSelectedObj(null); setShowModal(true); }}
                                     title="Add new Level"
                                 >
                                     <i className="bx bx-plus me-1"></i> Add Level
@@ -129,12 +128,14 @@ export const CourseLevelListPage = () => {
             />
 
             <CourseLevelModal
+                show={showModal}
                 selectedObj={selectedObj}
                 onSuccess={() => {
                     setTableRefresh(prev => prev + 1);
                     setSelectedObj(null);
+                    setShowModal(false);
                 }}
-                onClose={() => setSelectedObj(null)}
+                onClose={() => { setSelectedObj(null); setShowModal(false); }}
             />
         </>
     );

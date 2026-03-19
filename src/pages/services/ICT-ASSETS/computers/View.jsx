@@ -20,6 +20,7 @@ export const ComputerListPage = () => {
     const [selectedAssets, setSelectedAssets] = useState([]);
     const [showBulkActions, setShowBulkActions] = useState(false);
     const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [tableData, setTableData] = useState([]);
     const tableRef = useRef(null);
     const navigate = useNavigate();
@@ -565,9 +566,8 @@ export const ComputerListPage = () => {
                                         className="btn btn-sm btn-outline-primary border-0"
                                         onClick={() => {
                                             setSelectedObj(row);
+                                            setShowModal(true);
                                         }}
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#computerAssetModal"
                                         title="Edit Asset"
                                     >
                                         <i className="bx bx-edit"></i>
@@ -658,9 +658,10 @@ export const ComputerListPage = () => {
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"
-                                    onClick={() => setSelectedObj(null)}
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#computerAssetModal"
+                                    onClick={() => {
+                                        setSelectedObj(null);
+                                        setShowModal(true);
+                                    }}
                                     title="Add new computer asset"
                                 >
                                     <i className="bx bx-plus me-1"></i> Add Asset
@@ -726,7 +727,16 @@ export const ComputerListPage = () => {
                     }
                 ]}
             />
-            <ComputerAssetModal />
+            <ComputerAssetModal 
+                show={showModal}
+                onSuccess={() => {
+                    setTableRefresh(prev => prev + 1);
+                }}
+                onClose={() => {
+                    setSelectedObj(null);
+                    setShowModal(false);
+                }}
+            />
             <AssetImportModal />
         </AssetContext.Provider>
     );

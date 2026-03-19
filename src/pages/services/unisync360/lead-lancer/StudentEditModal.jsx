@@ -23,7 +23,7 @@ export const StudentEditModal = ({ show, onHide, student, onSuccess }) => {
                 status: student.student_details?.status || "",
             });
         }
-    }, [student, show]);
+    }, [student]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;

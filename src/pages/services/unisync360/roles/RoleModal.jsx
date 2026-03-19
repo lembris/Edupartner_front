@@ -1,40 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useState, useMemo } from "react";
+import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { createRole, updateRole } from "./RoleQueries";
 import showToast from "../../../../helpers/ToastHelper";
+import GlobalModal from "../../../../components/modal/GlobalModal";
 
-export const RoleModal = ({ selectedRole, onSuccess, onClose }) => {
-    const [initialValues, setInitialValues] = useState({
-        name: "",
-        description: "",
-        is_active: true,
-    });
+export const RoleModal = ({ show, selectedRole, onSuccess, onClose }) => {
+    const [loading, setLoading] = useState(false);
+
+    const initialValues = useMemo(() => ({
+        name: selectedRole?.name || "",
+        description: selectedRole?.description || "",
+        is_active: selectedRole?.is_active ?? true,
+    }), [selectedRole]);
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().required("Role name is required").min(2, "Role name must be at least 2 characters"),
         description: Yup.string(),
     });
 
-    useEffect(() => {
-        if (selectedRole) {
-            setInitialValues({
-                name: selectedRole.name || "",
-                description: selectedRole.description || "",
-                is_active: selectedRole.is_active !== false,
-            });
-        } else {
-            setInitialValues({
-                name: "",
-                description: "",
-                is_active: true,
-            });
-        }
-    }, [selectedRole]);
-
-    const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
+    const handleSubmit = async (values, { setErrors }) => {
         try {
-            setSubmitting(true);
+            setLoading(true);
 
             const payload = {
                 name: values.name,
@@ -50,8 +37,7 @@ export const RoleModal = ({ selectedRole, onSuccess, onClose }) => {
                 showToast("success", "Role created successfully");
             }
 
-            handleClose();
-            resetForm();
+            if (onClose) onClose();
             if (onSuccess) onSuccess();
         } catch (error) {
             console.error("Role submission error:", error);
@@ -62,127 +48,73 @@ export const RoleModal = ({ selectedRole, onSuccess, onClose }) => {
                 showToast("error", "Something went wrong while saving the role");
             }
         } finally {
-            setSubmitting(false);
+            setLoading(false);
         }
     };
 
-    const handleClose = () => {
-        if (onClose) onClose();
-    };
+    if (!show) return null;
 
     return (
-        <div
-            className="modal fade show d-block"
-            tabIndex="-1"
-            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-            aria-hidden="false"
+        <GlobalModal
+            show={show}
+            onClose={onClose}
+            title={<><i className="bx bx-shield me-2"></i>{selectedRole ? "Edit Role" : "Create New Role"}</>}
+            size="md"
+            onSubmit={handleSubmit}
+            submitText={selectedRole ? "Update Role" : "Create Role"}
+            loading={loading}
         >
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">
-                            <i className="bx bx-shield me-2"></i>
-                            {selectedRole ? "Edit Role" : "Create New Role"}
-                        </h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            onClick={handleClose}
-                        ></button>
-                    </div>
+            <Formik
+                key={selectedRole?.id || 'new'}
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ errors }) => (
+                    <>
+                        <div className="mb-3">
+                            <label htmlFor="name" className="form-label">
+                                Role Name <span className="text-danger">*</span>
+                            </label>
+                            <Field
+                                type="text"
+                                className={`form-control ${errors.name ? "is-invalid" : ""}`}
+                                id="name"
+                                name="name"
+                                placeholder="e.g., Administrator, Manager"
+                            />
+                            <ErrorMessage name="name" component="div" className="text-danger small" />
+                        </div>
 
-                    <Formik
-                        enableReinitialize
-                        initialValues={initialValues}
-                        validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
-                    >
-                        {({ isSubmitting, errors, touched, values }) => (
-                            <Form>
-                                <div className="modal-body">
-                                    <div className="mb-3">
-                                        <label htmlFor="name" className="form-label">
-                                            Role Name <span className="text-danger">*</span>
-                                        </label>
-                                        <Field
-                                            type="text"
-                                            className={`form-control ${
-                                                errors.name && touched.name ? "is-invalid" : ""
-                                            }`}
-                                            id="name"
-                                            name="name"
-                                            placeholder="e.g., Administrator, Manager"
-                                        />
-                                        <ErrorMessage name="name" component="div" className="invalid-feedback" />
-                                    </div>
+                        <div className="mb-3">
+                            <label htmlFor="description" className="form-label">
+                                Description
+                            </label>
+                            <Field
+                                as="textarea"
+                                className={`form-control ${errors.description ? "is-invalid" : ""}`}
+                                id="description"
+                                name="description"
+                                rows="3"
+                                placeholder="Role description..."
+                            />
+                            <ErrorMessage name="description" component="div" className="text-danger small" />
+                        </div>
 
-                                    <div className="mb-3">
-                                        <label htmlFor="description" className="form-label">
-                                            Description
-                                        </label>
-                                        <Field
-                                            as="textarea"
-                                            className={`form-control ${
-                                                errors.description && touched.description ? "is-invalid" : ""
-                                            }`}
-                                            id="description"
-                                            name="description"
-                                            rows="3"
-                                            placeholder="Role description..."
-                                        />
-                                        <ErrorMessage name="description" component="div" className="invalid-feedback" />
-                                    </div>
-
-                                    <div className="form-check form-switch mb-3">
-                                        <Field
-                                            type="checkbox"
-                                            className="form-check-input"
-                                            id="is_active"
-                                            name="is_active"
-                                        />
-                                        <label className="form-check-label" htmlFor="is_active">
-                                            Active Role
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-secondary"
-                                        data-bs-dismiss="modal"
-                                        onClick={handleClose}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary"
-                                        disabled={isSubmitting}
-                                    >
-                                        {isSubmitting ? (
-                                            <>
-                                                <span
-                                                    className="spinner-border spinner-border-sm me-1"
-                                                    role="status"
-                                                    aria-hidden="true"
-                                                ></span>
-                                                Saving...
-                                            </>
-                                        ) : selectedRole ? (
-                                            "Update Role"
-                                        ) : (
-                                            "Create Role"
-                                        )}
-                                    </button>
-                                </div>
-                            </Form>
-                        )}
-                    </Formik>
-                </div>
-            </div>
-        </div>
+                        <div className="form-check form-switch mb-3">
+                            <Field
+                                type="checkbox"
+                                className="form-check-input"
+                                id="is_active"
+                                name="is_active"
+                            />
+                            <label className="form-check-label" htmlFor="is_active">
+                                Active Role
+                            </label>
+                        </div>
+                    </>
+                )}
+            </Formik>
+        </GlobalModal>
     );
 };

@@ -237,6 +237,7 @@ export const PermissionListPage = () => {
 
             {showModal && (
                 <PermissionFormModal
+                    show={showModal}
                     selectedPermission={selectedPermission}
                     onSuccess={() => {
                         loadPermissions();

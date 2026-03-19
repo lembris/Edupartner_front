@@ -795,6 +795,7 @@ export const LeadLancerPortalDashboard = () => {
             {/* Student Registration Modal */}
             {showStudentModal && (
                 <StudentModal
+                    show={showStudentModal}
                     selectedObj={null}
                     onClose={() => setShowStudentModal(false)}
                     onSuccess={handleStudentRegistered}

@@ -908,6 +908,7 @@ export const StudentDetailsPage = () => {
 
             {showStudentModal && (
                 <StudentModal
+                    show={showStudentModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         fetchStudent();

@@ -904,6 +904,7 @@ export const UnisyncDashboardPage = () => {
             {/* Student Modal */}
             {showStudentModal && (
                 <StudentModal
+                    show={showStudentModal}
                     selectedObj={null}
                     onSuccess={handleStudentCreated}
                     onClose={() => setShowStudentModal(false)}

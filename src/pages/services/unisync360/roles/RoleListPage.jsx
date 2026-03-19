@@ -158,6 +158,7 @@ export const RoleListPage = () => {
 
             {showModal && (
                 <RoleModal
+                    show={showModal}
                     selectedRole={selectedRole}
                     onSuccess={() => {
                         setTableRefresh((prev) => prev + 1);
@@ -173,6 +174,7 @@ export const RoleListPage = () => {
 
             {showPermissionModal && selectedRole && (
                 <PermissionModal
+                    show={showPermissionModal}
                     selectedRole={selectedRole}
                     onSuccess={() => {
                         setTableRefresh((prev) => prev + 1);

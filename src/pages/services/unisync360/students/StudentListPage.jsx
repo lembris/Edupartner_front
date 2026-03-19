@@ -6,7 +6,7 @@ import PaginatedTable from "../../../../components/ui-templates/PaginatedTable";
 import { formatDate } from "../../../../helpers/DateFormater";
 import Swal from "sweetalert2";
 import { StudentModal } from "./StudentModal";
-import { EntityBulkImportModal } from "../../../../components/EntityBulkImportModal";
+import { BulkImportModal } from "./BulkImportModal";
 import { deleteStudent } from "./Queries";
 import { hasAccess } from "../../../../hooks/AccessHandler";
 import { useSelector } from "react-redux";
@@ -210,6 +210,7 @@ export const StudentListPage = () => {
 
             {showModal && (
                 <StudentModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);
@@ -224,8 +225,8 @@ export const StudentListPage = () => {
             )}
 
             {showBulkImportModal && (
-                <EntityBulkImportModal
-                    importType="student"
+                <BulkImportModal
+                    show={showBulkImportModal}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);
                         setShowBulkImportModal(false);

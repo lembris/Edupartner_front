@@ -17,6 +17,7 @@ import { CourseModal } from "./CourseModal";
 export const CourseDetailsPage = () => {
     const [courseData, setCourseData] = useState(null);
     const [selectedObj, setSelectedObj] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const [tableRefresh, setTableRefresh] = useState(0);
     const navigate = useNavigate();
     const user = useSelector((state) => state.userReducer?.data);
@@ -179,9 +180,7 @@ export const CourseDetailsPage = () => {
                                 {hasAccess(user, [["change_course"]]) && (
                                     <button
                                         className="btn btn-primary btn-sm me-2"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#courseModal"
-                                        onClick={() => setSelectedObj(courseData)}
+                                        onClick={() => { setSelectedObj(courseData); setShowModal(true); }}
                                     >
                                         <i className="bx bx-edit-alt me-1"></i> Edit
                                     </button>
@@ -229,12 +228,14 @@ export const CourseDetailsPage = () => {
             </div>
 
             <CourseModal
+                show={showModal}
                 selectedObj={selectedObj}
                 onSuccess={() => {
                     setTableRefresh(prev => prev + 1);
                     setSelectedObj(null);
+                    setShowModal(false);
                 }}
-                onClose={() => setSelectedObj(null)}
+                onClose={() => { setSelectedObj(null); setShowModal(false); }}
             />
         </>
     );

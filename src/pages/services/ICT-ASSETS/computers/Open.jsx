@@ -35,6 +35,7 @@ export const ComputerViewPage = () => {
     const [tableRefresh, setTableRefresh] = useState(0);
     const [activeTab, setActiveTab] = useState("overview");
     const [assetUid, setAssetUid] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     const user = useSelector((state) => state.userReducer?.data);
 
@@ -1526,7 +1527,15 @@ export const ComputerViewPage = () => {
                 </div>
             </div>
 
-            <ComputerAssetModal loadOnlyModal={true} />
+            <ComputerAssetModal 
+                show={showModal}
+                onSuccess={() => {
+                    setTableRefresh(prev => prev + 1);
+                }}
+                onClose={() => {
+                    setShowModal(false);
+                }}
+            />
             <MaintenanceRecordModal
                 assetUid={assetUid}
                 assetTag={assetData?.asset_tag}

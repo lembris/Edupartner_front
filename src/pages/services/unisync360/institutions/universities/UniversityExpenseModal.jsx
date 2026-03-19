@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { createUniversityExpense, updateUniversityExpense, getExpenseCategories, createExpenseCategory } from "./Queries";
 import showToast from "../../../../../helpers/ToastHelper";
+import GlobalModal from "../../../../../components/modal/GlobalModal";
 
-export const UniversityExpenseModal = ({ selectedObj, universityUid, universityId, onSuccess, onClose }) => {
+export const UniversityExpenseModal = ({ show, selectedObj, universityUid, universityId, onSuccess, onClose }) => {
     const [categories, setCategories] = useState([]);
     const [loadingCategories, setLoadingCategories] = useState(false);
     const [showNewCategoryForm, setShowNewCategoryForm] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
     const [creatingCategory, setCreatingCategory] = useState(false);
 
-    const [initialValues, setInitialValues] = useState({
-        university: universityUid || universityId || "",
-        category: "",
-        description: "",
-        amount: "",
-        currency: "USD",
-        due_date: "",
-        paid_date: "",
-        is_paid: false,
-        payment_reference: "",
+    const initialValues = useMemo(() => ({
+        university: selectedObj?.university || universityUid || universityId || "",
+        category: selectedObj?.category || "",
+        description: selectedObj?.description || "",
+        amount: selectedObj?.amount || "",
+        currency: selectedObj?.currency || "USD",
+        due_date: selectedObj?.due_date || "",
+        paid_date: selectedObj?.paid_date || "",
+        is_paid: selectedObj?.is_paid || false,
+        payment_reference: selectedObj?.payment_reference || "",
         receipt: null,
-    });
+    }), [selectedObj, universityUid, universityId]);
 
     const currencies = [
         { value: "USD", label: "USD - US Dollar" },
@@ -43,36 +44,6 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, universityI
     useEffect(() => {
         fetchCategories();
     }, []);
-
-    useEffect(() => {
-        if (selectedObj) {
-            setInitialValues({
-                university: selectedObj.university || universityUid || universityId || "",
-                category: selectedObj.category || "",
-                description: selectedObj.description || "",
-                amount: selectedObj.amount || "",
-                currency: selectedObj.currency || "USD",
-                due_date: selectedObj.due_date || "",
-                paid_date: selectedObj.paid_date || "",
-                is_paid: selectedObj.is_paid || false,
-                payment_reference: selectedObj.payment_reference || "",
-                receipt: null,
-            });
-        } else {
-            setInitialValues({
-                university: universityUid || universityId || "",
-                category: "",
-                description: "",
-                amount: "",
-                currency: "USD",
-                due_date: "",
-                paid_date: "",
-                is_paid: false,
-                payment_reference: "",
-                receipt: null,
-            });
-        }
-    }, [selectedObj, universityUid, universityId]);
 
     const fetchCategories = async () => {
         setLoadingCategories(true);
@@ -121,7 +92,11 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, universityI
         paid_date: Yup.date().nullable(),
     });
 
-    const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
+    const handleClose = () => {
+        if (onClose) onClose();
+    };
+
+    const handleSubmitForm = async (values, { setSubmitting, resetForm, setErrors }) => {
         try {
             setSubmitting(true);
 
@@ -168,54 +143,28 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, universityI
         }
     };
 
-    const handleClose = () => {
-        if (onClose) onClose();
-        const modalElement = document.getElementById("universityExpenseModal");
-        if (window.bootstrap) {
-            const modalInstance = window.bootstrap.Modal.getInstance(modalElement);
-            if (modalInstance) modalInstance.hide();
-        }
-    };
-
     return (
-        <div
-            className="modal fade"
-            id="universityExpenseModal"
-            tabIndex="-1"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            aria-hidden="true"
+        <GlobalModal
+            show={show}
+            onClose={handleClose}
+            title={<><i className="bx bx-wallet me-2"></i>{selectedObj ? "Update Expense" : "Add New Expense"}</>}
+            size="lg"
+            showFooter={false}
         >
-            <div className="modal-dialog modal-lg" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">
-                            <i className="bx bx-wallet me-2"></i>
-                            {selectedObj ? "Update Expense" : "Add New Expense"}
-                        </h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            onClick={handleClose}
-                        ></button>
-                    </div>
-
-                    <Formik
-                        enableReinitialize
-                        initialValues={initialValues}
-                        validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
-                    >
-                        {({
-                            isSubmitting,
-                            values,
-                            setFieldValue,
-                            errors,
-                            touched
-                        }) => (
-                            <Form>
+            <Formik
+                enableReinitialize
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmitForm}
+            >
+                {({
+                    isSubmitting,
+                    values,
+                    setFieldValue,
+                    errors,
+                    touched
+                }) => (
+                    <Form onSubmit={handleSubmitForm}>
                                 <div className="modal-body">
                                     <div className="row">
                                         <div className="col-md-6 mb-3">
@@ -394,7 +343,6 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, universityI
                                     <button
                                         type="button"
                                         className="btn btn-outline-secondary"
-                                        data-bs-dismiss="modal"
                                         onClick={handleClose}
                                     >
                                         Cancel
@@ -414,11 +362,9 @@ export const UniversityExpenseModal = ({ selectedObj, universityUid, universityI
                                         )}
                                     </button>
                                 </div>
-                            </Form>
-                        )}
-                    </Formik>
-                </div>
-            </div>
-        </div>
+                    </Form>
+                )}
+            </Formik>
+        </GlobalModal>
     );
 };

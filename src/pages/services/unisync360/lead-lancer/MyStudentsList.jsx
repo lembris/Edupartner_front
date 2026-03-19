@@ -485,6 +485,7 @@ export const MyStudentsList = () => {
             {/* Student Modal - Add/Edit */}
             {showModal && (
                 <StudentModal
+                    show={showModal}
                     selectedObj={selectedStudent}
                     isLeadLancer={isLeadLancer}
                     onClose={() => {

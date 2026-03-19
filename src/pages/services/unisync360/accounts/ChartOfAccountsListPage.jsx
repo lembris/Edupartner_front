@@ -169,6 +169,7 @@ export const ChartOfAccountsListPage = () => {
 
             {showModal && (
                 <ChartOfAccountsModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);

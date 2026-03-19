@@ -266,6 +266,7 @@ const AIInsightsPage = () => {
             {/* Student Modal */}
             {showStudentModal && (
                 <StudentModal
+                    show={showStudentModal}
                     selectedObj={selectedObj}
                     onClose={() => {
                         setShowStudentModal(false);

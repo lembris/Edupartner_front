@@ -216,6 +216,7 @@ export const InvoicesListPage = () => {
 
             {showModal && (
                 <InvoiceModal
+                    show={showModal}
                     selectedObj={selectedObj}
                     onSuccess={() => {
                         setTableRefresh(prev => prev + 1);
