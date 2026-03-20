@@ -216,8 +216,8 @@ const PaginatedTable = ({
           </div>
         </div>
 
-        <div className=" text-nowrap animate__animated animate__fadeInUp animate__faster">
-          <div className="table-responsive text-nowrap">
+        <div className="animate__animated animate__fadeInUp animate__faster">
+          <div className="table-responsive">
             <table className="table table-hover table-align-middle mb-0 table-bordered">
               <thead style={{ backgroundColor: "#f1f1f1" }}>
                 <tr>

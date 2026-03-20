@@ -88,16 +88,21 @@ export const UserListPage = () => {
 
     const getRoleBadges = (roles) => {
         if (!roles || roles.length === 0) {
-            return <span className="badge bg-label-secondary">No Role</span>;
+            return <span className="badge bg-secondary">No Role</span>;
         }
-        return roles.map((role, index) => (
-            <span
-                key={index}
-                className={`badge bg-label-${ROLE_COLORS[role.name] || 'secondary'} me-1`}
-            >
-                {role.display_name || ROLE_DISPLAY_NAMES[role.name] || role.name}
-            </span>
-        ));
+        return (
+            <div className="d-flex flex-wrap gap-1">
+                {roles.map((role, index) => (
+                    <span
+                        key={index}
+                        className={`badge bg-${ROLE_COLORS[role.name] || 'secondary'}`}
+                        style={{ whiteSpace: "nowrap" }}
+                    >
+                        {role.display_name || ROLE_DISPLAY_NAMES[role.name] || role.name}
+                    </span>
+                ))}
+            </div>
+        );
     };
 
     return (
@@ -195,7 +200,12 @@ export const UserListPage = () => {
                                         {row.full_name || `${row.first_name} ${row.last_name}`}
                                     </span>
                                     <small className="d-block text-muted fs-11">{row.email}</small>
-                                    <small className="d-block text-muted fs-11">PF: {row.pf_number}</small>
+                                    <small className="d-block text-muted fs-11">STAFF: {row.pf_number}</small>
+                                    {row.username && (
+                                        <small className="d-block text-muted fs-11">
+                                            <i className="bx bx-user-check me-1"></i>@{row.username}
+                                        </small>
+                                    )}
                                 </div>
                             </div>
                         ),
@@ -203,27 +213,54 @@ export const UserListPage = () => {
                     {
                         key: "roles",
                         label: "Roles",
+                        style: { minWidth: "250px" },
                         render: (row) => getRoleBadges(row.roles)
                     },
                     {
                         key: "contact",
                         label: "Contact",
+                        style: { minWidth: "180px" },
                         render: (row) => (
                             <div className="d-flex flex-column">
-                                <span>{row.phone_number || "-"}</span>
+                                {row.email && (
+                                    <small className="mb-1">
+                                        <i className="bx bx-envelope me-1"></i>
+                                        <a href={`mailto:${row.email}`} className="text-decoration-none">
+                                            {row.email}
+                                        </a>
+                                    </small>
+                                )}
+                                {row.phone_number ? (
+                                    <small>
+                                        <i className="bx bx-phone me-1"></i>
+                                        <a href={`tel:${row.phone_number}`} className="text-decoration-none">
+                                            {row.phone_number}
+                                        </a>
+                                    </small>
+                                ) : (
+                                    <small className="text-muted">
+                                        <i className="bx bx-phone me-1"></i>
+                                        No phone
+                                    </small>
+                                )}
                             </div>
                         )
                     },
                     {
                         key: "status",
                         label: "Status",
+                        style: { minWidth: "140px" },
                         render: (row) => (
-                            <div className="d-flex flex-column align-items-start">
-                                <span className={`badge bg-label-${row.is_active ? "success" : "danger"}`}>
-                                    {row.is_active ? "Active" : "Inactive"}
-                                </span>
-                                <small className="text-muted mt-1">{row.status || "ACTIVE"}</small>
-                            </div>
+                            <button
+                                type="button"
+                                className={`badge border-0 bg-${row.is_active ? "success" : "danger"}`}
+                                onClick={() => handleToggleActivation(row)}
+                                style={{ cursor: "pointer" }}
+                                title={`Click to ${row.is_active ? "deactivate" : "activate"}`}
+                            >
+                                <i className={`bx ${row.is_active ? "bx-check-circle me-1" : "bx-x-circle me-1"}`}></i>
+                                {row.is_active ? "Active" : "Inactive"}
+                            </button>
                         )
                     },
                     {
@@ -235,85 +272,60 @@ export const UserListPage = () => {
                             </span>
                         )
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "180px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                {hasAccess(user, [["change_user"]]) && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-primary border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowModal(true);
-                                        }}
-                                        title="Edit User"
-                                    >
-                                        <i className="bx bx-edit"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["assign_role"]]) && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-info border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowRoleModal(true);
-                                        }}
-                                        title="Manage Roles"
-                                    >
-                                        <i className="bx bx-shield"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["change_password"]]) && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-warning border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowPasswordModal(true);
-                                        }}
-                                        title="Change Password"
-                                    >
-                                        <i className="bx bx-key"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["change_user"]]) && (
-                                    <button
-                                        type="button"
-                                        className={`btn btn-sm border-0 ${row.is_active ? 'btn-outline-secondary' : 'btn-outline-success'}`}
-                                        onClick={() => handleToggleActivation(row)}
-                                        title={row.is_active ? "Deactivate" : "Activate"}
-                                    >
-                                        <i className={`bx ${row.is_active ? 'bx-pause' : 'bx-play'}`}></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["delete_user"]]) && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete User"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "Edit",
+                        icon: "bx bx-edit",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowModal(true);
+                        },
+                        condition: () => hasAccess(user, ["change_user"]),
+                        className: "btn-outline-primary text-primary",
+                    },
+                    {
+                        label: "Roles",
+                        icon: "bx bx-shield",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowRoleModal(true);
+                        },
+                        condition: () => hasAccess(user, ["assign_role"]),
+                        className: "btn-outline-info text-info",
+                    },
+                    {
+                        label: "Password",
+                        icon: "bx bx-key",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowPasswordModal(true);
+                        },
+                        condition: () => hasAccess(user, ["change_password"]),
+                        className: "btn-outline-warning text-warning",
+                    },
+                    {
+                        label: row => row.is_active ? "Deactivate" : "Activate",
+                        icon: row => row.is_active ? "bx bx-pause" : "bx bx-play",
+                        onClick: (row) => handleToggleActivation(row),
+                        condition: () => hasAccess(user, ["change_user"]),
+                        className: row => `btn-outline-${row.is_active ? 'secondary' : 'success'} ${row.is_active ? 'text-secondary' : 'text-success'}`,
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, ["delete_user"]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 buttons={[
                     {
                         label: "Add User",
                         render: () => (
-                            hasAccess(user, [["add_user"]]) && (
+                            hasAccess(user, ["add_user"]) && (
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"

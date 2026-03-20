@@ -1,0 +1,475 @@
+/* External Form Page Styles - Reusable layout for all external forms */
+
+/* Main Layout */
+.external-form-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background: #fff;
+}
+
+.external-form-page .layout-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.external-form-page .content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+
+.external-form-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Container */
+.external-form-container {
+  padding: 3rem 2rem;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 900px;
+}
+
+.external-form-container.full-width {
+  max-width: 100%;
+  padding: 3rem 2rem;
+}
+
+/* Top Bar */
+.external-top-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.form-top-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.form-logo {
+  height: 45px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.form-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Form Header */
+.form-header {
+  padding-bottom: 2rem;
+}
+
+.form-header .display-5 {
+  color: #1a1a1a;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.form-header .badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.15);
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.form-section .card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.form-section .card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.form-section .card-header {
+  background: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+  padding: 1.25rem;
+}
+
+.form-section .card-title {
+  color: #1a1a1a;
+  margin-bottom: 0.25rem;
+}
+
+.form-section .card-text {
+  font-size: 0.875rem;
+}
+
+.step-badge {
+  display: inline-block;
+}
+
+.step-badge .badge {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Service Cards */
+.service-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 12px;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.service-card.border-primary {
+  border-color: #0d6efd !important;
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.02) 0%, rgba(13, 110, 253, 0.05) 100%);
+  animation: selectPulse 0.5s ease;
+}
+
+@keyframes selectPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.service-card .form-check-input {
+  cursor: pointer;
+}
+
+.service-card .form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Terms Section */
+.terms-card {
+  background: #f8f9fa;
+  transition: all 0.2s ease;
+}
+
+.terms-card:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.terms-content {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.terms-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.terms-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.terms-content::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.terms-content::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Form Actions */
+.form-actions {
+  margin-top: 2rem;
+  padding-top: 2rem;
+}
+
+.form-actions .btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.form-actions .btn-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+  border: none;
+}
+
+.form-actions .btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+.form-actions .btn-outline-secondary:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.form-actions .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Form Inputs */
+.form-label {
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.invalid-feedback {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  color: #dc3545;
+  display: block;
+}
+
+/* Form Check (Checkbox/Radio) */
+.form-check {
+  padding-left: 0;
+  margin-bottom: 1rem;
+}
+
+.form-check-input {
+  margin-top: 0.3rem;
+  cursor: pointer;
+  accent-color: #0d6efd;
+}
+
+.form-check-label {
+  cursor: pointer;
+  user-select: none;
+  margin-left: 0.5rem;
+}
+
+/* Alerts */
+.alert {
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.alert-danger {
+  background-color: #fff5f5;
+  border-color: #f5c2c7;
+}
+
+.alert-info {
+  background-color: #cfe2ff;
+  border-color: #b6d4fe;
+}
+
+/* Progress Bar */
+.progress {
+  height: 6px;
+  border-radius: 10px;
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #0d6efd 0%, #3d8bfd 100%);
+  transition: width 0.5s ease;
+}
+
+/* Badge Styles */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  padding: 0.5rem 1rem;
+}
+
+/* Utility Classes */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-dark {
+  color: #1a1a1a;
+}
+
+/* Footer */
+.external-form-page .footer {
+  margin-top: auto;
+  width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .external-form-container {
+    padding: 2rem 1rem;
+  }
+
+  .form-header .display-5 {
+    font-size: 2rem;
+  }
+
+  .form-header .fs-5 {
+    font-size: 1rem;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .form-actions .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .form-top-bar .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .form-logo {
+    height: 35px;
+  }
+
+  .d-flex.justify-content-center.flex-wrap.gap-4 {
+    gap: 1.5rem !important;
+  }
+
+  .service-card .card-body {
+    padding: 1rem;
+  }
+
+  .terms-content {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .external-form-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .form-top-bar .d-none.d-md-flex {
+    display: none !important;
+  }
+
+  .form-header .badge {
+    font-size: 0.875rem;
+  }
+
+  .form-section .card-header {
+    padding: 1rem;
+  }
+
+  .form-section .card-title {
+    font-size: 1rem;
+  }
+
+  .form-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+
+  .form-actions .btn {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .row.g-3 > [class*='col-'] {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Override public layout container styles if needed */
+.external-form-page .container-fluid {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+}
+
+/* Remove sidebar-related styles */
+.external-form-page .layout-sidenav,
+.external-form-page .layout-sidenav-toggle,
+.external-form-page #layout-menu {
+  display: none !important;
+}
+
+.external-form-page .layout-navbar {
+  display: none !important;
+}
+
+/* Scrollbar styling */
+.external-form-page ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.external-form-page ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.external-form-page ::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.external-form-page ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

@@ -33,6 +33,10 @@ export const createStudent = async (data) => {
         return response.data;
     } catch (error) {
         console.error("Error creating student:", error);
+        // Return error data if available (for validation errors, etc.)
+        if (error.response?.data) {
+            return error.response.data;
+        }
         throw error;
     }
 };
@@ -44,6 +48,10 @@ export const updateStudent = async (uid, data) => {
         return response.data;
     } catch (error) {
         console.error("Error updating student:", error);
+        // Return error data if available (for validation errors, etc.)
+        if (error.response?.data) {
+            return error.response.data;
+        }
         throw error;
     }
 };

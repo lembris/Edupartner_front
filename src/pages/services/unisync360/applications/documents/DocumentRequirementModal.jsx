@@ -119,14 +119,14 @@ export const DocumentRequirementModal = ({ selectedObj, onSuccess, onClose }) =>
                     >
                         {({ isSubmitting, values, setFieldValue }) => (
                             <Form>
-                                <div className="modal-header bg-primary">
-                                    <h5 className="modal-title text-white">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">
                                         <i className="bx bx-file me-2"></i>
                                         {selectedObj?.uid ? "Edit Document Requirement" : "New Document Requirement"}
                                     </h5>
                                     <button
                                         type="button"
-                                        className="btn-close btn-close-white"
+                                        className="btn-close"
                                         onClick={handleClose}
                                         aria-label="Close"
                                     ></button>

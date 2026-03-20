@@ -1,62 +1,46 @@
 import { Route, Routes } from "react-router-dom";
+import React from "react";
+import RouteLoadingSpinner from "../components/loaders/RouteLoadingSpinner";
 
+// Public auth routes - loaded immediately
 import { authenticationRoutes } from "./microservices/auth/authentication.jsx";
-import { accountRoutes } from "./microservices/auth/account.jsx";
-import { settingsRoutes } from "./microservices/e_approval/settings.jsx";
-import { usersRoutes } from "./microservices/e_approval/users.jsx";
-import { eApprovalRoutes } from "./microservices/e_approval/operations.jsx";
-import { ictAssetsRoutes } from "./microservices/ict_assets/ict-assets.jsx";
-import { unisync360Routes } from "./microservices/unisync360/unisync360.jsx";
-import { businessIntelligenceRoutes } from "./microservices/business_intelligence/business-intelligence.jsx";
 
+// Core pages - loaded immediately
 import { ErrorPage } from "../pages/misc/ErrorPage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { Services } from "../pages/Services";
 
 const AppRoutes = () => {
+  const [unisync360Routes, setUnisync360Routes] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    import("./microservices/unisync360/unisync360.jsx").then((module) => {
+      setUnisync360Routes(module.default);
+      setLoading(false);
+    });
+  }, []);
+
   return (
     <Routes>
-      {/* Public Routes */}
+      {/* Public Authentication Routes - Loaded Immediately */}
       {authenticationRoutes.map((route) => (
         <Route key={route.path} path={route.path} element={route.element} />
       ))}
 
-      {/* Core Routes */}
+      {/* Core Routes - Loaded Immediately */}
       <Route path="/e-approval" element={<DashboardPage />} />
       <Route path="/" element={<Services />} />
+
+      {/* UniSync360 Routes - Lazy Loaded (Main Microservice) */}
+      {!loading && unisync360Routes.map((route) => (
+        <Route key={route.path} path={route.path} element={route.element} />
+      ))}
+      
+      {loading && <Route path="/unisync360/*" element={<RouteLoadingSpinner />} />}
+
+      {/* Catch-all 404 route */}
       <Route path="*" element={<ErrorPage />} />
-
-      {/* Account Routes */}
-      {accountRoutes.map((route) => (
-        <Route key={route.path} path={route.path} element={route.element} />
-      ))}
-
-      {/* Module Routes */}
-      {settingsRoutes.map((route) => (
-        <Route key={route.path} path={route.path} element={route.element} />
-      ))}
-
-      {usersRoutes.map((route) => (
-        <Route key={route.path} path={route.path} element={route.element} />
-      ))}
-
-      {eApprovalRoutes.map((route) => (
-        <Route key={route.path} path={route.path} element={route.element} />
-      ))}
-
-      {ictAssetsRoutes.map((route) => (
-        <Route key={route.path} path={route.path} element={route.element} />
-      ))}
-
-      {unisync360Routes.map((route) => (
-        <Route key={route.path} path={route.path} element={route.element} />
-      ))}
-
-      {businessIntelligenceRoutes.map((route) => (
-        <Route key={route.path} path={route.path} element={route.element} />
-      ))}
-
-      {/* Add future modules here */}
     </Routes>
   );
 };

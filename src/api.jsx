@@ -54,21 +54,52 @@ api.interceptors.response.use(
             error.config.headers.Authorization = `Bearer ${newAccessToken}`;
             return api.request(error.config);
           } else {
-            window.location.href = "/auth/login"; // Redirect to login page if login fails
+            // Determine redirect URL based on user_type from localStorage
+            let redirectUrl = "/auth/login";
+            const userType = localStorage.getItem("user_type");
+            
+            if (userType === "lead_lancer") {
+              redirectUrl = "/unisync360/lead-lancer-login";
+            } else if (userType === "external_counselor") {
+              redirectUrl = "/unisync360/external-counselor-login";
+            }
+            
+            window.location.href = redirectUrl; // Redirect to appropriate login page
           }
         }
       } catch (e) {
         showLoginDialog();
-        window.location.href = "/auth/login";
+        
+        // Determine redirect URL based on user_type from localStorage
+        let redirectUrl = "/auth/login";
+        const userType = localStorage.getItem("user_type");
+        
+        if (userType === "lead_lancer") {
+          redirectUrl = "/unisync360/lead-lancer-login";
+        } else if (userType === "external_counselor") {
+          redirectUrl = "/unisync360/external-counselor-login";
+        }
+        
+        window.location.href = redirectUrl;
       }
     }
     if (
       (error.response && error.status === 403) ||
       error.response.data?.status === 8006
     ) {
+      // Determine redirect URL based on user_type from localStorage
+      let redirectUrl = "/";
+      const userType = localStorage.getItem("user_type");
+      
+      if (userType === "lead_lancer") {
+        redirectUrl = "/unisync360/lead-lancer";
+      } else if (userType === "external_counselor") {
+        redirectUrl = "/unisync360/external-counselor";
+      }
+
       Swal.fire({
         title: "Access Denied!",
-        text: "You don’t have permission to  proceed with the Action",
+        text: "You don't have permission to  proceed with the Action",
         icon: "warning",
         allowOutsideClick: false, // User can't click outside to close
         allowEscapeKey: false, // User can't press ESC to close
@@ -81,7 +112,7 @@ api.interceptors.response.use(
       }).then((result) => {
         // Redirect when the user clicks the button
         if (result.isConfirmed) {
-          window.location.href = "/"; // Change to your dashboard URL
+          window.location.href = redirectUrl;
         }
       });
     }

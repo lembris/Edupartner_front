@@ -163,54 +163,39 @@ export const InvoicesListPage = () => {
                             </span>
                         ),
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "120px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                <button
-                                    className="btn btn-sm btn-outline-secondary border-0"
-                                    onClick={() => navigate(`/unisync360/accounts/invoices/${row.uid}`)}
-                                    title="View Details"
-                                >
-                                    <i className="bx bx-show"></i>
-                                </button>
-                                {hasAccess(user, [["change_invoice"]]) && row.status === 'draft' && (
-                                    <button
-                                        aria-label="Edit"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-primary border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowModal(true);
-                                        }}
-                                        title="Edit Invoice"
-                                    >
-                                        <i className="bx bx-edit"></i>
-                                    </button>
-                                )}
-                                {hasAccess(user, [["delete_invoice"]]) && row.status === 'draft' && (
-                                    <button
-                                        aria-label="Delete"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete Invoice"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "View",
+                        icon: "bx bx-show",
+                        onClick: (row) => navigate(`/unisync360/accounts/invoices/${row.uid}`),
+                        className: "btn-outline-secondary",
+                    },
+                    {
+                        label: "Edit",
+                        icon: "bx bx-edit",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowModal(true);
+                        },
+                        condition: (row) => hasAccess(user, ["change_invoice"]) && row.status === 'draft',
+                        className: "btn-outline-primary text-primary",
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: (row) => hasAccess(user, ["delete_invoice"]) && row.status === 'draft',
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 buttons={[
                     {
                         label: "Add Invoice",
                         render: () => (
-                            hasAccess(user, [["add_invoice"]]) && (
+                            hasAccess(user, ["add_invoice"]) && (
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"

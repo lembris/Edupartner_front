@@ -64,6 +64,7 @@ export const StudentSourceListPage = () => {
             <PaginatedTable
                 fetchPath="/unisync360-students/sources/"
                 title="Student Sources"
+                isFullPath={false}
                 columns={[
                     {
                         key: "name",
@@ -89,48 +90,33 @@ export const StudentSourceListPage = () => {
                             <span className="text-muted">{row.description || "-"}</span>
                         )
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "120px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                {hasAccess(user, [["change_studentsource"]]) && (
-                                    <button
-                                        aria-label="Edit"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-primary border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowModal(true);
-                                        }}
-                                        title="Edit Source"
-                                    >
-                                        <i className="bx bx-edit"></i>
-                                    </button>
-                                )}
-
-                                {hasAccess(user, [["delete_studentsource"]]) && (
-                                    <button
-                                        aria-label="Delete"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete Source"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "Edit",
+                        icon: "bx bx-edit",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowModal(true);
+                        },
+                        condition: () => hasAccess(user, ["change_studentsource"]),
+                        className: "btn-outline-primary text-primary",
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, ["delete_studentsource"]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 buttons={[
                     {
                         label: "Add Source",
                         render: () => (
-                            hasAccess(user, [["add_studentsource"]]) && (
+                            hasAccess(user, ["add_studentsource"]) && (
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm"

@@ -1,0 +1,17 @@
+/* Centralized modal stacking - single source of truth */
+:root {
+  --modal-base: 1500;
+  --modal-backdrop: calc(var(--modal-base) - 1);
+}
+
+/* Core modal stacking */
+.modal {
+  z-index: var(--modal-base) !important;
+}
+.modal-backdrop {
+  z-index: var(--modal-backdrop) !important;
+}
+.modal-content,
+.modal-dialog {
+  z-index: calc(var(--modal-base) + 1) !important;
+}

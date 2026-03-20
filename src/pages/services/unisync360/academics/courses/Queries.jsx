@@ -41,6 +41,10 @@ export const createCourse = async (data) => {
         return response.data;
     } catch (error) {
         console.error("Error creating course:", error);
+        // Return error data if available (for validation errors, etc.)
+        if (error.response?.data) {
+            return error.response.data;
+        }
         throw error;
     }
 };
@@ -52,6 +56,10 @@ export const updateCourse = async (uid, data) => {
         return response.data;
     } catch (error) {
         console.error("Error updating course:", error);
+        // Return error data if available (for validation errors, etc.)
+        if (error.response?.data) {
+            return error.response.data;
+        }
         throw error;
     }
 };

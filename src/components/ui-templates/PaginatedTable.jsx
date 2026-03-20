@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
 import ReactLoading from "react-loading";
-import ReactPaginate from "react-paginate";
 import { fetchData } from "../../utils/GlobalQueries";
 import showToast from "../../helpers/ToastHelper";
 import Select from "react-select";
@@ -18,8 +17,12 @@ const PaginatedTable = ({
   filterSelected = ["ALL"],
   filterGroups = [],
   isFullPath = false,
+  additionalFilters = {},
+  fixedActions = false,
+  actions = [],
+  user = null,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
   const [rowRecords, setRowRecords] = useState([]);
@@ -27,6 +30,7 @@ const PaginatedTable = ({
   const [error, setError] = useState(false);
   const pageSizeData = [10, 25, 50, 100];
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const searchDebounceRef = useRef(null);
   const [selectedFilters, setSelectedFilters] = useState(filterSelected);
   const [selectedFilterGroups, setSelectedFilterGroups] = useState(() =>
@@ -36,18 +40,70 @@ const PaginatedTable = ({
     }, {})
   );
   
-  // Track if component is mounted
   const isMounted = useRef(true);
   const lastFetchParams = useRef("");
+  const doFetchRef = useRef(null);
+  const abortControllerRef = useRef(null);
+<<<<<<< Updated upstream
+  
+  const totalPages = Math.ceil((totalCount || 0) / (pageSize || 1));
+  
+  const getPageNumbers = (current, total) => {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    
+    const pages = [];
+    const minVisible = 2;
+    const maxVisible = total - 1;
+    
+    pages.push(1);
+    
+    if (current > minVisible + 2) {
+      pages.push('...');
+    }
+    
+    const start = Math.max(minVisible, current - minVisible);
+    const end = Math.min(maxVisible, current + minVisible);
+    
+    for (let i = start; i <= end; i++) {
+      if (!pages.includes(i)) pages.push(i);
+    }
+    
+    if (current < total - 3) {
+      pages.push('...');
+    }
+    
+    if (!pages.includes(total)) {
+      pages.push(total);
+    }
+    
+    return pages;
+=======
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
+>>>>>>> Stashed changes
   };
 
   const doFetch = useCallback(async (page, size, search, selFilters, selFilterGroups) => {
     const paramsKey = JSON.stringify({ page, size, search, selFilters, selFilterGroups });
     if (paramsKey === lastFetchParams.current) return;
     lastFetchParams.current = paramsKey;
+
+<<<<<<< Updated upstream
+=======
+    // Cancel previous request if one is in progress
+>>>>>>> Stashed changes
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+<<<<<<< Updated upstream
+=======
+    // Create new AbortController for this request
+>>>>>>> Stashed changes
+    abortControllerRef.current = new AbortController();
 
     setLoading(true);
     setError(null);
@@ -69,20 +125,45 @@ const PaginatedTable = ({
           search: search,
           filters: selFilters.join(","),
           ...formattedFilterGroups,
+          ...additionalFilters,
         },
+        signal: abortControllerRef.current.signal,
       });
 
       if (!isMounted.current) return;
 
       if (result.status === 200 || result.status === 8000 || result.status === "success") {
         setRowRecords(result.data || []);
-        if (result.pagination) {
-          setTotalCount(result.pagination.total || 0);
+        setError(false);
+<<<<<<< Updated upstream
+        const total = result.pagination?.total ?? (result.data ? result.data.length : 0);
+        setTotalCount(total);
+        
+=======
+        // Always set total count - handle empty results properly
+        const total = result.pagination?.total ?? (result.data ? result.data.length : 0);
+        setTotalCount(total);
+        
+        // Only show warning if search was used and no results found
+>>>>>>> Stashed changes
+        if (debouncedSearchQuery && (!result.data || result.data.length === 0)) {
+          showToast("No Records Found", "info", "Search completed");
         }
       } else {
-        showToast("No Records Found", "warning", "Fetch Completed");
+        setRowRecords([]);
+        setTotalCount(0);
+        setError(true);
+        showToast("Failed to fetch records", "warning", "Fetch completed");
       }
     } catch (err) {
+<<<<<<< Updated upstream
+=======
+      // Ignore abort errors - they're expected when canceling requests
+>>>>>>> Stashed changes
+      if (err.name === 'AbortError') {
+        return;
+      }
+      
       if (!isMounted.current) return;
       console.error("Error fetching data:", err);
       setError(true);
@@ -90,37 +171,77 @@ const PaginatedTable = ({
     } finally {
       if (isMounted.current) setLoading(false);
     }
-  }, [fetchPath, isFullPath]);
+  }, [fetchPath, isFullPath, additionalFilters, debouncedSearchQuery]);
 
-  // Single effect for fetching (pagination, filters, page size changes)
   useEffect(() => {
-    doFetch(currentPage, pageSize, searchQuery, selectedFilters, selectedFilterGroups);
-  }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, searchQuery]);
+    doFetchRef.current = doFetch;
+  }, [doFetch]);
 
-  // Handle isRefresh
+  useEffect(() => {
+    doFetch(currentPage, pageSize, debouncedSearchQuery, selectedFilters, selectedFilterGroups);
+  }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, debouncedSearchQuery]);
+
+  useEffect(() => {
+<<<<<<< Updated upstream
+=======
+    // Clear any existing timeout
+>>>>>>> Stashed changes
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+    
+<<<<<<< Updated upstream
+    searchDebounceRef.current = setTimeout(() => {
+      if (isMounted.current) {
+        lastFetchParams.current = "";
+        setCurrentPage(1);
+        setDebouncedSearchQuery(searchQuery);
+      }
+    }, 400);
+    
+=======
+    // Set new timeout to update debouncedSearchQuery after user stops typing
+    searchDebounceRef.current = setTimeout(() => {
+      if (isMounted.current) {
+        lastFetchParams.current = ""; // Reset to force fetch with new search
+        setCurrentPage(1); // Reset to page 1 when search changes
+        setDebouncedSearchQuery(searchQuery);
+      }
+    }, 400); // 400ms debounce delay - prevents excessive API calls
+    
+    // Cleanup: clear timeout on unmount or before next effect runs
+>>>>>>> Stashed changes
+    return () => {
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+      }
+    };
+<<<<<<< Updated upstream
+  }, [searchQuery]);
+=======
+  }, [searchQuery]); // Only depend on raw searchQuery - NOT debouncedSearchQuery
+>>>>>>> Stashed changes
+
   useEffect(() => {
     if (isRefresh > 0) {
       lastFetchParams.current = "";
-      doFetch(currentPage, pageSize, searchQuery, selectedFilters, selectedFilterGroups);
+      doFetch(currentPage, pageSize, debouncedSearchQuery, selectedFilters, selectedFilterGroups);
     }
   }, [isRefresh]);
 
-  // Debounce search
   useEffect(() => {
-    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
-    searchDebounceRef.current = setTimeout(() => {
-      doFetch(1, pageSize, searchQuery, selectedFilters, selectedFilterGroups);
-      setCurrentPage(1);
-    }, 400);
-    return () => clearTimeout(searchDebounceRef.current);
-  }, [searchQuery]);
-
-  // Cleanup
-  useEffect(() => {
-    return () => { isMounted.current = false; };
+    return () => { 
+      isMounted.current = false;
+<<<<<<< Updated upstream
+=======
+      // Cancel any pending requests on unmount
+>>>>>>> Stashed changes
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, []);
 
-  // Handle group filter change
   const handleGroupFilterChange = (group, selected) => {
     const values = selected ? selected.map((opt) => opt.value) : [];
     const newGroups = { ...selectedFilterGroups, [group]: values };
@@ -130,7 +251,6 @@ const PaginatedTable = ({
     doFetch(1, pageSize, searchQuery, selectedFilters, newGroups);
   };
 
-  // Handle Group filter reset
   const resetAllFilters = () => {
     const cleared = {};
     filterGroups.forEach((g) => (cleared[g.group] = []));
@@ -139,12 +259,22 @@ const PaginatedTable = ({
     doFetch(1, pageSize, searchQuery, selectedFilters, cleared);
   };
 
+  const getCellContent = (col, row, rowIndex, page, size) => {
+    if (col.render) {
+      const content = col.render(row, rowIndex, page, size);
+      if (col.key === "SN") {
+        return page * size - size + rowIndex + 1;
+      }
+      return content !== undefined && content !== null ? content : "N/A";
+    }
+    return row[col.key] !== undefined && row[col.key] !== null ? row[col.key] : "N/A";
+  };
 
   return (
     <div className="card">
       <div className="d-flex justify-content-between align-items-center card-header mb-1">
         <h5 className="mb-0">{title || "Presentation Table"}</h5>
-        <div key="action_button_div" className=" d-flex align-items-center">
+        <div key="action_button_div" className="d-flex align-items-center">
           {buttons &&
             buttons.length > 0 &&
             buttons.map((button, index) =>
@@ -155,9 +285,7 @@ const PaginatedTable = ({
               ) : (
                 <button
                   key={"action_button_" + index}
-                  className={`btn btn-sm ${
-                    button.className || "btn-primary"
-                  } me-2`}
+                  className={`btn btn-sm ${button.className || "btn-primary"} me-2`}
                   onClick={button.onClick}
                 >
                   {button.label}
@@ -167,27 +295,20 @@ const PaginatedTable = ({
         </div>
       </div>
       <div className="card-body">
-        <div className="row d-flex justify-content-between align-items-center mb-2 ">
-         
-          {/* Multiple Filters */}
+        <div className="row d-flex justify-content-between align-items-center mb-2">
           {filterGroups.length > 0 && (
             <div className="row g-2 mb-2">
               {filterGroups.map((group) => (
                 <div key={group.group} className="col-auto">
                   <div className="input-group">
-                    <span className="input-group-text text-info">
-                      {group.label}
-                    </span>
-
+                    <span className="input-group-text text-info">{group.label}</span>
                     <Select
                       isMulti
                       options={group.options}
                       value={group.options.filter((opt) =>
                         selectedFilterGroups[group.group]?.includes(opt.value)
                       )}
-                      onChange={(selected) =>
-                        handleGroupFilterChange(group.group, selected)
-                      }
+                      onChange={(selected) => handleGroupFilterChange(group.group, selected)}
                       placeholder={group.placeholder || `Select ${group.label}`}
                       classNamePrefix="react-select"
                       styles={{
@@ -205,68 +326,57 @@ const PaginatedTable = ({
                   </div>
                 </div>
               ))}
-              {/*Reset All Button */}
               <div className="col-auto d-flex align-items-center">
-                  <button
-                    className="btn btn-outline-info me-2"
-                    onClick={resetAllFilters}
-                    title="Reset All Filters"
-                  >
-                    <i className="tf-icons bx bx-refresh"></i> Reset All
-                  </button>
-                </div>
+                <button
+                  className="btn btn-outline-info me-2"
+                  onClick={resetAllFilters}
+                  title="Reset All Filters"
+                >
+                  <i className="tf-icons bx bx-refresh"></i> Reset All
+                </button>
+              </div>
             </div>
-            )}
+          )}
             
-            <div className="d-flex align-items-center col-md-8 col-sm-6 mt-2">
-                <Select
-                  options={pageSizeData.map((size) => ({
-                  value: size,
-                  label: `${size}`,
-                  }))}
-                  value={{ value: pageSize, label: `${pageSize}` }}
-                  onChange={(selected) => {
-                    setPageSize(Number(selected.value));
-                    setCurrentPage(1);
-                  }}
-                className="me-2"
-                classNamePrefix="react-select"
-                styles={{
-                  control: (base) => ({
-                    ...base,
-                    minHeight: "32px",
-                    width: "95px",
-                  }),
-                  menuPortal: (base) => ({
-                    ...base,
-                    zIndex: 99999,
-                  }),
-                }}
-                menuPortalTarget={document.body}
+          <div className="d-flex align-items-center col-md-8 col-sm-6 mt-2">
+            <Select
+              options={pageSizeData.map((size) => ({ value: size, label: `${size}` }))}
+              value={{ value: pageSize, label: `${pageSize}` }}
+              onChange={(selected) => {
+                setPageSize(Number(selected.value));
+                setCurrentPage(1);
+              }}
+              className="me-2"
+              classNamePrefix="react-select"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  minHeight: "32px",
+                  width: "95px",
+                }),
+                menuPortal: (base) => ({
+                  ...base,
+                  zIndex: 99999,
+                }),
+              }}
+              menuPortalTarget={document.body}
             />
 
             {filters.length > 0 && (
-              <div className="input-group " style={{ minWidth: "250px" }}>
+              <div className="input-group" style={{ minWidth: "250px" }}>
                 <span className="input-group-text text-info">
                   <i className="tf-icons bx bx-filter-alt"></i>
                 </span>
                 <Select
                   isMulti
                   options={filters}
-                  value={filters.filter((f) =>
-                    selectedFilters?.includes(f.value)
-                  )}
+                  value={filters.filter((f) => selectedFilters?.includes(f.value))}
                   onChange={(selected) => {
-                    let values = selected
-                      ? selected.map((opt) => opt.value)
-                      : [];
-
+                    let values = selected ? selected.map((opt) => opt.value) : [];
                     if (values.includes("ALL")) {
-                      // If ALL is selected, clear all others and keep only ALL
                       values = ["ALL"];
                       selected = filters.filter((f) => f.value === "ALL");
                     } else {
-                      // Remove ALL if it was previously selected
                       values = values.filter((v) => v !== "ALL");
                     }
                     setSelectedFilters(values);
@@ -288,7 +398,7 @@ const PaginatedTable = ({
             )}           
           </div>
 
-          <div className=" col-md-4 col-sm-6  animate__animated animate__fadeInRight animate__fast">
+          <div className="col-md-4 col-sm-6 animate__animated animate__fadeInRight animate__fast">
             <form className="d-flex">
               <div className="input-group">
                 <span className="input-group-text">
@@ -299,17 +409,54 @@ const PaginatedTable = ({
                   className="form-control"
                   placeholder="Search..."
                   value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                  }}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </form>
           </div>
         </div>
 
-        <div className=" text-nowrap animate__animated animate__fadeInUp animate__faster">
-          <div className="table-responsive text-nowrap">
+<<<<<<< Updated upstream
+        <div className="table-wrapper" style={{ overflowX: 'auto', overflowY: 'visible', position: 'relative' }}>
+          <table className="table table-hover table-bordered mb-0" style={{ tableLayout: 'auto', minWidth: '100%' }}>
+            <thead style={{ backgroundColor: "#f1f1f1", position: 'sticky', top: 0, zIndex: 11 }}>
+              <tr>
+                {columns.map((col, idx) => (
+                  <th
+                    key={col.key || col.label || idx}
+                    className={col.className || ""}
+                    style={{ 
+                      ...col.style, 
+                      padding: '0.75rem',
+                      backgroundColor: '#f1f1f1',
+                      position: 'relative',
+                      zIndex: 9
+                    }}
+                  >
+                    {col.label}
+                  </th>
+                ))}
+                {actions && actions.length > 0 && (
+                  <th 
+                    className="text-center" 
+                    style={{ 
+                      width: `${Math.max(actions.length * 45, 120)}px`, 
+                      minWidth: `${Math.max(actions.length * 45, 120)}px`,
+                      padding: '0.75rem', 
+                      backgroundColor: '#f1f1f1',
+                      ...(fixedActions ? {
+                        position: 'sticky',
+                        right: 0,
+                        zIndex: 10,
+                        borderLeft: '1px solid #dee2e6'
+                      } : {})
+                    }}
+                  >
+                    Actions
+                  </th>
+=======
+        <div className="animate__animated animate__fadeInUp animate__faster">
+          <div className="table-responsive">
             <table className="table table-hover table-align-middle mb-0 table-bordered">
               <thead style={{ backgroundColor: "#f1f1f1" }}>
                 <tr>
@@ -357,16 +504,22 @@ const PaginatedTable = ({
                     </td>
                   </tr>
                 ) : rowRecords.length === 0 ? (
-                  <tr>
-                    <td colSpan="100%">
-                      <div className="alert alert-info" role="alert">
-                        <div className="alert-body text-center">
-                          <p className="mb-0">No Records Found</p>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
+                   <tr>
+                     <td colSpan="100%">
+                       <div className="alert alert-info" role="alert">
+                         <div className="alert-body text-center py-4">
+                           <i className="bx bx-search-alt" style={{ fontSize: '2rem', color: '#17a2b8' }}></i>
+                           <p className="mb-1 mt-2 fw-semibold">No Records Found</p>
+                           <small className="text-muted">
+                             {debouncedSearchQuery || selectedFilters?.length > 1 
+                               ? "Try adjusting your search or filters" 
+                               : "No data available. Create a new record to get started."}
+                           </small>
+                         </div>
+                       </div>
+                     </td>
+                   </tr>
+                 ) : (
                   rowRecords.map((row, rowIndex) => (
                     <tr
                       key={row.id || rowIndex}
@@ -393,44 +546,204 @@ const PaginatedTable = ({
                       })}
                     </tr>
                   ))
+>>>>>>> Stashed changes
                 )}
-              </tbody>
-            </table>
-          </div>
+              </tr>
+            </thead>
 
-          <div className="d-flex justify-content-between align-items-center mt-3">
-            <div className="text-muted">
-              {totalCount > 0
-                ? `Showing ${
-                    currentPage * pageSize - pageSize + 1
-                  } to ${Math.min(
-                    currentPage * pageSize,
-                    totalCount
-                  )} of ${totalCount} records`
-                : "No records to show"}
-            </div>
-            {/* Your content here */}
-            <div></div>
-            <ReactPaginate
-              previousLabel={<i className="tf-icons bx bx-chevrons-left"></i>}
-              nextLabel={<i className="tf-icons bx bx-chevrons-right"></i>}
-              breakLabel={"..."}
-              pageCount={Math.ceil((totalCount || 0) / (pageSize || 1))}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={handlePageClick}
-              containerClassName={"pagination justify-content-center"}
-              pageClassName={"page-item"}
-              pageLinkClassName={"page-link"}
-              previousClassName={"page-item"}
-              previousLinkClassName={"page-link"}
-              nextClassName={"page-item"}
-              nextLinkClassName={"page-link"}
-              breakClassName={"page-item"}
-              breakLinkClassName={"page-link"}
-              activeClassName={"active"}
-            />
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="100%">
+                    <div className="text-center p-4">
+                      <ReactLoading type={"cylon"} color={"#696cff"} height={"30px"} width={"50px"} />
+                      <p className="mt-2 text-muted">Fetching Records...</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan="100%">
+                    <div className="alert alert-danger m-3">
+                      <div className="text-center">
+                        <p className="mb-0">Unable to fetch Records. Please try again later.</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ) : rowRecords.length === 0 ? (
+                <tr>
+                  <td colSpan="100%">
+                    <div className="text-center py-4">
+                      <i className="bx bx-search-alt fs-1 text-info"></i>
+                      <p className="mt-2 fw-semibold">No Records Found</p>
+                      <small className="text-muted">
+                        {debouncedSearchQuery || (selectedFilters?.length > 1)
+                          ? "Try adjusting your search or filters"
+                          : "No data available. Create a new record to get started."}
+                      </small>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                rowRecords.map((row, rowIndex) => (
+                  <tr key={row.id || rowIndex} onClick={() => onSelect && onSelect(row)}>
+                    {columns.map((col) => (
+                      <td key={col.key} className={col.className} style={{ 
+                        ...col.style, 
+                        padding: '0.75rem',
+                        backgroundColor: 'white',
+                        position: 'relative',
+                        zIndex: 1
+                      }}>
+                        {getCellContent(col, row, rowIndex, currentPage, pageSize)}
+                      </td>
+                    ))}
+                    {actions && actions.length > 0 && (
+                      <td 
+                        className="text-center" 
+                        style={{ 
+                          width: `${Math.max(actions.length * 45, 120)}px`,
+                          minWidth: `${Math.max(actions.length * 45, 120)}px`,
+                          padding: '0.5rem',
+                          ...(fixedActions ? {
+                            position: 'sticky',
+                            right: 0,
+                            zIndex: 5,
+                            backgroundColor: 'white',
+                            borderLeft: '1px solid #dee2e6'
+                          } : {})
+                        }}
+                      >
+                        <div className="btn-group">
+                          {actions.map((action, actionIdx) => {
+                            const showAction = action.condition ? action.condition(row, user) : true;
+                            if (!showAction) return null;
+                            return (
+                              <button
+                                key={actionIdx}
+                                className={`btn btn-sm border-0 ${action.className || 'btn-outline-secondary'}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  action.onClick && action.onClick(row);
+                                }}
+                                title={action.label}
+                              >
+                                <i className={`bx ${action.icon}`}></i>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+<div className="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+          <div className="text-muted small">
+            {totalCount > 0
+              ? `Showing ${currentPage * pageSize - pageSize + 1} to ${Math.min(currentPage * pageSize, totalCount)} of ${totalCount} records`
+              : "No records to show"}
           </div>
+          
+          {totalPages > 1 && (
+            <nav aria-label="Table navigation">
+              <style>{`
+                .unisync-pagination .page-link {
+                  min-width: 36px;
+                  height: 36px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  padding: 0 6px;
+                  border-radius: 6px;
+                }
+                @media (max-width: 576px) {
+                  .unisync-pagination .page-btn-extended {
+                    display: none !important;
+                  }
+                  .unisync-pagination .page-link {
+                    min-width: 34px;
+                    height: 34px;
+                  }
+                  .unisync-pagination .mobile-info {
+                    display: flex !important;
+                  }
+                }
+                .unisync-pagination .mobile-info {
+                  display: none;
+                  align-items: center;
+                  gap: 8px;
+                }
+              `}</style>
+              <ul className="pagination pagination-sm mb-0 unisync-pagination">
+                <li className={`page-item page-btn-extended ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button 
+                    className="page-link" 
+                    onClick={() => setCurrentPage(1)}
+                    disabled={currentPage === 1}
+                    title="First page"
+                  >
+                    <i className="tf-icons bx bx-chevrons-left"></i>
+                  </button>
+                </li>
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button 
+                    className="page-link" 
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    title="Previous page"
+                  >
+                    <i className="tf-icons bx bx-chevron-left"></i>
+                  </button>
+                </li>
+                
+                <div className="mobile-info text-muted small">
+                  <span>Page {currentPage} of {totalPages}</span>
+                </div>
+                
+                {getPageNumbers(currentPage, totalPages).map((page, idx) => (
+                  <li 
+                    key={idx} 
+                    className={`page-item ${page === currentPage ? 'active' : ''} ${page === '...' ? 'disabled' : ''}`}
+                  >
+                    <button 
+                      className="page-link"
+                      onClick={() => page !== '...' && setCurrentPage(page)}
+                      disabled={page === '...'}
+                    >
+                      {page}
+                    </button>
+                  </li>
+                ))}
+                
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button 
+                    className="page-link" 
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                    title="Next page"
+                  >
+                    <i className="tf-icons bx bx-chevron-right"></i>
+                  </button>
+                </li>
+                <li className={`page-item page-btn-extended ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button 
+                    className="page-link" 
+                    onClick={() => setCurrentPage(totalPages)}
+                    disabled={currentPage === totalPages}
+                    title="Last page"
+                  >
+                    <i className="tf-icons bx bx-chevrons-right"></i>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </div>
@@ -481,6 +794,18 @@ PaginatedTable.propTypes = {
       placeholder: PropTypes.string,
     })
   ),
+  additionalFilters: PropTypes.object,
+  fixedActions: PropTypes.bool,
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      icon: PropTypes.string,
+      onClick: PropTypes.func.isRequired,
+      condition: PropTypes.func,
+      className: PropTypes.string,
+    })
+  ),
+  user: PropTypes.object,
 };
 
 export default PaginatedTable;

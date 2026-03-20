@@ -13,17 +13,14 @@
                         "icon": "bx bx-home",
                         "available": true,
                         "link": "/unisync360/dashboard",
-                        "permission": [
-                            "view_dashboard"
-                        ],
+                        "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -31,17 +28,14 @@
                         "icon": "bx bxs-school",
                         "available": true,
                         "link": "/unisync360/institutions/universities",
-                        "permission": [
-                            ""
-                        ],
+                        "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -51,13 +45,12 @@
                         "link": "/unisync360/institutions/schools",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     }
                 ]
@@ -76,13 +69,12 @@
                         "link": "/unisync360/academics/course-categories",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -92,13 +84,12 @@
                         "link": "/unisync360/academics/course-levels",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -108,13 +99,12 @@
                         "link": "/unisync360/academics/courses",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -124,13 +114,12 @@
                         "link": "/unisync360/academics/university-courses",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     }
                 ]
@@ -149,13 +138,12 @@
                         "link": "/unisync360/students-sources",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -165,13 +153,12 @@
                         "link": "/unisync360/students-statuses",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -181,13 +168,51 @@
                         "link": "/unisync360/students",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Services",
+                "icon": "bx bxs-user",
+                "available": true,
+                "link": "",
+                "header": "Services",
+                "submenu": [
+                    {
+                        "text": "Consent services",
+                        "icon": "bx bx-cog",
+                        "available": true,
+                        "link": "/unisync360/consent-service",
+                        "permission": [],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
+                        ]
+                    },
+                    {
+                        "text": "Consent Enquiry",
+                        "icon": "bx bx-check-circle",
+                        "available": true,
+                        "link": "/unisync360/consent-enquiry",
+                        "permission": [],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     }
                 ]
@@ -206,13 +231,12 @@
                         "link": "/unisync360/applications/course-allocations",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -222,13 +246,12 @@
                         "link": "/unisync360/applications/document-requirements",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     }
                 ]
@@ -247,13 +270,10 @@
                         "link": "/unisync360/recommendations/engines",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor"
                         ]
                     },
                     {
@@ -263,13 +283,12 @@
                         "link": "/unisync360/recommendations/recommended-courses",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant",
+                            "unisync360_counselor",
+                            "unisync360_external_counselor",
+                            "unisync360_lead_lancer"
                         ]
                     },
                     {
@@ -279,13 +298,9 @@
                         "link": "/unisync360/recommendations/weight-config",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant"
                         ]
                     },
                     {
@@ -295,13 +310,9 @@
                         "link": "/unisync360/recommendations/generate-recommendations",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_facilitation_officer",
+                            "unisync360_accountant"
                         ]
                     }
                 ]
@@ -320,13 +331,8 @@
                         "link": "/unisync360/accounts/chart-of-accounts",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
                         ]
                     },
                     {
@@ -336,13 +342,8 @@
                         "link": "/unisync360/accounts/transactions",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
                         ]
                     },
                     {
@@ -352,13 +353,8 @@
                         "link": "/unisync360/accounts/payments",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
                         ]
                     },
                     {
@@ -368,13 +364,8 @@
                         "link": "/unisync360/accounts/invoices",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
                         ]
                     },
                     {
@@ -384,17 +375,105 @@
                         "link": "/unisync360/accounts/reports",
                         "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager",
-                            "ICT_Technician",
-                            "ICT_Auditor",
-                            "Department_User",
-                            "ReadOnly_User"
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
                         ]
                     }
                 ]
             },
+            {
+                "text": "Commissions",
+                "icon": "bx bx-dollar-circle",
+                "available": true,
+                "link": "",
+                "header": "COMMISSIONS & EARNINGS",
+                "submenu": [
+                    {
+                        "text": "Commission Records",
+                        "icon": "bx bx-receipt",
+                        "available": true,
+                        "link": "/unisync360/commissions",
+                        "permission": [
+                            "view_commission"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant",
+                            "unisync360_lead_lancer"
+                        ]
+                    },
+                    {
+                        "text": "Agent Commissions",
+                        "icon": "bx bx-wallet",
+                        "available": true,
+                        "link": "/unisync360/agent-commissions",
+                        "permission": [
+                            "view_agentcommission"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
+                        ]
+                    },
+                    {
+                        "text": "Commission Packages",
+                        "icon": "bx bx-box",
+                        "available": true,
+                        "link": "/unisync360/commission-packages",
+                        "permission": [
+                            "view_commissionpackage"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
+                        ]
+                    },
+                    {
+                        "text": "Commission Payments",
+                        "icon": "bx bx-credit-card",
+                        "available": true,
+                        "link": "/unisync360/commission-payments",
+                        "permission": [
+                            "view_commissionpayment"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
+                        ]
+                    },
+                    {
+                        "text": "Commission Targets",
+                        "icon": "bx bx-target-lock",
+                        "available": true,
+                        "link": "/unisync360/commission-targets",
+                        "permission": [
+                            "view_commissiontarget"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant",
+                            "unisync360_lead_lancer"
+                        ]
+                    },
+                    {
+                        "text": "Commission Predictions",
+                        "icon": "bx bx-trending-up",
+                        "available": true,
+                        "link": "/unisync360/commission-predictions",
+                        "permission": [
+                            "view_commissionprediction"
+                        ],
+                        "role": [
+                            "unisync360_super_admin",
+                            "unisync360_accountant"
+                        ]
+                    }
+                ]
+            },
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             {
                 "text": "Settings",
                 "icon": "bx bx-cog",
@@ -407,13 +486,9 @@
                         "icon": "bx bx-user-circle",
                         "available": true,
                         "link": "/unisync360/users",
-                        "permission": [
-                            "view_user"
-                        ],
+                        "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager"
+                            "unisync360_super_admin"
                         ]
                     },
                     {
@@ -421,14 +496,33 @@
                         "icon": "bx bx-shield",
                         "available": true,
                         "link": "/unisync360/roles",
-                        "permission": [
-                            "view_role"
-                        ],
+                        "permission": [],
                         "role": [
-                            "ICT_Superuser",
-                            "ICT_Admin",
-                            "ICT_Manager"
+                            "unisync360_super_admin"
                         ]
+                    },
+                    {
+                        "text": "Permissions",
+                        "icon": "bx bx-lock",
+                        "available": true,
+                        "link": "/unisync360/permissions",
+                        "permission": [],
+                        "role": [
+                            "unisync360_super_admin"
+                        ]
+<<<<<<< Updated upstream
+                    },
+                    {
+                        "text": "Site Settings",
+                        "icon": "bx bx-globe",
+                        "available": true,
+                        "link": "/unisync360/site",
+                        "permission": [],
+                        "role": [
+                            "unisync360_super_admin"
+                        ]
+=======
+>>>>>>> Stashed changes
                     }
                 ]
             }

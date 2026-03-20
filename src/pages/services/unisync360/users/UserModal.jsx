@@ -63,7 +63,7 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().email("Invalid email").required("Email is required"),
-        pf_number: selectedObj ? Yup.string() : Yup.string().required("PF Number is required"),
+        pf_number: selectedObj ? Yup.string() : Yup.string().required("STAFF Number is required"),
         username: selectedObj ? Yup.string() : Yup.string().required("Username is required"),
         first_name: Yup.string().required("First name is required"),
         middle_name: Yup.string().nullable(),
@@ -74,12 +74,12 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
         alternative_contact: Yup.string().nullable(),
         office_location: Yup.string().nullable(),
         status: Yup.string().required("Status is required"),
-        password: selectedObj 
-            ? Yup.string() 
-            : Yup.string().required("Password is required").min(8, "Password must be at least 8 characters"),
-        password_confirm: selectedObj 
-            ? Yup.string() 
-            : Yup.string().required("Confirm password").oneOf([Yup.ref('password')], 'Passwords must match'),
+        password: !selectedObj
+            ? Yup.string().required("Password is required").min(8, "Password must be at least 8 characters")
+            : Yup.string(),
+        password_confirm: !selectedObj
+            ? Yup.string().required("Confirm password is required").oneOf([Yup.ref('password')], 'Passwords must match')
+            : Yup.string(),
         roles: selectedObj ? Yup.array() : Yup.array().min(1, "At least one role is required"),
     });
 
@@ -102,23 +102,43 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
 
     const handleSubmit = async (values, { setSubmitting, resetForm, setErrors }) => {
         try {
-            const submitData = { ...values };
+            setSubmitting(true);
             
-            if (selectedObj) {
-                delete submitData.password;
-                delete submitData.password_confirm;
-                delete submitData.pf_number;
-                delete submitData.username;
+            const submitData = {};
+
+            // Always include these fields
+            submitData.email = values.email;
+            submitData.first_name = values.first_name;
+            submitData.last_name = values.last_name;
+            submitData.status = values.status;
+
+            // Include these if provided/changed
+            if (values.middle_name) submitData.middle_name = values.middle_name;
+            if (values.dob) submitData.dob = values.dob;
+            if (values.sex) submitData.sex = values.sex;
+            if (values.phone_number) submitData.phone_number = values.phone_number;
+            if (values.alternative_contact) submitData.alternative_contact = values.alternative_contact;
+            if (values.office_location) submitData.office_location = values.office_location;
+
+            // For create (new user)
+            if (!selectedObj) {
+                submitData.username = values.username;
+                submitData.pf_number = values.pf_number;
+                submitData.password = values.password;
+<<<<<<< Updated upstream
+                submitData.password_confirm = values.password_confirm;
+=======
+>>>>>>> Stashed changes
+                submitData.roles = values.roles;
+            } else {
+                // For update (edit user) - only include fields that might have changed
+                // Don't send password, username, pf_number (read-only)
+                // But allow roles to be sent if needed
+                if (values.roles && values.roles.length > 0) {
+                    submitData.roles = values.roles;
+                }
             }
 
-            if (!submitData.middle_name) delete submitData.middle_name;
-            if (!submitData.dob) delete submitData.dob;
-            if (!submitData.sex) delete submitData.sex;
-            if (!submitData.phone_number) delete submitData.phone_number;
-            if (!submitData.alternative_contact) delete submitData.alternative_contact;
-            if (!submitData.office_location) delete submitData.office_location;
-
-            setSubmitting(true);
             let result;
             if (selectedObj?.guid) {
                 result = await updateUser(selectedObj.guid, submitData);
@@ -164,14 +184,14 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
         >
             <div className="modal-dialog modal-lg">
                 <div className="modal-content">
-                    <div className="modal-header bg-primary text-white">
+                    <div className="modal-header">
                         <h5 className="modal-title" id="userModalLabel">
                             <i className="bx bx-user-plus me-2"></i>
                             {selectedObj ? "Update User" : "Create New User"}
                         </h5>
                         <button
                             type="button"
-                            className="btn-close btn-close-white"
+                            className="btn-close"
                             onClick={handleCloseModal}
                             aria-label="Close"
                         ></button>
@@ -211,7 +231,7 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
                                                     <ErrorMessage name="username" component="div" className="text-danger small" />
                                                 </div>
                                                 <div className="col-md-6 mb-3">
-                                                    <label className="form-label">PF Number *</label>
+                                                    <label className="form-label">STAFF Number *</label>
                                                     <Field 
                                                         name="pf_number" 
                                                         className="form-control" 

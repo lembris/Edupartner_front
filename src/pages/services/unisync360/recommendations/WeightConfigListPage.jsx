@@ -134,38 +134,28 @@ export const WeightConfigListPage = () => {
                             </div>
                         ),
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "100px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                {hasAccess(user, ["change_recommendationweightconfig"]) && (
-                                    <button
-                                        className="btn btn-sm btn-outline-primary border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowModal(true);
-                                        }}
-                                        title="Edit"
-                                    >
-                                        <i className="bx bx-edit"></i>
-                                    </button>
-                                )}
-                                {hasAccess(user, ["delete_recommendationweightconfig"]) && (
-                                    <button
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "Edit",
+                        icon: "bx bx-edit",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowModal(true);
+                        },
+                        condition: () => hasAccess(user, ["change_recommendationweightconfig"]),
+                        className: "btn-outline-primary text-primary",
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, ["delete_recommendationweightconfig"]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 filters={[
                     { label: "All", value: "ALL" },
                 ]}

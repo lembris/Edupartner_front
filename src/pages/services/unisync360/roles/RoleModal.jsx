@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { createRole, updateRole } from "./RoleQueries";
 import showToast from "../../../../helpers/ToastHelper";
 
-export const RoleModal = ({ selectedRole, onSuccess }) => {
+export const RoleModal = ({ selectedRole, onSuccess, onClose }) => {
     const [initialValues, setInitialValues] = useState({
         name: "",
         description: "",
@@ -67,32 +67,26 @@ export const RoleModal = ({ selectedRole, onSuccess }) => {
     };
 
     const handleClose = () => {
-        const modalElement = document.getElementById("roleModal");
-        if (window.bootstrap) {
-            const modalInstance = window.bootstrap.Modal.getInstance(modalElement);
-            if (modalInstance) modalInstance.hide();
-        }
+        if (onClose) onClose();
     };
 
     return (
         <div
-            className="modal fade"
-            id="roleModal"
+            className="modal fade show d-block"
             tabIndex="-1"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            aria-hidden="true"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+            aria-hidden="false"
         >
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
-                    <div className="modal-header bg-primary text-white">
-                        <h5 className="modal-title text-white">
+                    <div className="modal-header">
+                        <h5 className="modal-title">
                             <i className="bx bx-shield me-2"></i>
                             {selectedRole ? "Edit Role" : "Create New Role"}
                         </h5>
                         <button
                             type="button"
-                            className="btn-close btn-close-white"
+                            className="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
                             onClick={handleClose}

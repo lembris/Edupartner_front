@@ -228,39 +228,82 @@ export const CourseAllocationListPage = () => {
                         },
                     },
                     {
-                        key: "fees",
-                        label: "Tuition Fee",
-                        render: (row) => {
-                            const course = row.university_course;
-                            const currency = course?.currency || 'USD';
-                            const tuitionFee = course?.tuition_fee ? Number(course.tuition_fee) : null;
-                            const hasScholarship = course?.scholarship_available;
-                            const feeAfterScholarship = course?.fee_after_scholarship;
+                         key: "fees",
+                         label: "Fee Details",
+                         style: { width: "300px" },
+                         render: (row) => {
+                             const course = row.university_course;
+                             const currency = course?.currency || 'USD';
+                             const tuitionFee = course?.tuition_fee ? Number(course.tuition_fee) : null;
+                             const hasScholarship = course?.scholarship_available;
+                             const feeAfterScholarship = course?.fee_after_scholarship;
+                             const studentScholarshipApplied = row.scholarship_applied;
+                             const studentScholarshipAmount = row.scholarship_amount;
 
-                            return (
-                                <div className="d-flex flex-column">
-                                    {tuitionFee ? (
-                                        <>
-                                            <span className={`fw-medium ${hasScholarship ? 'text-decoration-line-through text-muted' : ''}`}>
-                                                {currency} {tuitionFee.toLocaleString()}
-                                            </span>
-                                            {hasScholarship && feeAfterScholarship !== null && (
-                                                <span className="fw-semibold text-success">
-                                                    {currency} {Number(feeAfterScholarship).toLocaleString()}
-                                                    <i className="bx bxs-badge-check ms-1" title="Scholarship Applied"></i>
-                                                </span>
-                                            )}
-                                            {hasScholarship && course?.scholarship_type === 'full' && (
-                                                <span className="badge bg-label-success">Full Scholarship</span>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <span className="text-muted">N/A</span>
-                                    )}
-                                </div>
-                            );
-                        },
-                    },
+                             return (
+                                 <div className="d-flex flex-column gap-1" style={{ fontSize: '0.85rem' }}>
+                                     {/* Tuition Fee */}
+                                     {tuitionFee ? (
+                                         <>
+                                             <div>
+                                                 <small className="text-muted">Tuition:</small>
+                                                 <span className={`ms-2 fw-medium ${hasScholarship ? 'text-decoration-line-through text-muted' : 'text-primary'}`}>
+                                                     {currency} {tuitionFee.toLocaleString()}
+                                                 </span>
+                                             </div>
+                                             
+                                             {/* Course Scholarship */}
+                                             {hasScholarship && (
+                                                 <div>
+                                                     <small className="text-muted">Course Scholarship:</small>
+                                                     <span className="ms-2 fw-semibold text-success">
+                                                         {course?.scholarship_type === 'percentage'
+                                                             ? `${course?.scholarship_amount}%`
+                                                             : course?.scholarship_type === 'fixed'
+                                                             ? `${currency} ${Number(course?.scholarship_amount || 0).toLocaleString()}`
+                                                             : 'Full'}
+                                                         <i className="bx bx-gift ms-1" style={{ fontSize: '0.9rem' }}></i>
+                                                     </span>
+                                                 </div>
+                                             )}
+                                             
+                                             {/* Final Fee After Course Scholarship */}
+                                             {hasScholarship && feeAfterScholarship !== null && course?.scholarship_type !== 'full' && (
+                                                 <div>
+                                                     <small className="text-muted">Final Fee:</small>
+                                                     <span className="ms-2 fw-semibold text-info">
+                                                         {currency} {Number(feeAfterScholarship).toLocaleString()}
+                                                     </span>
+                                                 </div>
+                                             )}
+                                             
+                                             {/* Full Scholarship Badge */}
+                                             {hasScholarship && course?.scholarship_type === 'full' && (
+                                                 <div>
+                                                     <span className="badge bg-label-success">Full Scholarship</span>
+                                                 </div>
+                                             )}
+                                             
+                                             {/* Student Applied Scholarship */}
+                                             {studentScholarshipApplied && (
+                                                 <div className="pt-1 border-top">
+                                                     <small className="text-muted">Student Scholarship:</small>
+                                                     <span className="ms-2 fw-semibold text-success">
+                                                         {studentScholarshipAmount 
+                                                             ? `${currency} ${Number(studentScholarshipAmount).toLocaleString()}`
+                                                             : 'Applied'}
+                                                         <i className="bx bx-check-circle ms-1" style={{ fontSize: '0.9rem' }}></i>
+                                                     </span>
+                                                 </div>
+                                             )}
+                                         </>
+                                     ) : (
+                                         <span className="text-muted">N/A</span>
+                                     )}
+                                 </div>
+                             );
+                         },
+                     },
                     {
                         key: "created",
                         label: "Created",
@@ -273,49 +316,34 @@ export const CourseAllocationListPage = () => {
                             </div>
                         ),
                     },
+                ]}
+                actions={[
                     {
-                        key: "actions",
-                        label: "Actions",
-                        style: { width: "120px" },
-                        className: "text-center",
-                        render: (row) => (
-                            <div className="btn-group">
-                                <button
-                                    className="btn btn-sm btn-outline-secondary border-0"
-                                    onClick={() => navigate(`/unisync360/applications/course-allocations/${row.uid}`)}
-                                    title="View Details"
-                                >
-                                    <i className="bx bx-show"></i>
-                                </button>
-                                {hasAccess(user, ["change_courseallocation"]) && (
-                                    <button
-                                        aria-label="Edit"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-primary border-0"
-                                        onClick={() => {
-                                            setSelectedObj(row);
-                                            setShowModal(true);
-                                        }}
-                                        title="Edit Allocation"
-                                    >
-                                        <i className="bx bx-edit"></i>
-                                    </button>
-                                )}
-                                {hasAccess(user, ["delete_courseallocation"]) && (
-                                    <button
-                                        aria-label="Delete"
-                                        type="button"
-                                        className="btn btn-sm btn-outline-danger border-0"
-                                        onClick={() => handleDelete(row)}
-                                        title="Delete Allocation"
-                                    >
-                                        <i className="bx bx-trash"></i>
-                                    </button>
-                                )}
-                            </div>
-                        ),
+                        label: "View",
+                        icon: "bx bx-show",
+                        onClick: (row) => navigate(`/unisync360/applications/course-allocations/${row.uid}`),
+                        className: "btn-outline-secondary",
+                    },
+                    {
+                        label: "Edit",
+                        icon: "bx bx-edit",
+                        onClick: (row) => {
+                            setSelectedObj(row);
+                            setShowModal(true);
+                        },
+                        condition: () => hasAccess(user, ["change_courseallocation"]),
+                        className: "btn-outline-primary text-primary",
+                    },
+                    {
+                        label: "Delete",
+                        icon: "bx bx-trash",
+                        onClick: (row) => handleDelete(row),
+                        condition: () => hasAccess(user, ["delete_courseallocation"]),
+                        className: "btn-outline-secondary text-danger",
                     },
                 ]}
+                user={user}
+                fixedActions={true}
                 filters={[
                     { label: "All", value: "ALL" },
                     { label: "Pending", value: "pending" },

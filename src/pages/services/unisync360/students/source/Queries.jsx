@@ -40,7 +40,7 @@ export const createStudentSource = async (data) => {
 // Update Student Source
 export const updateStudentSource = async (uid, data) => {
     try {
-        const response = await api.patch(`${API_URL}/unisync360-students/sources/${uid}/`, data, config);
+        const response = await api.put(`${API_URL}/unisync360-students/sources/${uid}/`, data, config);
         return response.data;
     } catch (error) {
         console.error("Error updating student source:", error);

@@ -13,32 +13,6 @@ const BASE_URL = "api/unisync360-commission";
 
 
 export const commissionPortalService = {
-    // Recruiter Profile
-    getMyProfile: async () => {
-        const response = await axiosInstance.get(`${BASE_URL}/my-profile/`);
-        return response.data;
-    },
-
-    getRecruiters: async (params = {}) => {
-        const response = await axiosInstance.get(`${BASE_URL}/recruiters/`, { params });
-        return response.data;
-    },
-
-    createRecruiter: async (data) => {
-        const response = await axiosInstance.post(`${BASE_URL}/recruiters/`, data);
-        return response.data;
-    },
-
-    updateRecruiter: async (uid, data) => {
-        const response = await axiosInstance.patch(`${BASE_URL}/recruiters/${uid}/`, data);
-        return response.data;
-    },
-
-    deleteRecruiter: async (uid) => {
-        const response = await axiosInstance.delete(`${BASE_URL}/recruiters/${uid}/`);
-        return response.data;
-    },
-
     // Student Registration
     registerStudent: async (data) => {
         const response = await axiosInstance.post(`${BASE_URL}/register-student/`, data);
@@ -125,7 +99,12 @@ export const commissionPortalService = {
         return response.data;
     },
 
-    getCommissionBoard: async () => {
+    getCommissionBoard: async (params = {}) => {
+        const response = await axiosInstance.get(`${BASE_URL}/my-commissions/`, { params });
+        return response.data;
+    },
+
+    getMyCommissionDetails: async () => {
         const response = await axiosInstance.get(`${BASE_URL}/commission-board/`);
         return response.data;
     },

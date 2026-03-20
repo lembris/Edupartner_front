@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { recruiterService } from "../commission-portal/Queries.jsx";
+// Removed: recruiterService (RecruiterProfile model removed)
+// import { recruiterService } from "../commission-portal/Queries.jsx";
 import { LeadLancerModal } from "./LeadLancerModal.jsx";
 import ProtectedRoute from "../../../../components/wrapper/ProtectedRoute.jsx";
 import BreadCumb from "../../../../layouts/BreadCumb";

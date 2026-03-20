@@ -13,9 +13,7 @@
                         "icon": "bx bx-home",
                         "available": true,
                         "link": "/unisync360/lead-lancer",
-                        "permission": [
-                            "view_recruiterprofile"
-                        ],
+                        "permission": [],
                         "role": [
                             "admin",
                             "unisync360_lead_lancer",
@@ -35,55 +33,9 @@
                         "text": "My Students",
                         "icon": "bx bx-user-circle",
                         "available": true,
-                        "link": "/unisync360/lead-lancer",
+                        "link": "/unisync360/lead-lancer/my-students",
                         "permission": [
-                            "view_student",
-                            "view_recruiterstudent"
-                        ],
-                        "role": [
-                            "admin",
-                            "unisync360_lead_lancer",
-                            "unisync360_external_counselor"
-                        ]
-                    },
-                    {
-                        "text": "Register Student",
-                        "icon": "bx bx-user-plus",
-                        "available": true,
-                        "link": "/unisync360/lead-lancer?action=register",
-                        "permission": [
-                            "add_student",
-                            "add_recruiterstudent"
-                        ],
-                        "role": [
-                            "admin",
-                            "unisync360_lead_lancer",
-                            "unisync360_external_counselor"
-                        ]
-                    },
-                    {
-                        "text": "Student Status",
-                        "icon": "bx bx-check-circle",
-                        "available": true,
-                        "link": "/unisync360/lead-lancer?tab=status",
-                        "permission": [
-                            "view_studentstatus",
-                            "view_studentcommissionstatus"
-                        ],
-                        "role": [
-                            "admin",
-                            "unisync360_lead_lancer",
-                            "unisync360_external_counselor"
-                        ]
-                    },
-                    {
-                        "text": "Update Status",
-                        "icon": "bx bx-refresh",
-                        "available": true,
-                        "link": "/unisync360/lead-lancer?action=update-status",
-                        "permission": [
-                            "add_studentcommissionstatus",
-                            "change_studentcommissionstatus"
+                            "view_student"
                         ],
                         "role": [
                             "admin",
@@ -101,10 +53,10 @@
                 "header": "EARNINGS & TARGETS",
                 "submenu": [
                     {
-                        "text": "Commission Board",
-                        "icon": "bx bx-dollar-circle",
+                        "text": "My Commissions",
+                        "icon": "bx bx-wallet",
                         "available": true,
-                        "link": "/unisync360/lead-lancer?tab=commissions",
+                        "link": "/unisync360/lead-lancer/my-commissions",
                         "permission": [
                             "view_commission"
                         ],
@@ -115,13 +67,88 @@
                         ]
                     },
                     {
-                        "text": "My Targets",
+                        "text": "Commission Board",
+                        "icon": "bx bx-dollar-circle",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer/commission-portal",
+                        "permission": [
+                            "view_commission",
+                            "view_commissionpayment"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "Payments",
+                        "icon": "bx bx-credit-card",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer/commission-payments",
+                        "permission": [
+                            "view_commissionpayment"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer"
+                        ]
+                    },
+                    {
+                        "text": "Targets",
                         "icon": "bx bx-target-lock",
                         "available": true,
-                        "link": "/unisync360/lead-lancer?tab=targets",
+                        "link": "/unisync360/lead-lancer/commission-targets",
                         "permission": [
-                            "view_recruitertarget"
+                            "view_commissiontarget"
                         ],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer"
+                        ]
+                    },
+                    {
+                        "text": "Predictions",
+                        "icon": "bx bx-trending-up",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer/commission-predictions",
+                        "permission": [
+                            "view_commissionprediction"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Resources",
+                "icon": "bx bx-book",
+                "available": true,
+                "link": "",
+                "header": "LEARNING & RESOURCES",
+                "submenu": [
+                    {
+                        "text": "Browse Courses",
+                        "icon": "bx bx-library",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer/courses",
+                        "permission": [
+                            "view_course"
+                        ],
+                        "role": [
+                            "admin",
+                            "unisync360_lead_lancer",
+                            "unisync360_external_counselor"
+                        ]
+                    },
+                    {
+                        "text": "User Manual",
+                        "icon": "bx bx-help-circle",
+                        "available": true,
+                        "link": "/unisync360/lead-lancer/user-manual",
+                        "permission": [],
                         "role": [
                             "admin",
                             "unisync360_lead_lancer",

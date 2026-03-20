@@ -126,18 +126,18 @@ export const StudentSourceModal = ({ selectedObj, onSuccess, onClose }) => {
             id="studentSourceModal"
             tabIndex="-1"
             aria-hidden="true"
-            style={{ zIndex: 1055 }}
+            style={{ zIndex: 1100 }}
         >
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
-                    <div className="modal-header bg-primary text-white">
-                        <h5 className="modal-title text-white">
+                    <div className="modal-header">
+                        <h5 className="modal-title">
                             <i className="bx bx-network-chart me-2"></i>
                             {selectedObj ? "Update Source" : "Add New Source"}
                         </h5>
                         <button
                             type="button"
-                            className="btn-close btn-close-white"
+                            className="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
                             onClick={handleClose}

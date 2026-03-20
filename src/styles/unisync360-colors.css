@@ -1,0 +1,165 @@
+/* 
+ * UniSync360 Specific Color Overrides
+ * Uses secondary gray tones as primary color throughout the system
+ * Professional, accessible, and neutral color palette for public-facing systems
+ */
+
+/* Override primary colors to use secondary style (gray) */
+:root {
+  /* Primary Colors - Using Secondary Gray Style for UniSync360 */
+  --neutral-primary: #6b7280;
+  --neutral-primary-light: #9ca3af;
+  --neutral-primary-dark: #4b5563;
+  --neutral-primary-bg: #f3f4f6;
+
+  /* Update secondary colors to complement the new primary */
+  --neutral-secondary: #6b7280;
+  --neutral-secondary-light: #9ca3af;
+  --neutral-secondary-dark: #4b5563;
+
+  /* Text Colors - Updated to match secondary gray palette */
+  --neutral-text-secondary: #6b7280;
+  --neutral-text-muted: #9ca3af;
+  --neutral-text-disabled: #d1d5db;
+
+  /* Chart Colors - Using gray palette */
+  --neutral-chart-1: #6b7280;
+  --neutral-chart-2: #9ca3af;
+  --neutral-chart-3: #d1d5db;
+  --neutral-chart-4: #e5e7eb;
+  --neutral-chart-5: #4b5563;
+  --neutral-chart-6: #374151;
+
+  /* Interactive States - Gray-based */
+  --neutral-hover-bg: rgba(107, 114, 128, 0.08);
+  --neutral-active-bg: rgba(107, 114, 128, 0.16);
+  --neutral-focus-ring: rgba(107, 114, 128, 0.25);
+}
+
+/* Button Overrides - Primary buttons use gray */
+.btn-primary,
+.btn-outline-primary {
+  --bs-btn-color: #ffffff !important;
+  --bs-btn-bg: #6b7280 !important;
+  --bs-btn-border-color: #6b7280 !important;
+  color: #ffffff !important;
+  background-color: #6b7280 !important;
+  border-color: #6b7280 !important;
+}
+
+.btn-primary:hover,
+.btn-outline-primary:hover {
+  --bs-btn-bg: #4b5563 !important;
+  --bs-btn-border-color: #4b5563 !important;
+  background-color: #4b5563 !important;
+  border-color: #4b5563 !important;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #6b7280 !important;
+  color: #6b7280 !important;
+}
+
+.btn-outline-primary:hover {
+  --bs-btn-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Text Colors */
+.text-primary {
+  color: #6b7280 !important;
+}
+
+/* Background Colors */
+.bg-primary {
+  background-color: #6b7280 !important;
+}
+
+/* Border Colors */
+.border-primary {
+  border-color: #6b7280 !important;
+}
+
+/* Badge Colors */
+.badge.bg-primary {
+  background-color: #6b7280 !important;
+}
+
+/* Link Colors */
+a,
+.link-primary {
+  color: #6b7280 !important;
+}
+
+a:hover,
+.link-primary:hover {
+  color: #4b5563 !important;
+}
+
+/* Form Controls */
+.form-control:focus,
+.form-select:focus {
+  border-color: #6b7280 !important;
+  box-shadow: 0 0 0 0.2rem rgba(107, 114, 128, 0.25) !important;
+}
+
+/* Nav Pills */
+.nav-pills .nav-link.active {
+  background-color: #6b7280 !important;
+}
+
+.nav-pills .nav-link:hover {
+  color: #6b7280 !important;
+}
+
+/* Progress Bars */
+.progress-bar {
+  background-color: #6b7280 !important;
+}
+
+/* Spinners */
+.spinner-border {
+  border-color: #6b7280 !important;
+  border-right-color: transparent !important;
+}
+
+/* Alert Primary */
+.alert-primary {
+  background-color: #f3f4f6 !important;
+  border-color: #6b7280 !important;
+  color: #4b5563 !important;
+}
+
+/* Disabled Elements */
+.btn:disabled,
+.form-control:disabled,
+.form-select:disabled {
+  background-color: #f3f4f6 !important;
+  color: #d1d5db !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Menu Items */
+.menu-inner .menu-item .menu-link {
+  color: #6b7280 !important;
+}
+
+.menu-inner .menu-item.active > .menu-link {
+  color: #6b7280 !important;
+  background-color: #f3f4f6 !important;
+}
+
+.menu-inner .menu-item .menu-link:hover {
+  background-color: rgba(107, 114, 128, 0.08) !important;
+}
+
+/* Table Header */
+.table th {
+  background-color: #f3f4f6 !important;
+  color: #6b7280 !important;
+}
+
+/* Card Border Focus */
+.card:focus-within {
+  border-color: #6b7280 !important;
+}

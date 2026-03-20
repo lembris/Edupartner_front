@@ -6,6 +6,8 @@ import "animate.css";
 import { useNavigate, useParams } from "react-router-dom";
 import BreadCumb from "../../../../../layouts/BreadCumb";
 import { useSelector } from "react-redux";
+import Chart from "react-apexcharts";
+const ReactApexChart = Chart;
 import { hasAccess } from "../../../../../hooks/AccessHandler";
 import {
     getSchools,
@@ -51,44 +53,102 @@ const SchoolNectaAnalytics = ({ history }) => {
 
     const leadingDivision = getLeadingDivision(latestYear.division_breakdown);
 
-    // Custom CSS Stacked Bar Chart
-    const StackedBarChart = () => {
-        return (
-            <div className="w-100" style={{ height: "300px", display: "flex", alignItems: "flex-end", gap: "20px", paddingBottom: "30px", position: "relative" }}>
-                {/* Y-Axis Lines */}
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 30, display: "flex", flexDirection: "column", justifyContent: "space-between", zIndex: 0, pointerEvents: "none" }}>
-                    {[100, 75, 50, 25, 0].map((val) => (
-                        <div key={val} style={{ borderBottom: "1px dashed #eee", width: "100%", height: "1px", position: "relative" }}>
-                            <span style={{ position: "absolute", left: -30, fontSize: "10px", color: "#999", top: "-6px" }}>{val}%</span>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Bars */}
-                {sortedHistory.map((h, idx) => {
+    // ApexCharts Area Chart for Performance Trends
+    const PerformanceTrendChart = () => {
+        const series = [
+            {
+                name: "Division I",
+                data: sortedHistory.map(h => {
                     const total = h.total_candidates || 1;
-                    const breakdown = h.division_breakdown || { I: 0, II: 0, III: 0, IV: 0, '0': 0 };
+                    return Math.round((h.division_breakdown?.I || 0) / total * 100);
+                })
+            },
+            {
+                name: "Division II",
+                data: sortedHistory.map(h => {
+                    const total = h.total_candidates || 1;
+                    return Math.round((h.division_breakdown?.II || 0) / total * 100);
+                })
+            },
+            {
+                name: "Division III",
+                data: sortedHistory.map(h => {
+                    const total = h.total_candidates || 1;
+                    return Math.round((h.division_breakdown?.III || 0) / total * 100);
+                })
+            },
+            {
+                name: "Division IV",
+                data: sortedHistory.map(h => {
+                    const total = h.total_candidates || 1;
+                    return Math.round((h.division_breakdown?.IV || 0) / total * 100);
+                })
+            }
+        ];
 
-                    const p1 = (breakdown.I / total) * 100;
-                    const p2 = (breakdown.II / total) * 100;
-                    const p3 = (breakdown.III / total) * 100;
-                    const p4 = (breakdown.IV / total) * 100;
-                    const p0 = (breakdown['0'] / total) * 100;
+        const options = {
+            chart: {
+                type: "area",
+                stacked: true,
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: true,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        reset: true
+                    }
+                },
+                fontFamily: "Roboto, sans-serif"
+            },
+            colors: ["#28a745", "#17a2b8", "#ffc107", "#dc3545"],
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: "smooth",
+                width: 2
+            },
+            fill: {
+                type: "gradient",
+                gradient: {
+                    opacityFrom: 0.45,
+                    opacityTo: 0.05
+                }
+            },
+            xaxis: {
+                categories: sortedHistory.map(h => h.year),
+                title: {
+                    text: "Year"
+                }
+            },
+            yaxis: {
+                title: {
+                    text: "Percentage (%)"
+                },
+                min: 0,
+                max: 100
+            },
+            tooltip: {
+                shared: true,
+                intersect: false
+            },
+            legend: {
+                position: "bottom",
+                horizontalAlign: "left"
+            }
+        };
 
-                    return (
-                        <div key={idx} style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", height: "100%", zIndex: 1 }}>
-                            <div className="progress-stacked" style={{ height: "100%", width: "100%", borderRadius: "4px", backgroundColor: "transparent", flexDirection: "column-reverse", display: "flex" }}>
-                                {p1 > 0 && <div className="progress-bar bg-success" style={{ height: `${p1}%`, width: "100%" }} title={`Div I: ${breakdown.I} (${Math.round(p1)}%)`}></div>}
-                                {p2 > 0 && <div className="progress-bar bg-info" style={{ height: `${p2}%`, width: "100%" }} title={`Div II: ${breakdown.II} (${Math.round(p2)}%)`}></div>}
-                                {p3 > 0 && <div className="progress-bar bg-warning" style={{ height: `${p3}%`, width: "100%" }} title={`Div III: ${breakdown.III} (${Math.round(p3)}%)`}></div>}
-                                {p4 > 0 && <div className="progress-bar bg-danger" style={{ height: `${p4}%`, width: "100%" }} title={`Div IV: ${breakdown.IV} (${Math.round(p4)}%)`}></div>}
-                                {p0 > 0 && <div className="progress-bar bg-secondary" style={{ height: `${p0}%`, width: "100%" }} title={`Div 0: ${breakdown['0']} (${Math.round(p0)}%)`}></div>}
-                            </div>
-                            <div className="text-center mt-2 small text-muted fw-bold">{h.year}</div>
-                        </div>
-                    );
-                })}
-            </div>
+        return (
+            <ReactApexChart
+                options={options}
+                series={series}
+                type="area"
+                height={300}
+            />
         );
     };
 
@@ -204,7 +264,7 @@ const SchoolNectaAnalytics = ({ history }) => {
                             <small className="text-muted">Historical distribution of grades over years</small>
                         </div>
                         <div className="card-body px-4 pb-4 pt-4">
-                            <StackedBarChart />
+                            <PerformanceTrendChart />
                         </div>
                     </div>
                 </div>
@@ -435,7 +495,18 @@ export const SchoolDetailsPage = () => {
         setLoading(true);
         try {
             const response = await getNectaDetails(nectaUid);
-            setScrapedData(response.data);
+            const historyData = response.data;
+
+            // Validate: Check if scraped data belongs to the currently opened school
+            if (historyData.school_name && schoolData?.name && 
+                historyData.school_name.toLowerCase().trim() !== schoolData.name.toLowerCase().trim()) {
+                showToast(
+                    `⚠️ School Mismatch: Data is from "${historyData.school_name}" but you're viewing "${schoolData.name}"`,
+                    "warning"
+                );
+            }
+
+            setScrapedData(historyData);
             // Smooth scroll to results
             window.scrollTo({ top: 500, behavior: 'smooth' });
         } catch (error) {
@@ -509,6 +580,9 @@ export const SchoolDetailsPage = () => {
     const handleFetchSchool = async () => {
         setLoading(true);
         setError(null);
+        setScrapedData(null); // Clear previous school's scraped data
+        setNectaHistory([]); // Clear previous school's history
+        setStudentSearch(""); // Clear search filter
         try {
             const response = await getSchools({ uid: id });
             let data = response;
@@ -883,47 +957,64 @@ export const SchoolDetailsPage = () => {
                                     <div className="card-body">
                                         <form onSubmit={handleScrape}>
                                             <div className="mb-3">
-                                                <label className="form-label">Exam Type</label>
-                                                <select
-                                                    className="form-select"
-                                                    value={nectaExamType}
-                                                    onChange={(e) => setNectaExamType(e.target.value)}
-                                                >
-                                                    <option value="CSEE">CSEE (Form 4)</option>
-                                                    <option value="ACSEE">ACSEE (Form 6)</option>
-                                                </select>
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Year</label>
-                                                <input
-                                                    type="number"
-                                                    className="form-control"
-                                                    value={nectaYear}
-                                                    onChange={(e) => setNectaYear(e.target.value)}
-                                                    min="2000"
-                                                    max={new Date().getFullYear()}
-                                                />
-                                            </div>
-                                            <div className="mb-3">
-                                                <label className="form-label">Result Page URL</label>
-                                                <input
-                                                    type="url"
-                                                    className="form-control"
-                                                    value={nectaUrl}
-                                                    onChange={(e) => setNectaUrl(e.target.value)}
-                                                    placeholder="https://onlinesys.necta.go.tz/..."
-                                                    required
-                                                />
-                                                <div className="form-text">
-                                                    {schoolData?.registration_number ? (
-                                                        <span className="text-success">
-                                                            <i className="bx bx-check-circle me-1"></i>
-                                                            Auto-generated from Reg# {schoolData.registration_number}
-                                                        </span>
-                                                    ) : (
-                                                        "Paste the direct link to the school's result page"
-                                                    )}
-                                                </div>
+                                                 <label className="form-label">Exam Type</label>
+                                                 <select
+                                                     className="form-select"
+                                                     value={nectaExamType}
+                                                     onChange={(e) => {
+                                                         setNectaExamType(e.target.value);
+                                                         // Auto-fill URL when CSEE 2025 is selected
+                                                         if (e.target.value === "CSEE" && nectaYear === 2025) {
+                                                             setNectaUrl("https://matokeo.necta.go.tz");
+                                                         }
+                                                     }}
+                                                 >
+                                                     <option value="CSEE">CSEE (Form 4)</option>
+                                                     <option value="ACSEE">ACSEE (Form 6)</option>
+                                                 </select>
+                                                 </div>
+                                                 <div className="mb-3">
+                                                 <label className="form-label">Year</label>
+                                                 <input
+                                                     type="number"
+                                                     className="form-control"
+                                                     value={nectaYear}
+                                                     onChange={(e) => {
+                                                         setNectaYear(e.target.value);
+                                                         // Auto-fill URL when year is set to 2025 and exam is CSEE
+                                                         if (nectaExamType === "CSEE" && e.target.value === 2025) {
+                                                             setNectaUrl("https://matokeo.necta.go.tz");
+                                                         }
+                                                     }}
+                                                     min="2000"
+                                                     max={new Date().getFullYear()}
+                                                 />
+                                                 </div>
+                                                 <div className="mb-3">
+                                                 <label className="form-label">Result Page URL</label>
+                                                 <input
+                                                     type="url"
+                                                     className="form-control"
+                                                     value={nectaUrl}
+                                                     onChange={(e) => setNectaUrl(e.target.value)}
+                                                     placeholder="https://matokeo.necta.go.tz"
+                                                     required
+                                                 />
+                                                 <div className="form-text">
+                                                     {nectaExamType === "CSEE" && nectaYear === 2025 ? (
+                                                         <span className="text-info">
+                                                             <i className="bx bx-info-circle me-1"></i>
+                                                             Auto-filled for 2025 CSEE
+                                                         </span>
+                                                     ) : schoolData?.registration_number ? (
+                                                         <span className="text-success">
+                                                             <i className="bx bx-check-circle me-1"></i>
+                                                             Auto-generated from Reg# {schoolData.registration_number}
+                                                         </span>
+                                                     ) : (
+                                                         "Paste the direct link to the school's result page"
+                                                     )}
+                                                 </div>
                                             </div>
                                             <button
                                                 type="submit"
@@ -951,7 +1042,15 @@ export const SchoolDetailsPage = () => {
                                 <div className="card h-100">
                                     <div className="card-header d-flex justify-content-between align-items-center">
                                         <h5 className="card-title mb-0">Result Analysis</h5>
-                                        {scrapedData && <span className="badge bg-success">Latest Fetch</span>}
+                                        <div className="d-flex gap-2">
+                                            {scrapedData && schoolData?.name && 
+                                             scrapedData.school_name?.toLowerCase().trim() !== schoolData.name.toLowerCase().trim() && (
+                                                <span className="badge bg-warning text-dark" title="This data belongs to a different school">
+                                                    <i className="bx bx-alert-triangle me-1"></i>School Mismatch
+                                                </span>
+                                            )}
+                                            {scrapedData && <span className="badge bg-success">Latest Fetch</span>}
+                                        </div>
                                     </div>
                                     <div className="card-body">
                                         {scrapedData ? (

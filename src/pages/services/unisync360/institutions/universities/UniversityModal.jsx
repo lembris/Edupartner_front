@@ -128,14 +128,14 @@ export const UniversityModal = ({ selectedObj, onSuccess, onClose }) => {
         >
             <div className="modal-dialog modal-lg" role="document">
                 <div className="modal-content">
-                    <div className="modal-header bg-primary text-white">
-                        <h5 className="modal-title text-white">
+                    <div className="modal-header">
+                        <h5 className="modal-title">
                             <i className="bx bxs-school me-2"></i>
                             {selectedObj ? "Update University" : "Add New University"}
                         </h5>
                         <button
                             type="button"
-                            className="btn-close btn-close-white"
+                            className="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
                             onClick={handleClose}

@@ -13,7 +13,9 @@ export const DashboardPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dashboardAnalitics();
+    // Analytics script removed from index.html during optimization
+    // This function was loading legacy template charts, not needed for React components
+    // If needed, uncomment the script tag in index.html or implement React-based charts
   }, []);
   return (
     <>

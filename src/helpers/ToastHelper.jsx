@@ -21,7 +21,10 @@ const showToast = function (message, toastType, title = '') {
     showEasing: 'swing',
     hideEasing: 'linear',
     showDuration: 300,
-    hideDuration: 1000
+    hideDuration: 1000,
+    style: {
+      zIndex: 9999
+    }
   };
 
   // Add title if provided

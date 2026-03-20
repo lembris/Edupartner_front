@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "postinstall": "mkdir -p public/assets/js && cp node_modules/pdfjs-dist/build/pdf.worker.min.js public/assets/js/"
+    "postinstall": "mkdir -p public/assets/js && cp node_modules/pdfjs-dist/build/pdf.worker.min.js public/assets/js/",
+    "visual-regression": "node scripts/visual-regression-check.cjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -59,11 +60,13 @@
   "devDependencies": {
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
+    "@vitejs/plugin-react": "^4.7.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "eslint": "^8.53.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
-    "vite": "^6.3.2"
+    "terser": "^5.46.0",
+    "vite": "^6.4.1"
   }
 }

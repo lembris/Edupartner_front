@@ -97,16 +97,41 @@ function ProtectedRoute({
     requiredRoles.some((role) => userRoles.includes(role));
 
   if (!hasRequiredPermissions || !hasRequiredRoles) {
+    // Determine redirect URL based on user_type from localStorage
+    let redirectUrl = "/";
+    const userType = localStorage.getItem("user_type");
+    
+    if (userType === "lead_lancer") {
+      redirectUrl = "/unisync360/lead-lancer";
+    } else if (userType === "external_counselor") {
+      redirectUrl = "/unisync360/external-counselor";
+    }
+
     Swal.fire({
       title: "Access Denied",
-      text: "You don’t have permission to access this page.",
+<<<<<<< Updated upstream
+      text: "You don't have permission to access this page. Taking you home in 3 seconds...",
+=======
+      text: "You don't have permission to access this page.",
+>>>>>>> Stashed changes
       icon: "warning",
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
-      confirmButtonText: "Go to Dashboard",
+      confirmButtonText: "Get Back Home",
+      didOpen: () => {
+        // Auto-close and redirect after 3 seconds
+        setTimeout(() => {
+          Swal.close();
+          window.location.href = redirectUrl;
+        }, 3000);
+      }
     }).then(() => {
-      window.location.href = "/";
+<<<<<<< Updated upstream
+      // If user clicks the button, redirect immediately
+=======
+>>>>>>> Stashed changes
+      window.location.href = redirectUrl;
     });
 
     return null;

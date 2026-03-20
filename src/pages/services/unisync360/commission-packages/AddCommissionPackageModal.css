@@ -1,0 +1,290 @@
+<<<<<<< Updated upstream
+/* AddCommissionPackageModal.css - Commission Package specific styles */
+
+.package-modal-content {
+    background: var(--neutral-surface);
+=======
+/* AddCommissionPackageModal.css */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1390;
+}
+
+.modal-content {
+    background: white;
+    z-index: 1400;
+>>>>>>> Stashed changes
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    max-width: 700px;
+    width: 95%;
+<<<<<<< Updated upstream
+}
+
+.package-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--neutral-divider);
+    background-color: var(--neutral-bg-tertiary);
+}
+
+.package-modal-header h3 {
+    margin: 0;
+    color: var(--neutral-text-primary);
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.package-modal-body {
+    padding: 1.5rem;
+}
+
+.package-form-row {
+=======
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #111827;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+}
+
+.btn-close:hover {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+.modal-form {
+    padding: 1.5rem;
+}
+
+.form-row {
+>>>>>>> Stashed changes
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+<<<<<<< Updated upstream
+.package-form-group {
+=======
+.form-group {
+>>>>>>> Stashed changes
+    display: flex;
+    flex-direction: column;
+}
+
+<<<<<<< Updated upstream
+.package-form-group label {
+    font-weight: 600;
+    color: var(--neutral-text-primary);
+=======
+.form-group label {
+    font-weight: 600;
+    color: #374151;
+>>>>>>> Stashed changes
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+<<<<<<< Updated upstream
+.package-checkbox-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.package-checkbox-group {
+    flex: 1;
+}
+
+.package-checkbox-label {
+=======
+.form-control,
+textarea.form-control {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.form-control:focus,
+textarea.form-control:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+.checkbox-row {
+    display: flex;
+    gap: 2rem;
+    grid-template-columns: unset;
+}
+
+.checkbox-group {
+    flex: 1;
+}
+
+.checkbox-label {
+>>>>>>> Stashed changes
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+<<<<<<< Updated upstream
+    color: var(--neutral-text-primary);
+}
+
+.package-checkbox-label input[type="checkbox"] {
+=======
+    color: #374151;
+}
+
+.checkbox-label input[type="checkbox"] {
+>>>>>>> Stashed changes
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+<<<<<<< Updated upstream
+    accent-color: var(--neutral-accent-blue);
+}
+
+.package-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--neutral-divider);
+    background-color: var(--neutral-bg-secondary);
+}
+
+@media (max-width: 640px) {
+    .package-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .package-checkbox-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+=======
+    accent-color: #6366f1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: #6366f1;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #4f46e5;
+}
+
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #d1d5db;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .checkbox-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .modal-content {
+        max-height: 95vh;
+        width: 98%;
+    }
+
+    .modal-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+>>>>>>> Stashed changes
+}

@@ -1,0 +1,19 @@
+/* Centralized z-index and modal stacking for StudentModal */
+:root {
+  --modal-base: 1500;
+  --modal-backdrop: 1499;
+}
+#studentModal {
+  z-index: var(--modal-base) !important;
+  position: fixed !important;
+  top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+#studentModal::before {
+  content: '';
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,.5);
+  z-index: var(--modal-backdrop) !important;
+}
+#studentModal .modal-dialog { z-index: calc(var(--modal-base) + 1); }
+#studentModal .modal-content { z-index: calc(var(--modal-base) + 1); }

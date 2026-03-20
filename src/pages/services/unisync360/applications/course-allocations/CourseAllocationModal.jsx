@@ -9,6 +9,7 @@ import FormikSelect from "../../../../../components/ui-templates/form-components
 export const CourseAllocationModal = ({ selectedObj, onSuccess, onClose }) => {
     const [modalInstance, setModalInstance] = useState(null);
     const modalRef = useRef(null);
+    const [selectedCourseData, setSelectedCourseData] = useState(null);
 
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 6 }, (_, i) => currentYear + i);
@@ -138,14 +139,14 @@ export const CourseAllocationModal = ({ selectedObj, onSuccess, onClose }) => {
                     >
                         {({ isSubmitting, values, setFieldValue }) => (
                             <Form>
-                                <div className="modal-header bg-primary">
-                                    <h5 className="modal-title text-white">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">
                                         <i className="bx bx-task me-2"></i>
                                         {selectedObj?.uid ? "Edit Course Allocation" : "New Course Allocation"}
                                     </h5>
                                     <button
                                         type="button"
-                                        className="btn-close btn-close-white"
+                                        className="btn-close"
                                         onClick={handleClose}
                                         aria-label="Close"
                                     ></button>
@@ -181,33 +182,64 @@ export const CourseAllocationModal = ({ selectedObj, onSuccess, onClose }) => {
                                         />
 
                                         {/* University Course Selection */}
-                                        <FormikSelect
-                                            name="university_course"
-                                            label="University Course *"
-                                            url="/unisync360-academic/university-courses/"
-                                            placeholder="Search and select course..."
-                                            containerClass="col-md-6 mb-3"
-                                            mapOption={(item) => ({
-                                                value: item.uid,
-                                                label: `${item.course_name || ''} - ${item.university_name || ''}`,
-                                                ...item
-                                            })}
-                                            formatOptionLabel={(option) => (
-                                                <div>
-                                                    <span className="fw-medium">{option.course_name || option.label}</span>
-                                                    <small className="d-block text-muted">
-                                                        <i className="bx bxs-school me-1"></i>
-                                                        {option.university_name}
-                                                        {option.tuition_fee && (
-                                                            <span className="ms-2">
-                                                                | <i className="bx bx-money me-1"></i>
-                                                                {option.currency} {parseFloat(option.tuition_fee).toLocaleString()}
-                                                            </span>
-                                                        )}
-                                                    </small>
-                                                </div>
-                                            )}
-                                        />
+                                         <FormikSelect
+                                             name="university_course"
+                                             label="University Course *"
+                                             url="/unisync360-academic/university-courses/"
+                                             placeholder="Search and select course..."
+                                             containerClass="col-md-6 mb-3"
+                                             mapOption={(item) => ({
+                                                 value: item.uid,
+                                                 label: `${item.course_name || ''} - ${item.university_name || ''}`,
+                                                 ...item
+                                             })}
+                                             formatOptionLabel={(option) => (
+                                                 <div>
+                                                     <span className="fw-medium">{option.course_name || option.label}</span>
+                                                     <small className="d-block" style={{ color: '#555' }}>
+                                                         <i className="bx bxs-school me-1"></i>
+                                                         {option.university_name}
+                                                         {option.tuition_fee && (
+                                                             <span className="ms-2">
+                                                                 | <i className="bx bx-money me-1"></i>
+                                                                 {option.currency} {parseFloat(option.tuition_fee).toLocaleString()}
+                                                             </span>
+                                                         )}
+                                                     </small>
+                                                     {option.scholarship_available && (
+                                                         <small className="d-block" style={{ color: '#28a745', fontWeight: '500' }}>
+                                                             <i className="bx bx-gift me-1"></i>
+                                                             Scholarship: {
+                                                                 option.scholarship_type === 'percentage'
+                                                                     ? `${option.scholarship_amount}%`
+                                                                     : option.scholarship_type === 'fixed'
+                                                                     ? `${option.currency} ${parseFloat(option.scholarship_amount || 0).toLocaleString()}`
+                                                                     : 'Full Scholarship'
+                                                             }
+                                                             {option.fee_after_scholarship && (
+                                                                 <span className="ms-2">
+                                                                     | Fee after: <strong>{option.currency} {parseFloat(option.fee_after_scholarship).toLocaleString()}</strong>
+                                                                 </span>
+                                                             )}
+                                                         </small>
+                                                     )}
+                                                 </div>
+                                             )}
+                                             onChange={(option) => {
+                                                 setFieldValue("university_course", option?.value || "");
+                                                 setSelectedCourseData(option);
+                                                 // Auto-populate scholarship if available
+                                                 if (option?.scholarship_available) {
+                                                     setFieldValue("scholarship_applied", true);
+                                                     if (option?.scholarship_amount) {
+                                                         setFieldValue("scholarship_amount", option.scholarship_amount);
+                                                     }
+                                                 } else {
+                                                     setFieldValue("scholarship_applied", false);
+                                                     setFieldValue("scholarship_amount", "");
+                                                 }
+                                             }}
+                                         />
 
                                         {/* Intake Month */}
                                         <div className="col-md-4 mb-3">
@@ -270,39 +302,80 @@ export const CourseAllocationModal = ({ selectedObj, onSuccess, onClose }) => {
                                             <ErrorMessage name="estimated_start_date" component="div" className="text-danger small" />
                                         </div>
 
-                                        {/* Scholarship Applied */}
-                                        <div className="col-md-6 mb-3">
-                                            <div className="form-check mt-4">
-                                                <Field
-                                                    type="checkbox"
-                                                    name="scholarship_applied"
-                                                    className="form-check-input"
-                                                    id="scholarship_applied"
-                                                />
-                                                <label className="form-check-label" htmlFor="scholarship_applied">
-                                                    Scholarship Applied
-                                                </label>
-                                            </div>
-                                        </div>
+                                        {/* Scholarship Information */}
+                                         {selectedCourseData?.scholarship_available && (
+                                             <div className="col-12 mb-3">
+                                                 <div className="alert alert-success d-flex align-items-start">
+                                                     <i className="bx bx-check-circle me-2 mt-1"></i>
+                                                     <div>
+                                                         <strong>Scholarship Available on Course</strong>
+                                                         <div className="small mt-1">
+                                                             <div>
+                                                                 <strong>Type:</strong> <span className="fw-medium">
+                                                                     {selectedCourseData.scholarship_type === 'percentage' 
+                                                                         ? 'Percentage' 
+                                                                         : selectedCourseData.scholarship_type === 'fixed'
+                                                                         ? 'Fixed Amount'
+                                                                         : 'Full Scholarship'}
+                                                                 </span>
+                                                             </div>
+                                                             <div>
+                                                                 <strong>Value:</strong> <span className="fw-medium">
+                                                                     {selectedCourseData.scholarship_type === 'percentage' 
+                                                                         ? `${selectedCourseData.scholarship_amount}%` 
+                                                                         : selectedCourseData.scholarship_type === 'fixed'
+                                                                         ? `${selectedCourseData.currency || 'USD'} ${parseFloat(selectedCourseData.scholarship_amount || 0).toLocaleString()}`
+                                                                         : 'Full Coverage'}
+                                                                 </span>
+                                                             </div>
+                                                             {selectedCourseData.fee_after_scholarship && (
+                                                                 <div>
+                                                                     <strong>Fee After Scholarship:</strong> <span className="fw-medium text-success">
+                                                                         {selectedCourseData.currency || 'USD'} {parseFloat(selectedCourseData.fee_after_scholarship).toLocaleString()}
+                                                                     </span>
+                                                                 </div>
+                                                             )}
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         )}
 
-                                        {/* Scholarship Amount - Only show if scholarship applied */}
-                                        {values.scholarship_applied && (
-                                            <div className="col-md-6 mb-3">
-                                                <label className="form-label">Scholarship Amount</label>
-                                                <div className="input-group">
-                                                    <span className="input-group-text">$</span>
-                                                    <Field
-                                                        type="number"
-                                                        name="scholarship_amount"
-                                                        className="form-control"
-                                                        placeholder="0.00"
-                                                        min="0"
-                                                        step="0.01"
-                                                    />
-                                                </div>
-                                                <ErrorMessage name="scholarship_amount" component="div" className="text-danger small" />
-                                            </div>
-                                        )}
+                                         {/* Manual Scholarship Option - Only if course doesn't have scholarship */}
+                                         {!selectedCourseData?.scholarship_available && (
+                                             <div className="col-md-6 mb-3">
+                                                 <div className="form-check mt-4">
+                                                     <Field
+                                                         type="checkbox"
+                                                         name="scholarship_applied"
+                                                         className="form-check-input"
+                                                         id="scholarship_applied"
+                                                     />
+                                                     <label className="form-check-label" htmlFor="scholarship_applied">
+                                                         Scholarship Applied
+                                                     </label>
+                                                 </div>
+                                             </div>
+                                         )}
+
+                                         {/* Custom Scholarship Amount - Only show if NOT from course */}
+                                         {!selectedCourseData?.scholarship_available && values.scholarship_applied && (
+                                             <div className="col-md-6 mb-3">
+                                                 <label className="form-label">Scholarship Amount</label>
+                                                 <div className="input-group">
+                                                     <span className="input-group-text">$</span>
+                                                     <Field
+                                                         type="number"
+                                                         name="scholarship_amount"
+                                                         className="form-control"
+                                                         placeholder="0.00"
+                                                         min="0"
+                                                         step="0.01"
+                                                     />
+                                                 </div>
+                                                 <ErrorMessage name="scholarship_amount" component="div" className="text-danger small" />
+                                             </div>
+                                         )}
 
                                         {/* Agent Commission */}
                                         <div className="col-md-6 mb-3">
