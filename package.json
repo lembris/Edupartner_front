@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "postinstall": "mkdir -p public/assets/js && cp node_modules/pdfjs-dist/build/pdf.worker.min.js public/assets/js/"
+    "postinstall": "mkdir -p public/assets/js && cp node_modules/pdfjs-dist/build/pdf.worker.min.js public/assets/js/",
+    "visual-regression": "node scripts/visual-regression-check.cjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

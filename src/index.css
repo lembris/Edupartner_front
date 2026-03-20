@@ -3,6 +3,7 @@
 
 /* Import UniSync360 Specific Color Overrides */
 @import './styles/unisync360-colors.css';
+@import './pages/services/unisync360/students/StudentModal.css';
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -31,9 +32,18 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  place-items: stretch;
+  min-width: 100vw;
   min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body.modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100%;
 }
 
 h1 {
@@ -71,6 +81,25 @@ button:focus-visible {
   button {
     background-color: var(--neutral-bg-tertiary);
   }
+}
+
+/* Prevent body overflow when modal is open */
+body.modal-open {
+  overflow-x: hidden !important;
+}
+
+.modal {
+  z-index: 1500 !important;
+}
+
+.modal-backdrop {
+  z-index: 1040 !important;
+  position: fixed !important;
+  inset: 0 !important;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5 !important;
 }
 
 .swal2-container {

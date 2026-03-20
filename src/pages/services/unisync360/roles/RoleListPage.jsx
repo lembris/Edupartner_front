@@ -56,6 +56,7 @@ export const RoleListPage = () => {
     return (
         <>
             <BreadCumb pageList={["UniSync360", "Role Management"]} />
+<<<<<<< Updated upstream
 
             <PaginatedTable
                 fetchPath="/unisync360-users/roles/"
@@ -156,6 +157,123 @@ export const RoleListPage = () => {
                 isRefresh={tableRefresh}
             />
 
+=======
+
+            <PaginatedTable
+                fetchPath="/unisync360-users/roles/"
+                title="Roles"
+                columns={[
+                    {
+                        key: "name",
+                        label: "Role Name",
+                        className: "fw-bold",
+                        style: { width: "300px" },
+                        render: (row) => <strong>{row.name}</strong>,
+                    },
+                    {
+                        key: "permissions_count",
+                        label: "Permissions",
+                        render: (row) => (
+                            <span className="badge bg-label-info">
+                                {row.permissions?.length || 0} permissions
+                            </span>
+                        )
+                    },
+                    {
+                        key: "user_count",
+                        label: "Users Assigned",
+                        render: (row) => (
+                            <span className="badge bg-label-secondary">
+                                {row.user_count || 0} users
+                            </span>
+                        )
+                    },
+                    {
+                        key: "is_active",
+                        label: "Status",
+                        style: { width: "120px" },
+                        className: "text-center",
+                        render: (row) => (
+                            <button
+                                type="button"
+                                className={`badge border-0 ${
+                                    row.is_active
+                                        ? "bg-success cursor-pointer"
+                                        : "bg-danger cursor-pointer"
+                                }`}
+                                onClick={() => handleToggleStatus(row)}
+                                style={{ cursor: "pointer" }}
+                                title={`Click to ${row.is_active ? "deactivate" : "activate"}`}
+                            >
+                                {row.is_active ? "Active" : "Inactive"}
+                            </button>
+                        ),
+                    },
+                    {
+                        key: "actions",
+                        label: "Actions",
+                        style: { width: "200px" },
+                        className: "text-center",
+                        render: (row) => (
+                            <div className="btn-group">
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-primary border-0"
+                                    onClick={() => {
+                                        setSelectedRole(row);
+                                        setShowModal(true);
+                                    }}
+                                    title="Edit Role"
+                                >
+                                    <i className="bx bx-edit"></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-warning border-0"
+                                    onClick={() => {
+                                        setSelectedRole(row);
+                                        setShowPermissionModal(true);
+                                    }}
+                                    title="Manage Permissions"
+                                >
+                                    <i className="bx bx-lock"></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-outline-danger border-0"
+                                    onClick={() => handleDelete(row)}
+                                    title="Delete Role"
+                                >
+                                    <i className="bx bx-trash"></i>
+                                </button>
+                            </div>
+                        ),
+                    },
+                ]}
+                buttons={[
+                    {
+                        label: "Add Role",
+                        render: () => (
+                            <button
+                                type="button"
+                                className="btn btn-primary btn-sm"
+                                onClick={() => {
+                                    setSelectedRole(null);
+                                    setShowModal(true);
+                                }}
+                                title="Add new Role"
+                            >
+                                <i className="bx bx-plus me-1"></i> Add Role
+                            </button>
+                        ),
+                    },
+                ]}
+                isRefresh={tableRefresh}
+            />
+
+>>>>>>> Stashed changes
             {showModal && (
                 <RoleModal
                     selectedRole={selectedRole}

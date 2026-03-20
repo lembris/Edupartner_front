@@ -470,6 +470,10 @@
                     }
                 ]
             },
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             {
                 "text": "Settings",
                 "icon": "bx bx-cog",
@@ -506,6 +510,7 @@
                         "role": [
                             "unisync360_super_admin"
                         ]
+<<<<<<< Updated upstream
                     },
                     {
                         "text": "Site Settings",
@@ -516,6 +521,8 @@
                         "role": [
                             "unisync360_super_admin"
                         ]
+=======
+>>>>>>> Stashed changes
                     }
                 ]
             }

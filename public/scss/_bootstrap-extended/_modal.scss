@@ -16,9 +16,10 @@
     box-shadow: $box-shadow-sm;
     transition: all 0.23s ease 0.1s;
 
-    @include ltr-style {
-      transform: translate(23px, -25px);
-    }
+    // Transform removed: was causing horizontal overflow
+    // @include ltr-style {
+    //   transform: translate(23px, -25px);
+    // }
 
     // For hover effect of close btn
     &:hover,
@@ -27,14 +28,16 @@
       opacity: 1;
       outline: none;
 
-      @include ltr-style {
-        transform: translate(20px, -20px);
-      }
+      // Transform removed: no animation needed, prevents overflow
+      // @include ltr-style {
+      //   transform: translate(20px, -20px);
+      // }
     }
   }
   .modal-header {
     .btn-close {
-      margin-top: -1.25rem;
+      // Margin removed: was causing layout shift outside modal boundary
+      // margin-top: -1.25rem;
     }
   }
 }

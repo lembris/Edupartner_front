@@ -44,6 +44,7 @@ const [currentPage, setCurrentPage] = useState(1);
   const lastFetchParams = useRef("");
   const doFetchRef = useRef(null);
   const abortControllerRef = useRef(null);
+<<<<<<< Updated upstream
   
   const totalPages = Math.ceil((totalCount || 0) / (pageSize || 1));
   
@@ -78,6 +79,11 @@ const [currentPage, setCurrentPage] = useState(1);
     }
     
     return pages;
+=======
+
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected + 1);
+>>>>>>> Stashed changes
   };
 
   const doFetch = useCallback(async (page, size, search, selFilters, selFilterGroups) => {
@@ -85,10 +91,18 @@ const [currentPage, setCurrentPage] = useState(1);
     if (paramsKey === lastFetchParams.current) return;
     lastFetchParams.current = paramsKey;
 
+<<<<<<< Updated upstream
+=======
+    // Cancel previous request if one is in progress
+>>>>>>> Stashed changes
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
     
+<<<<<<< Updated upstream
+=======
+    // Create new AbortController for this request
+>>>>>>> Stashed changes
     abortControllerRef.current = new AbortController();
 
     setLoading(true);
@@ -121,9 +135,17 @@ const [currentPage, setCurrentPage] = useState(1);
       if (result.status === 200 || result.status === 8000 || result.status === "success") {
         setRowRecords(result.data || []);
         setError(false);
+<<<<<<< Updated upstream
         const total = result.pagination?.total ?? (result.data ? result.data.length : 0);
         setTotalCount(total);
         
+=======
+        // Always set total count - handle empty results properly
+        const total = result.pagination?.total ?? (result.data ? result.data.length : 0);
+        setTotalCount(total);
+        
+        // Only show warning if search was used and no results found
+>>>>>>> Stashed changes
         if (debouncedSearchQuery && (!result.data || result.data.length === 0)) {
           showToast("No Records Found", "info", "Search completed");
         }
@@ -134,6 +156,10 @@ const [currentPage, setCurrentPage] = useState(1);
         showToast("Failed to fetch records", "warning", "Fetch completed");
       }
     } catch (err) {
+<<<<<<< Updated upstream
+=======
+      // Ignore abort errors - they're expected when canceling requests
+>>>>>>> Stashed changes
       if (err.name === 'AbortError') {
         return;
       }
@@ -156,10 +182,15 @@ const [currentPage, setCurrentPage] = useState(1);
   }, [currentPage, pageSize, selectedFilters, selectedFilterGroups, doFetch, debouncedSearchQuery]);
 
   useEffect(() => {
+<<<<<<< Updated upstream
+=======
+    // Clear any existing timeout
+>>>>>>> Stashed changes
     if (searchDebounceRef.current) {
       clearTimeout(searchDebounceRef.current);
     }
     
+<<<<<<< Updated upstream
     searchDebounceRef.current = setTimeout(() => {
       if (isMounted.current) {
         lastFetchParams.current = "";
@@ -168,12 +199,28 @@ const [currentPage, setCurrentPage] = useState(1);
       }
     }, 400);
     
+=======
+    // Set new timeout to update debouncedSearchQuery after user stops typing
+    searchDebounceRef.current = setTimeout(() => {
+      if (isMounted.current) {
+        lastFetchParams.current = ""; // Reset to force fetch with new search
+        setCurrentPage(1); // Reset to page 1 when search changes
+        setDebouncedSearchQuery(searchQuery);
+      }
+    }, 400); // 400ms debounce delay - prevents excessive API calls
+    
+    // Cleanup: clear timeout on unmount or before next effect runs
+>>>>>>> Stashed changes
     return () => {
       if (searchDebounceRef.current) {
         clearTimeout(searchDebounceRef.current);
       }
     };
+<<<<<<< Updated upstream
   }, [searchQuery]);
+=======
+  }, [searchQuery]); // Only depend on raw searchQuery - NOT debouncedSearchQuery
+>>>>>>> Stashed changes
 
   useEffect(() => {
     if (isRefresh > 0) {
@@ -185,6 +232,10 @@ const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
     return () => { 
       isMounted.current = false;
+<<<<<<< Updated upstream
+=======
+      // Cancel any pending requests on unmount
+>>>>>>> Stashed changes
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
@@ -365,6 +416,7 @@ const [currentPage, setCurrentPage] = useState(1);
           </div>
         </div>
 
+<<<<<<< Updated upstream
         <div className="table-wrapper" style={{ overflowX: 'auto', overflowY: 'visible', position: 'relative' }}>
           <table className="table table-hover table-bordered mb-0" style={{ tableLayout: 'auto', minWidth: '100%' }}>
             <thead style={{ backgroundColor: "#f1f1f1", position: 'sticky', top: 0, zIndex: 11 }}>
@@ -402,6 +454,99 @@ const [currentPage, setCurrentPage] = useState(1);
                   >
                     Actions
                   </th>
+=======
+        <div className="animate__animated animate__fadeInUp animate__faster">
+          <div className="table-responsive">
+            <table className="table table-hover table-align-middle mb-0 table-bordered">
+              <thead style={{ backgroundColor: "#f1f1f1" }}>
+                <tr>
+                  {columns.map((col, idx) => (
+                    <th
+                      key={col.key || col.label || idx}
+                      className={col.className || ""}
+                      style={col.style || {}}
+                    >
+                      {col.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+
+              <tbody className="table-border-bottom-0">
+                {loading ? (
+                  <tr>
+                    <td colSpan="100%">
+                      <div className="col-md-12 col-lg-12 col-sm-12 p-2">
+                        <center>
+                          <ReactLoading
+                            type={"cylon"}
+                            color={"#696cff"}
+                            height={"30px"}
+                            width={"50px"}
+                          />
+                        </center>
+                        <center className="mt-1">
+                          <h6 className="text-muted">Fetching Records...</h6>
+                        </center>
+                      </div>
+                    </td>
+                  </tr>
+                ) : error ? (
+                  <tr>
+                    <td colSpan="100%">
+                      <div className="alert alert-danger" role="alert">
+                        <div className="alert-body text-center">
+                          <p className="mb-0">
+                            Unable to fetching Records. Please try again later.
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ) : rowRecords.length === 0 ? (
+                   <tr>
+                     <td colSpan="100%">
+                       <div className="alert alert-info" role="alert">
+                         <div className="alert-body text-center py-4">
+                           <i className="bx bx-search-alt" style={{ fontSize: '2rem', color: '#17a2b8' }}></i>
+                           <p className="mb-1 mt-2 fw-semibold">No Records Found</p>
+                           <small className="text-muted">
+                             {debouncedSearchQuery || selectedFilters?.length > 1 
+                               ? "Try adjusting your search or filters" 
+                               : "No data available. Create a new record to get started."}
+                           </small>
+                         </div>
+                       </div>
+                     </td>
+                   </tr>
+                 ) : (
+                  rowRecords.map((row, rowIndex) => (
+                    <tr
+                      key={row.id || rowIndex}
+                      onClick={() => onSelect && onSelect(row)}
+                    >
+                      {columns.map((col) => {
+                        const content = col.render
+                          ? col.render(row, rowIndex, currentPage, pageSize)
+                          : row[col.key];
+
+                        return (
+                          <td
+                            key={col.key}
+                            className={col.className}
+                            style={col.style}
+                          >
+                            {col.key === "SN"
+                              ? currentPage * pageSize - pageSize + rowIndex + 1
+                              : content !== undefined && content !== null
+                              ? content
+                              : "N/A"}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))
+>>>>>>> Stashed changes
                 )}
               </tr>
             </thead>

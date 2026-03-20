@@ -109,7 +109,11 @@ function ProtectedRoute({
 
     Swal.fire({
       title: "Access Denied",
+<<<<<<< Updated upstream
       text: "You don't have permission to access this page. Taking you home in 3 seconds...",
+=======
+      text: "You don't have permission to access this page.",
+>>>>>>> Stashed changes
       icon: "warning",
       allowOutsideClick: false,
       allowEscapeKey: false,
@@ -123,7 +127,10 @@ function ProtectedRoute({
         }, 3000);
       }
     }).then(() => {
+<<<<<<< Updated upstream
       // If user clicks the button, redirect immediately
+=======
+>>>>>>> Stashed changes
       window.location.href = redirectUrl;
     });
 

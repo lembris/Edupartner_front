@@ -45,9 +45,12 @@ import { FinancialReportsPage } from "../../../pages/services/unisync360/account
 import { UserListPage } from "../../../pages/services/unisync360/users/UserListPage.jsx";
 import { RoleListPage } from "../../../pages/services/unisync360/roles/RoleListPage.jsx";
 import { PermissionListPage } from "../../../pages/services/unisync360/permissions/PermissionListPage.jsx";
+<<<<<<< Updated upstream
 
 // Site Settings
 import SiteSettingsPage from "../../../pages/services/unisync360/site/SiteSettingsPage.jsx";
+=======
+>>>>>>> Stashed changes
 
 // User Manual
 import { UserManualPage } from "../../../pages/services/unisync360/usermanual/UserManualPage.jsx";
@@ -472,6 +475,7 @@ const unisync360Permissions = {
         editUsers: ["change_user"],
         deleteUsers: ["delete_user"],
     },
+<<<<<<< Updated upstream
 
     // Service Management (Service Setup, Consents)
     service: {
@@ -497,6 +501,8 @@ const unisync360Permissions = {
         change: ["change_sitesetting"],
         delete: ["delete_sitesetting"],
     },
+=======
+>>>>>>> Stashed changes
 }
 
 
@@ -1111,6 +1117,7 @@ export const unisync360Routes = [
         ),
     },
 
+<<<<<<< Updated upstream
     // Site Settings
     {
         path: "/unisync360/site",
@@ -1124,6 +1131,8 @@ export const unisync360Routes = [
         ),
     },
 
+=======
+>>>>>>> Stashed changes
     // Wards
     {
         path: "/unisync360/locations/wards",
@@ -1147,6 +1156,7 @@ export const unisync360Routes = [
             </ProtectedRoute>
         ),
     },
+<<<<<<< Updated upstream
 
     // PUBLIC ROUTE - Service Consent Request (No Authentication Required)
     {
@@ -1156,3 +1166,6 @@ export const unisync360Routes = [
 ];
 
 export default unisync360Routes; 
+=======
+]
+>>>>>>> Stashed changes
