@@ -1,3 +1,4 @@
+import React from 'react';
 import { UserListPage } from "../../../pages/services/MANAGMENTS/users/View";
 import { UserOpenPage } from "../../../pages/services/MANAGMENTS/users/Open";
 import ProtectedRoute from "../../../components/wrapper/ProtectedRoute";

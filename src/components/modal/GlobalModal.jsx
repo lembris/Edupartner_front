@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import ReactDOM from "react-dom/client";
+import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 
 /**
@@ -350,12 +350,12 @@ const GlobalModal = ({
   // Render portal or direct
   if (typeof getContainer === 'function') {
     const container = getContainer();
-    return container ? ReactDOM.createPortal(getModalContent({ style: { display: isVisible ? 'block' : 'none' } }), container) : null;
+    return container ? createPortal(getModalContent({ style: { display: isVisible ? 'block' : 'none' } }), container) : null;
   } else if (getContainer instanceof HTMLElement) {
-    return ReactDOM.createPortal(getModalContent({ style: { display: isVisible ? 'block' : 'none' } }), getContainer);
+    return createPortal(getModalContent({ style: { display: isVisible ? 'block' : 'none' } }), getContainer);
   } else {
     // Default to appending to body
-    return ReactDOM.createPortal(getModalContent({ style: { display: isVisible ? 'block' : 'none' } }), document.body);
+    return createPortal(getModalContent({ style: { display: isVisible ? 'block' : 'none' } }), document.body);
   }
 };
 
@@ -435,54 +435,6 @@ GlobalModal.propTypes = {
   
   // Legacy/compatibility
   title: PropTypes.string,
-};
-
-// Default props
-GlobalModal.defaultProps = {
-  modalSize: "",
-  centered: false,
-  scrollable: false,
-  show: false,
-  visible: undefined,
-  backdrop: true,
-  keyboard: true,
-  fade: true,
-  unmountOnClose: false,
-  destroyOnClose: false,
-  forceRender: false,
-  onShowChange: undefined,
-  onOk: undefined,
-  onCancel: undefined,
-  afterOpen: undefined,
-  afterClose: undefined,
-  showOk: true,
-  showCancel: true,
-  okText: "OK",
-  cancelText: "Cancel",
-  confirmLoading: false,
-  footerAlign: "right",
-  buttonLayout: "horizontal",
-  closable: true,
-  closeIcon: undefined,
-  header: undefined,
-  footer: undefined,
-  headerClassName: "",
-  bodyClassName: "",
-  footerClassName: "",
-  contentClassName: "",
-  dialogClassName: "",
-  wrapClassName: "",
-  style: {},
-  getContainer: document.body,
-  zIndex: 1050,
-  maskClosable: true,
-  trapFocus: true,
-  returnFocus: true,
-  preventScroll: true,
-  mousePosition: undefined,
-  modalRender: undefined,
-  dialogRender: undefined,
-  title: undefined,
 };
 
 export default GlobalModal;

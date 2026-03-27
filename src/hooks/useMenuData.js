@@ -35,6 +35,7 @@ export const useMenuData = (menuType) => {
       bi: () => import('../data/biMenu.json'),
       leadLancer: () => import('../data/leadLancerMenu.json'),
       externalCounselor: () => import('../data/externalCounselorMenu.json'),
+      clinic360: () => import('../data/clinic360Menu.json'),
     };
 
     if (!menuMap[menuType]) {
@@ -70,7 +71,7 @@ export const usePreloadMenuData = () => {
     if (!isAuthenticated) return;
 
     // Preload all menus in the background
-    const menus = ['unisync360', 'eApproval', 'ictAssets', 'bi', 'leadLancer', 'externalCounselor'];
+    const menus = ['unisync360', 'eApproval', 'ictAssets', 'bi', 'leadLancer', 'externalCounselor', 'clinic360'];
     
     menus.forEach(menu => {
       // Dynamic import to trigger loading

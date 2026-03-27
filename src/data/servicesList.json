@@ -22,6 +22,17 @@
     ]
   },
   {
+    "id": "clinic360",
+    "text": "CLINIC360",
+    "icon": "bx bxs-hospital",
+    "available": true,
+    "link": "/clinic360/dashboard",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
     "id": "unisync360",
     "text": "UniSync360",
     "icon": "bx bxs-graduation",
