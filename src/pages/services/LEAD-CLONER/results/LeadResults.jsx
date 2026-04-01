@@ -232,16 +232,16 @@ const LeadResults = () => {
                                             {row.phone}
                                         </a>
                                     </div>
-                                )}
-                                {row.email && (
+                                ) : null}
+                                {row.email ? (
                                     <div>
                                         <a href={`mailto:${row.email}`} className="text-dark text-decoration-none">
                                             <i className="bx bx-envelope text-primary me-1"></i>
                                             <small>{row.email}</small>
                                         </a>
                                     </div>
-                                )}
-                                {row.website && (
+                                ) : null}
+                                {row.website ? (
                                     <div>
                                         <a
                                             href={row.website}
@@ -253,7 +253,7 @@ const LeadResults = () => {
                                             <small>Website</small>
                                         </a>
                                     </div>
-                                )}
+                                ) : null}
                                 {!row.phone && !row.email && !row.website && (
                                     <span className="text-muted">—</span>
                                 )}

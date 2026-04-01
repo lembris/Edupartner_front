@@ -1,3 +1,4 @@
+import React from 'react';
 import { AssetDashboardPage } from "../../../pages/services/ICT-ASSETS/dashboard/AssetDashboardPage.jsx";
 import { AssetListPage } from "../../../pages/services/ICT-ASSETS/assets_list/View.jsx";
 import { AssetViewPage } from "../../../pages/services/ICT-ASSETS/assets_list/Open.jsx";

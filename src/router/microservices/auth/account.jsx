@@ -1,3 +1,4 @@
+import React from 'react';
 import { AccountPage } from "../../../pages/account/AccountPage";
 import { Connections } from "../../../pages/account/ConnectionsPage";
 import { NotificationPage } from "../../../pages/account/NotificationPage";
