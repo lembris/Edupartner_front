@@ -6,10 +6,14 @@ import { useMenuData } from '../hooks/useMenuData';
 // Static imports only for immediately needed data
 import servicesList from '../data/servicesList.json';
 
-// Menu mapping - UniSync360 menu loaded dynamically via useMenuData hook
+// Menu mapping - menus loaded dynamically via useMenuData hook
 const MENU_CONFIG = {
   'unisync360': {
     title: 'UniSync360',
+    type: 'nested'
+  },
+  'clinic360': {
+    title: 'CLINIC360',
     type: 'nested'
   }
 };
@@ -46,19 +50,23 @@ const hasAnyVisibleItem = (items, userPermissions, userRoles) => {
   });
 };
 
-// Extract namespace from URL path (UniSync360 only)
+// Extract namespace from URL path
 const getNamespaceFromPath = (pathname) => {
-  const segments = pathname.split('/').filter(Boolean);
-  if (segments.length === 0) return DEFAULT_NAMESPACE;
+   const segments = pathname.split('/').filter(Boolean);
+   if (segments.length === 0) return DEFAULT_NAMESPACE;
 
-  const firstSegment = segments[0].toLowerCase();
+   const firstSegment = segments[0].toLowerCase();
 
-  // Only support UniSync360
-  if (firstSegment === 'unisync360') {
-    return 'unisync360';
-  }
+   // Support UniSync360 and CLINIC360
+   if (firstSegment === 'unisync360') {
+     return 'unisync360';
+   }
+   
+   if (firstSegment === 'clinic360') {
+     return 'clinic360';
+   }
 
-  return DEFAULT_NAMESPACE;
+   return DEFAULT_NAMESPACE;
 };
 
 const Sidebar = ({ isService = false }) => {
@@ -68,8 +76,9 @@ const Sidebar = ({ isService = false }) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Lazy load UniSync360 menu data only
-  const { menuData: unisync360Data } = useMenuData('unisync360');
+// Lazy load menu data for UniSync360 and CLINIC360
+   const { menuData: unisync360Data } = useMenuData('unisync360');
+   const { menuData: clinic360Data } = useMenuData('clinic360');
 
   // Listen for sidebar toggle events
   useEffect(() => {
@@ -85,15 +94,20 @@ const Sidebar = ({ isService = false }) => {
     return getNamespaceFromPath(location.pathname);
   }, [location.pathname]);
 
-  // Build menu config with lazy-loaded UniSync360 data
-  const menuConfigWithData = useMemo(() => ({
-    ...MENU_CONFIG,
-    'unisync360': {
-      ...MENU_CONFIG['unisync360'],
-      // unisync360Data is an array with one element containing the items
-      data: (Array.isArray(unisync360Data) && unisync360Data[0]?.items) || unisync360Data || []
-    }
-  }), [unisync360Data]);
+// Build menu config with lazy-loaded UniSync360 and CLINIC360 data
+   const menuConfigWithData = useMemo(() => ({
+     ...MENU_CONFIG,
+     'unisync360': {
+       ...MENU_CONFIG['unisync360'],
+       // unisync360Data is an array with one element containing the items
+       data: (Array.isArray(unisync360Data) && unisync360Data[0]?.items) || unisync360Data || []
+     },
+     'clinic360': {
+       ...MENU_CONFIG['clinic360'],
+       // clinic360Data is an array with one element containing the items
+       data: (Array.isArray(clinic360Data) && clinic360Data[0]?.items) || clinic360Data || []
+     }
+   }), [unisync360Data, clinic360Data]);
 
   // Get menu config for current namespace
   const menuConfig = menuConfigWithData[activeNamespace] || menuConfigWithData[DEFAULT_NAMESPACE] || { title: 'Home', data: [] };

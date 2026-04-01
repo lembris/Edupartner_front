@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import RouteLoadingSpinner from '../../../components/loaders/RouteLoadingSpinner';
 
 // Lazy load authentication pages

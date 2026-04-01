@@ -1,10 +1,8 @@
-<<<<<<< Updated upstream
 /* AddCommissionPackageModal.css - Commission Package specific styles */
 
 .package-modal-content {
     background: var(--neutral-surface);
-=======
-/* AddCommissionPackageModal.css */
+}
 
 .modal-overlay {
     position: fixed;
@@ -22,12 +20,10 @@
 .modal-content {
     background: white;
     z-index: 1400;
->>>>>>> Stashed changes
     border-radius: 0.5rem;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     max-width: 700px;
     width: 95%;
-<<<<<<< Updated upstream
 }
 
 .package-modal-header {
@@ -51,7 +47,6 @@
 }
 
 .package-form-row {
-=======
     max-height: 90vh;
     overflow-y: auto;
 }
@@ -98,36 +93,34 @@
 }
 
 .form-row {
->>>>>>> Stashed changes
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-bottom: 1rem;
 }
 
-<<<<<<< Updated upstream
 .package-form-group {
-=======
-.form-group {
->>>>>>> Stashed changes
     display: flex;
     flex-direction: column;
 }
 
-<<<<<<< Updated upstream
 .package-form-group label {
     font-weight: 600;
     color: var(--neutral-text-primary);
-=======
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
 .form-group label {
     font-weight: 600;
     color: #374151;
->>>>>>> Stashed changes
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
 }
 
-<<<<<<< Updated upstream
 .package-checkbox-row {
     display: flex;
     gap: 2rem;
@@ -139,7 +132,11 @@
 }
 
 .package-checkbox-label {
-=======
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
 .form-control,
 textarea.form-control {
     padding: 0.5rem 0.75rem;
@@ -172,27 +169,22 @@ textarea.form-control {
 }
 
 .checkbox-label {
->>>>>>> Stashed changes
     display: flex;
     align-items: center;
     cursor: pointer;
     font-weight: 500;
-<<<<<<< Updated upstream
     color: var(--neutral-text-primary);
 }
 
 .package-checkbox-label input[type="checkbox"] {
-=======
     color: #374151;
 }
 
 .checkbox-label input[type="checkbox"] {
->>>>>>> Stashed changes
     width: 1.125rem;
     height: 1.125rem;
     margin-right: 0.5rem;
     cursor: pointer;
-<<<<<<< Updated upstream
     accent-color: var(--neutral-accent-blue);
 }
 
@@ -214,8 +206,6 @@ textarea.form-control {
         flex-direction: column;
         gap: 1rem;
     }
-=======
-    accent-color: #6366f1;
 }
 
 .modal-footer {
@@ -286,5 +276,4 @@ textarea.form-control {
         top: 1rem;
         right: 1rem;
     }
->>>>>>> Stashed changes
 }

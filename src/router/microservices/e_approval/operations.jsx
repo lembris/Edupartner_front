@@ -1,3 +1,4 @@
+import React from 'react';
 import { ApprovalRequestPage } from "../../../pages/services/E-APPROVAL/approval_request/View";
 import { ApprovalRequestOpenPage } from "../../../pages/services/E-APPROVAL/approval_request/Open";
 import { RequestHandlingPage } from "../../../pages/services/E-APPROVAL/request_handling/View.jsx";

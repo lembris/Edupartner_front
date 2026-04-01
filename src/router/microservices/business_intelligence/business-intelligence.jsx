@@ -1,3 +1,4 @@
+import React from 'react';
 import { BiDashboardPage } from "../../../pages/services/BUSINESS-INTELLIGENCE/dashboard/BiDashboardPage";
 import { AccountsListPage } from "../../../pages/services/BUSINESS-INTELLIGENCE/accounts/AccountsListPage";
 import { AccountDetailPage } from "../../../pages/services/BUSINESS-INTELLIGENCE/accounts/AccountDetailPage";

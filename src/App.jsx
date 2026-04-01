@@ -1,3 +1,4 @@
+import React from "react";
 import { useLocation } from "react-router-dom";
 import { Suspense } from "react";
 import Layout from "./layouts/Layout";
@@ -21,7 +22,8 @@ function App() {
     location.pathname.includes("blank") ||
     location.pathname === "/unisync360/external-counselor-login" ||
     location.pathname === "/unisync360/lead-lancer-login" ||
-    location.pathname === "/unisync360/service-consent";
+    location.pathname === "/unisync360/service-consent" ||
+    location.pathname === "/clinic360/operations";
 
   const isService = location.pathname === "/";
 

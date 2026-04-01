@@ -125,10 +125,7 @@ export const UserModal = ({ selectedObj, onSuccess, onClose }) => {
                 submitData.username = values.username;
                 submitData.pf_number = values.pf_number;
                 submitData.password = values.password;
-<<<<<<< Updated upstream
                 submitData.password_confirm = values.password_confirm;
-=======
->>>>>>> Stashed changes
                 submitData.roles = values.roles;
             } else {
                 // For update (edit user) - only include fields that might have changed

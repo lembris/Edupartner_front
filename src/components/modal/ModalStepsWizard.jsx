@@ -86,9 +86,30 @@ export const ModalStepsWizard = ({
     }
     setIsFirstTabChange(true);
     const modalElement = document.getElementById(modalId);
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    if (modalInstance) modalInstance.hide();
+    if (modalElement) {
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      if (modalInstance) {
+        modalInstance.hide();
+        modalInstance.dispose();
+      }
+    }
+    document.body.classList.remove("modal-open");
+    const backdrops = document.querySelectorAll(".modal-backdrop");
+    backdrops.forEach(backdrop => backdrop.remove());
   };
+
+  useEffect(() => {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+      modalInstance.show();
+    }
+    return () => {
+      document.body.classList.remove("modal-open");
+      const backdrops = document.querySelectorAll(".modal-backdrop");
+      backdrops.forEach(backdrop => backdrop.remove());
+    };
+  }, [modalId]);
 
   const validateTab = useCallback(async (values, setFieldError, setFieldTouched, currentTabIndex) => {
     try {
@@ -212,13 +233,13 @@ export const ModalStepsWizard = ({
 
   return (
     <div
-      className="modal modal-slide-in"
+      className="modal fade"
       id={modalId}
       tabIndex="-1"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
     >
-      <div className={`modal-dialog ${modalSize}`} role="document">
+      <div className={`modal-dialog modal-dialog-centered ${modalSize}`} role="document">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
@@ -231,7 +252,9 @@ export const ModalStepsWizard = ({
               onClick={handleClose}
               data-bs-dismiss="modal"
               aria-label="Close"
-            ></button>
+            >
+              <i className="bx bx-x"></i>
+            </button>
           </div>
 
           <Formik
@@ -249,7 +272,11 @@ export const ModalStepsWizard = ({
                     color={color}
                     stepSize={stepSize}
                     onTabChange={({ prevIndex, nextIndex }) => {
-                      setTimeout(() => setTabIndex(nextIndex), 0);
+                      if (nextIndex !== undefined) {
+                        setTabIndex(nextIndex);
+                      } else if (prevIndex !== undefined) {
+                        setTabIndex(prevIndex);
+                      }
                     }}
                     backButtonTemplate={(handlePrevious) => renderBackButton(handlePrevious)}
                     nextButtonTemplate={(handleNext) =>

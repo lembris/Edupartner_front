@@ -1,0 +1,290 @@
+[
+    {
+        "items": [
+            {
+                "text": "Overview",
+                "icon": "bx bxs-clinic",
+                "available": true,
+                "link": "",
+                "header": "OVERVIEW",
+                "submenu": [
+                    {
+                        "text": "Dashboard",
+                        "icon": "bx bx-home",
+                        "available": true,
+                        "link": "/clinic360/dashboard",
+                        "permission": ["view_dashboard"],
+                        "role": [
+                            "admin",
+                            "doctor",
+                            "nurse",
+                            "receptionist"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Patients",
+                "icon": "bx bxs-user",
+                "available": true,
+                "link": "",
+                "header": "PATIENTS",
+                "submenu": [
+                    {
+                        "text": "Patient List",
+                        "icon": "bx bx-list-ul",
+                        "available": true,
+                        "link": "/clinic360/patients",
+                        "permission": ["view_patient"],
+                        "role": [
+                            "admin",
+                            "doctor",
+                            "nurse",
+                            "receptionist"
+                        ]
+                    },
+                    {
+                        "text": "Operations",
+                        "icon": "bx bx-briefcase",
+                        "available": true,
+                        "link": "/clinic360/operations",
+                        "permission": ["view_patient"],
+                        "role": [
+                            "admin",
+                            "doctor",
+                            "nurse",
+                            "receptionist"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Visits",
+                "icon": "bx bx-calendar-plus",
+                "available": true,
+                "link": "",
+                "header": "VISITS",
+                "submenu": [
+                    {
+                        "text": "Visit List",
+                        "icon": "bx bx-calendar",
+                        "available": true,
+                        "link": "/clinic360/visits",
+                        "permission": ["view_visit"],
+                        "role": [
+                            "admin",
+                            "doctor",
+                            "nurse"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Clinical",
+                "icon": "bx bx-clipboard",
+                "available": true,
+                "link": "",
+                "header": "CLINICAL",
+                "submenu": [
+                    {
+                        "text": "Vital Signs",
+                        "icon": "bx bx-heart",
+                        "available": true,
+                        "link": "/clinic360/vitals",
+                        "permission": ["view_vital"],
+                        "role": [
+                            "admin",
+                            "doctor",
+                            "nurse"
+                        ]
+                    },
+                    {
+                        "text": "Diagnoses",
+                        "icon": "bx bx-clipboard",
+                        "available": true,
+                        "link": "/clinic360/diagnoses",
+                        "permission": ["view_diagnosis"],
+                        "role": [
+                            "admin",
+                            "doctor"
+                        ]
+                    },
+                    {
+                        "text": "Consultations",
+                        "icon": "bx bx-message-square",
+                        "available": true,
+                        "link": "/clinic360/consultations",
+                        "permission": ["view_consultation"],
+                        "role": [
+                            "admin",
+                            "doctor"
+                        ]
+                    },
+                    {
+                        "text": "Lab Orders",
+                        "icon": "bx bx-test-tube",
+                        "available": true,
+                        "link": "/clinic360/lab-orders",
+                        "permission": ["view_laborder"],
+                        "role": [
+                            "admin",
+                            "doctor",
+                            "nurse"
+                        ]
+                    },
+                    {
+                        "text": "Prescriptions",
+                        "icon": "bx bx-capsule",
+                        "available": true,
+                        "link": "/clinic360/prescriptions",
+                        "permission": ["view_prescription"],
+                        "role": [
+                            "admin",
+                            "doctor"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Queue",
+                "icon": "bx bx-list-ol",
+                "available": true,
+                "link": "",
+                "header": "QUEUE MANAGEMENT",
+                "submenu": [
+                    {
+                        "text": "Queue Stations",
+                        "icon": "bx bx-server",
+                        "available": true,
+                        "link": "/clinic360/queue-stations",
+                        "permission": ["view_queuestation"],
+                        "role": [
+                            "admin",
+                            "receptionist"
+                        ]
+                    },
+                    {
+                        "text": "Queue Entries",
+                        "icon": "bx bx-list-check",
+                        "available": true,
+                        "link": "/clinic360/queue-entries",
+                        "permission": ["view_queueentry"],
+                        "role": [
+                            "admin",
+                            "receptionist"
+                        ]
+                    },
+                    {
+                        "text": "Queue Tokens",
+                        "icon": "bx bx-tag",
+                        "available": true,
+                        "link": "/clinic360/queue-tokens",
+                        "permission": ["view_queuetoken"],
+                        "role": [
+                            "admin",
+                            "receptionist"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Insurance",
+                "icon": "bx bx-shield",
+                "available": true,
+                "link": "",
+                "header": "INSURANCE",
+                "submenu": [
+                    {
+                        "text": "Insurance Providers",
+                        "icon": "bx bx-building",
+                        "available": true,
+                        "link": "/clinic360/insurance-providers",
+                        "permission": ["view_insuranceprovider"],
+                        "role": [
+                            "admin"
+                        ]
+                    },
+                    {
+                        "text": "Insurance Plans",
+                        "icon": "bx bx-file",
+                        "available": true,
+                        "link": "/clinic360/insurance-plans",
+                        "permission": ["view_insuranceplan"],
+                        "role": [
+                            "admin"
+                        ]
+                    },
+                    {
+                        "text": "Insurance Policies",
+                        "icon": "bx bx-file-blank",
+                        "available": true,
+                        "link": "/clinic360/insurance-policies",
+                        "permission": ["view_insurancepolicy"],
+                        "role": [
+                            "admin"
+                        ]
+                    },
+                    {
+                        "text": "Insurance Claims",
+                        "icon": "bx bx-receipt",
+                        "available": true,
+                        "link": "/clinic360/insurance-claims",
+                        "permission": ["view_insuranceclaim"],
+                        "role": [
+                            "admin"
+                        ]
+                    },
+                    {
+                        "text": "Pre-Authorizations",
+                        "icon": "bx bx-check-circle",
+                        "available": true,
+                        "link": "/clinic360/pre-authorizations",
+                        "permission": ["view_preauthorization"],
+                        "role": [
+                            "admin"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Billing",
+                "icon": "bx bx-credit-card",
+                "available": true,
+                "link": "",
+                "header": "BILLING",
+                "submenu": [
+                    {
+                        "text": "Payments",
+                        "icon": "bx bx-money",
+                        "available": true,
+                        "link": "/clinic360/payments",
+                        "permission": ["view_payment"],
+                        "role": [
+                            "admin",
+                            "accountant"
+                        ]
+                    }
+                ]
+            },
+            {
+                "text": "Configuration",
+                "icon": "bx bx-cog",
+                "available": true,
+                "link": "",
+                "header": "CONFIGURATION",
+                "submenu": [
+                    {
+                        "text": "Code Formats",
+                        "icon": "bx bx-code",
+                        "available": true,
+                        "link": "/clinic360/code-formats",
+                        "permission": ["view_codeformat"],
+                        "role": [
+                            "admin"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

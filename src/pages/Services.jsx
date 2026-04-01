@@ -8,12 +8,8 @@ export const Services = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  // Filter services by search text - Only show UniSync360 services
-  const unisync360Services = servicesList.filter(
-    (service) => service.id === 'unisync360' || service.id === 'external-counselor-portal' || service.id === 'lead-lancer-portal'
-  );
-  
-  const filteredServices = unisync360Services.filter(
+  // Filter services by search text - Show all services
+  const filteredServices = servicesList.filter(
     (service) =>
       service.text.toLowerCase().includes(search.toLowerCase()) ||
       (service.description &&

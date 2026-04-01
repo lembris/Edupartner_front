@@ -1,3 +1,4 @@
+import React from 'react';
 import { DirectoryPage } from "../../../pages/services/MANAGMENTS/directory/View";
 import { DirectoryOpenPage } from "../../../pages/services/MANAGMENTS/directory/Open";
 import { DepartmentPage } from "../../../pages/services/MANAGMENTS/department/View";
