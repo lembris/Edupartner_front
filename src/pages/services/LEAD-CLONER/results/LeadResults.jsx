@@ -225,7 +225,7 @@ const LeadResults = () => {
                         style: { minWidth: "180px" },
                         render: (row) => (
                             <div>
-                                {row.phone ? (
+                                {row.phone && (
                                     <div>
                                         <a href={`tel:${row.phone}`} className="text-dark text-decoration-none">
                                             <i className="bx bx-phone text-success me-1"></i>
@@ -285,12 +285,12 @@ const LeadResults = () => {
                             if (!row.opening_hours || Object.keys(row.opening_hours).length === 0) {
                                 return <span className="text-muted">—</span>;
                             }
-                            const status = row.opening_hours.status || JSON.stringify(row.opening_hours);
-                            const isOpen = /open/i.test(status);
+                            const hourStatus = row.opening_hours.status || JSON.stringify(row.opening_hours);
+                            const isOpen = /open/i.test(hourStatus);
                             return (
                                 <span className={`badge ${isOpen ? "bg-success" : "bg-secondary"} bg-opacity-10 ${isOpen ? "text-success" : "text-secondary"}`}>
                                     <i className={`bx ${isOpen ? "bx-time-five" : "bx-lock"} me-1`}></i>
-                                    {status}
+                                    {hourStatus}
                                 </span>
                             );
                         },
