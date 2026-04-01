@@ -13,6 +13,7 @@ import { Services } from "../pages/Services";
 const AppRoutes = () => {
   const [unisync360Routes, setUnisync360Routes] = React.useState([]);
   const [clinic360Routes, setClinic360Routes] = React.useState([]);
+  const [leadClonerRoutes, setLeadClonerRoutes] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -22,6 +23,9 @@ const AppRoutes = () => {
       }),
       import("./microservices/clinic360/clinic360.jsx").then((module) => {
         setClinic360Routes(module.default);
+      }),
+      import("./microservices/lead_cloner/lead_cloner.jsx").then((module) => {
+        setLeadClonerRoutes(module.default);
       }),
     ]).finally(() => {
       setLoading(false);
@@ -52,6 +56,12 @@ const AppRoutes = () => {
       ))}
       
       {loading && <Route path="/clinic360/*" element={<RouteLoadingSpinner />} />}
+
+      {/* Lead Cloner Routes - Lazy Loaded */}
+      {!loading && leadClonerRoutes.map((route) => (
+        <Route key={route.path} path={route.path} element={route.element} />
+      ))}
+      {loading && <Route path="/lead-cloner/*" element={<RouteLoadingSpinner />} />}
 
       {/* Catch-all 404 route */}
       <Route path="*" element={<ErrorPage />} />

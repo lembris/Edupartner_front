@@ -59,6 +59,18 @@
     ]
   },
   {
+    "id": "lead-cloner",
+    "text": "Lead Cloner",
+    "icon": "bx bx-search-alt-2",
+    "available": true,
+    "link": "/lead-cloner/dashboard",
+    "description": "Search & Export Business Leads from Google",
+    "permission": [],
+    "role": [
+      "admin"
+    ]
+  },
+  {
     "id": "external-counselor-portal",
     "text": "External Counselor Portal",
     "icon": "bx bx-user-voice",
